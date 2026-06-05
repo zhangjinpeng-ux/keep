@@ -4,6 +4,7 @@ This module contains the database utilities.
 Mainly, it creates the database engine based on the environment variables.
 """
 
+import decimal
 import json
 import logging
 import os
@@ -273,20 +274,23 @@ def get_or_create(
 
 def custom_serialize(obj: Any) -> Any:
     """
-    Custom serializer that handles Pydantic models (like AlertDto) and other complex types.
+    Custom serializer that handles Pydantic models (like AlertDto), Decimal, tuples,
+    and other complex types into JSON-compatible structures.
     """
     if isinstance(obj, dict):
         return {k: custom_serialize(v) for k, v in obj.items()}
-    elif isinstance(obj, list):
+    elif isinstance(obj, (list, tuple)):
+        # Convert tuples to lists for full JSON compatibility
         return [custom_serialize(item) for item in obj]
-    elif isinstance(obj, tuple):
-        return tuple(custom_serialize(item) for item in obj)
     elif isinstance(obj, BaseModel):
         # For Pydantic models like AlertDto
         return obj.dict()
     elif isinstance(obj, Enum):
         # For enum values
         return obj.value
+    elif isinstance(obj, decimal.Decimal):
+        # MySQL returns Decimal for numeric aggregations (e.g. ROUND(x/1024/1024,2))
+        return float(obj)
     else:
         # For other objects, try jsonable_encoder, which handles many edge cases
         try:

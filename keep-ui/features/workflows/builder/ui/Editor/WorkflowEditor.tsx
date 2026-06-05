@@ -87,9 +87,9 @@ export function WorkflowEditorV2() {
                       <div key={key}>
                         {Object.entries(
                           properties[key] as { [key: string]: string }
-                        ).map(([constKey, constValue]) => (
+                        ).map(([constKey, constValue], index) => (
                           <div
-                            key={constKey}
+                            key={index}
                             className="flex items-center mt-1"
                           >
                             <TextInput

@@ -3,6 +3,7 @@ MysqlProvider is a class that provides a way to read data from MySQL.
 """
 
 import dataclasses
+import decimal
 import os
 
 import mysql.connector
@@ -117,6 +118,21 @@ class MysqlProvider(BaseProvider):
         """
         return self._query(query, as_dict, single_row, **kwargs)
 
+    @staticmethod
+    def _convert_decimals(obj):
+        """
+        Recursively convert Decimal values to float for JSON serialization compatibility.
+        MySQL returns Decimal types for numeric aggregations (e.g. ROUND(...)) which
+        are not natively JSON-serializable.
+        """
+        if isinstance(obj, decimal.Decimal):
+            return float(obj)
+        elif isinstance(obj, (list, tuple)):
+            return [MysqlProvider._convert_decimals(item) for item in obj]
+        elif isinstance(obj, dict):
+            return {k: MysqlProvider._convert_decimals(v) for k, v in obj.items()}
+        return obj
+
     def _query(
         self, query="", as_dict=False, single_row=False, **kwargs: dict
     ) -> list | tuple:
@@ -144,6 +160,8 @@ class MysqlProvider(BaseProvider):
             client.commit()
 
         results = cursor.fetchall()
+        # Convert Decimal to float for JSON serialization compatibility
+        results = self._convert_decimals(results)
 
         cursor.close()
         if single_row:
