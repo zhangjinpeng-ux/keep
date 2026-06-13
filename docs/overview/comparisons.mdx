@@ -1,40 +1,40 @@
 ---
-title: "Comparison"
+title: "对比分析"
 ---
 
-It's often easier to grasp a tool's features by comparing it to others in the same ecosystem. Here, we'll explain how Keep interacts with and compares to these tools.
+通过将 Keep 与同一生态系统中的其他工具进行比较，通常可以更容易地理解一个工具的功能。在这里，我们将解释 Keep 如何与这些工具交互并进行比较。
 
-## Keep vs IRM (PagerDuty, OpsGenie, etc.)
+## Keep vs IRM（PagerDuty、OpsGenie 等）
 
-Incident management tools aim to notify the right person at the right time, simplify reporting, and set up efficient war rooms.
+事件管理工具旨在在正确的时间通知正确的人员，简化报告流程，并建立高效的战时响应室。
 
-"Keep" focuses on the alert lifecycle, noise reduction, and AI-driven alert-incident correlation. Essentially, Keep acts as an 'intelligent layer before the IRM,' managing millions of alerts before they reach your IRM tool. Keep offers high-quality integrations with PagerDuty, OpsGenie, Grafana OnCall, and more.
+Keep 专注于告警生命周期、降噪以及 AI 驱动的告警-事件关联。本质上，Keep 充当"IRM 之前的智能层"，在告警到达您的 IRM 工具之前管理数百万条告警。Keep 提供与 PagerDuty、OpsGenie、Grafana OnCall 等工具的高质量集成。
 
-## Keep vs AIOps in Observability (Elastic, Splunk, etc.)
+## Keep vs 可观测性领域的 AIOps（Elastic、Splunk 等）
 
-Keep is different because it’s able to correlate alerts between different observability platforms.
+Keep 的不同之处在于它能够关联来自不同可观测性平台的告警。
 
-|                                       | Keep                                                           | Alternative                  |
+|                                       | Keep                                                           | 替代方案                      |
 | ------------------------------------- | -------------------------------------------------------------- | ---------------------------- |
-| Aggregates alerts from one platform | ✅                                                           | ✅                            |
-| Aggregates alerts from multiple platforms | ✅                                                             | ❌                            |
-| Correlates alerts between multiple sources | ✅                                                    | ❌                            |
-| Alerts enrichment                     | ✅                                                             | ❌                            |
-| Open source                           | ✅                                                             | ❌                            |
-| Workflow automation                   | ✅                                                             | ❌                            |
+| 聚合来自一个平台的告警                  | ✅                                                           | ✅                            |
+| 聚合来自多个平台的告警                  | ✅                                                             | ❌                            |
+| 关联来自多个数据源的告警                | ✅                                                    | ❌                            |
+| 告警富化                               | ✅                                                             | ❌                            |
+| 开源                                   | ✅                                                             | ❌                            |
+| 工作流自动化                            | ✅                                                             | ❌                            |
 
-## Keep vs AIOps platforms (BigPanda, Moogsoft, etc.)
+## Keep vs AIOps 平台（BigPanda、Moogsoft 等）
 
-Keep is an alternative to platforms like BigPanda and Moogsoft. 
-Customers who have used both traditional platforms and Keep notice a significant improvement in alert correlation. Unlike the manual methods of other platforms, Keep uses advanced state-of-the-art AI models for easier and more effective alert correlation.
+Keep 是 BigPanda 和 Moogsoft 等平台的替代方案。
+同时使用过传统平台和 Keep 的客户注意到告警关联方面有显著改善。与其他平台的人工方法不同，Keep 使用先进的、最先进的 AI 模型，实现更简单、更有效的告警关联。
 
-|                                       | Keep                                                           | Alternative                  |
+|                                       | Keep                                                           | 替代方案                      |
 | ------------------------------------- | -------------------------------------------------------------- | ---------------------------- |
-| Aggregation of alerts                 | ✅                                                             | ✅                            |
-| Integrations                          | ✅ (Bi-directional)                                            | ✅ (Webhooks)                 |
-| Alerts enrichment                     | ✅                                                             | ✅                            |
-| Open source                           | ✅                                                             | ❌                            |
-| Workflow automation                   | ✅ (GitHub Actions-like, infrastructure as code)               | ✅                            |
-| Managed version                       | ✅                                                             | ✅                             |
-| On-Premises                           | ✅                                                             | ❌                             |
-| Noise reduction & correlation         | ✅ (AI)                                                        | ✅ (Rule-based in some cases) |
+| 告警聚合                               | ✅                                                             | ✅                            |
+| 集成                                   | ✅（双向）                                                      | ✅（Webhooks）                |
+| 告警富化                               | ✅                                                             | ✅                            |
+| 开源                                   | ✅                                                             | ❌                            |
+| 工作流自动化                            | ✅（类似 GitHub Actions，基础设施即代码）                        | ✅                            |
+| 托管版本                               | ✅                                                             | ✅                             |
+| 本地部署                               | ✅                                                             | ❌                             |
+| 降噪与关联                              | ✅（AI）                                                        | ✅（某些情况下基于规则）       |

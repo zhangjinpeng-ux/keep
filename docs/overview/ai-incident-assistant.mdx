@@ -1,23 +1,20 @@
 ---
-title: "AI Incident Assistant"
+title: "AI 事件助手"
 ---
 
 <Tip>
 Keep Cloud: ✅ <br/>
 Keep Enterprise On-Premises: ✅ <br/>
-Keep Open Source: (experimental)
+Keep Open Source: (实验性功能)
 </Tip>
 
-The AI incident assistant is a chat feature embedded in the incident page. It streamlines all incident context—including 
-alerts, descriptions, and impacted topology—to the LLM, helping on-call engineers gather information faster and 
-resolve incidents more efficiently. Users can ask for root cause analysis and even execute commands on third-party 
-services ([read more about provider methods](/providers/provider-methods#via-ai-assistant)).
+AI 事件助手是嵌入在事件页面中的聊天功能。它将所有事件上下文——包括告警、描述和受影响的拓扑信息——传递给 LLM，帮助值班工程师更快地收集信息并更高效地解决事件。用户可以请求根因分析，甚至可以在第三方服务上执行命令（[了解更多关于提供商方法的信息](/providers/provider-methods#via-ai-assistant)）。
 
 <Frame>
   <img src="/images/provider-methods-assistant.png" />
 </Frame>
 
-## Frequent questions:
+## 常见问题：
 
-**Model used:** OpenAI, a model hosted by Keep, or other.<br/>
-**Data flow:** Data is shared between LLM provider and Keep whether the LLM provider may vary depending on the contract.
+**使用的模型：** OpenAI、Keep 托管的模型或其他模型。<br/>
+**数据流向：** 数据在 LLM 提供商和 Keep 之间共享，LLM 提供商可能因合同而异。

@@ -1,101 +1,98 @@
 ---
-title: "Maintenance Windows"
+title: "维护窗口"
 ---
 
-Keep's Maintenance Windows feature provides a critical mechanism for managing alert noise during scheduled maintenance periods or other planned events. By defining Maintenance Window rules, users can suppress alerts that are irrelevant during these times, ensuring that only actionable alerts reach the operations team.
-
+Keep 的维护窗口功能提供了一种关键机制，用于在计划维护期间或其他计划事件期间管理告警噪音。通过定义维护窗口规则，用户可以抑制在这些时间段内不相关的告警，确保只有可操作的告警才能到达运维团队。
 
 <Frame width="100" height="200">
   <img height="10" src="/images/maintenance.png" />
 </Frame>
 
+## 简介
 
-## Introduction
+在动态的 IT 环境中，经常会有某些时间段内，特定告警是预期中的，不应触发事件响应。Keep 的维护窗口功能允许用户定义特定规则，根据各种条件（如时间窗口或告警属性）临时抑制告警。这有助于防止不必要的告警疲劳，并确保团队能够专注于关键问题。
 
-In dynamic IT environments, it's common to have periods where certain alerts are expected and should not trigger incident responses. Keep's Maintenance Windows feature allows users to define specific rules that temporarily suppress alerts based on various conditions, such as time windows or alert attributes. This helps prevent unnecessary alert fatigue and ensures that teams can focus on critical issues.
+## 工作原理
 
-## How It Works
+1. **维护窗口规则定义**：用户定义维护窗口规则，指定抑制告警的条件。
+2. **条件指定**：每个维护窗口规则关联一个 CEL（Common Expression Language）查询，以定义抑制的条件。
+3. **时间窗口配置**：维护窗口规则可以设置特定的开始和结束时间，或基于相对持续时间。
+4. **告警抑制**：在维护窗口规则的活跃期间，任何匹配已定义条件的告警要么被抑制且**不在告警信息流中显示**，要么在信息流中以抑制状态显示（**这是可配置的**）。
 
-1. **Maintenance Window Rule Definition**: Users define Maintenance Window rules specifying the conditions under which alerts should be suppressed.
-2. **Condition Specification**: A CEL (Common Expression Language) query is associated with each Maintenance Window rule to define the conditions for suppression.
-3. **Time Window Configuration**: Maintenance Window rules can be set for specific start and end times, or based on a relative duration.
-4. **Alert Suppression**: During the active period of a Maintenance Window rule, any alerts matching the defined conditions are either suppressed and **not shown in alerts feed** or shown in the feed in suppressed status (**this is configurable**).
+## 实际示例
 
-## Practical Example
+假设您的团队计划进行一次数据库升级，可能会触发大量非关键告警。您可以创建一个维护窗口规则，在升级窗口期间抑制来自数据库服务的告警。这确保您的运维团队不会被不可操作的告警淹没，从而能够专注于更关键的问题。
 
-Suppose your team schedules a database upgrade that could trigger numerous non-critical alerts. You can create a Maintenance Window rule that suppresses alerts from the database service during the upgrade window. This ensures that your operations team isn't overwhelmed by non-actionable alerts, allowing them to focus on more critical issues.
+## 核心概念
 
-## Core Concepts
+- **维护窗口规则**：定义何时以及哪些告警应根据时间窗口和条件被抑制的配置。
+- **CEL 查询**：一种查询语言，用于指定告警应被抑制的条件。例如，CEL 查询可能在维护窗口期间抑制来源为特定服务的告警。
+- **时间窗口**：维护窗口规则活跃的特定开始和结束时间或相对持续时间。
+- **告警抑制**：在指定时间窗口内忽略匹配维护窗口规则条件的告警的过程。
 
-- **Maintenance Window Rules**: Configurations that define when and which alerts should be suppressed based on time windows and conditions.
-- **CEL Query**: A query language used to specify the conditions under which alerts should be suppressed. For example, a CEL query might suppress alerts where the source is a specific service during a maintenance window.
-- **Time Window**: The specific start and end times or relative duration during which the Maintenance Window rule is active.
-- **Alert Suppression**: The process of ignoring alerts that match the Maintenance Window rule's conditions during the specified time window.
+## 维护窗口中的基于状态的过滤
 
-## Status-Based Filtering in Maintenance Windows
+在 Keep 中，某些告警状态会被维护窗口规则自动忽略。具体来说，状态为 RESOLVED 和 ACKNOWLEDGED 的告警不会被维护窗口规则抑制。这是有意设计的，以确保解决告警仍能被处理并适当地关闭或更新活跃事件。
 
-In Keep, certain alert statuses are automatically ignored by Maintenance Window rules. Specifically, alerts with the statuses RESOLVED and ACKNOWLEDGED are not suppressed by Maintenance Window rules. This is intentional to ensure that resolving alerts can still be processed and appropriately close or update active incidents.
+### 为什么某些状态被忽略？
 
-### Why Are Some Statuses Ignored?
-
-    •	RESOLVED Alerts: These alerts indicate that an issue has been resolved. By allowing these alerts to bypass Maintenance Window rules, Keep ensures that any active incidents related to the alert can be properly closed, maintaining the integrity of the alert lifecycle.
+    •	RESOLVED 告警：这些告警表示问题已解决。通过允许这些告警绕过维护窗口规则，Keep 确保与告警相关的任何活跃事件可以正常关闭，维护告警生命周期的完整性。
     
-    •	ACKNOWLEDGED Alerts: These alerts have been acknowledged by an operator, signaling that they are being addressed. Ignoring these alerts in Maintenance Windows ensures that operators can track the progress of incidents and take necessary actions without interference.
+    •	ACKNOWLEDGED 告警：这些告警已被运维人员确认，表明正在处理中。在维护窗口中忽略这些告警可确保运维人员能够跟踪事件进展并采取必要行动，而不会受到干扰。
 
-By excluding these statuses from Maintenance Window suppression, Keep allows for the continuous and accurate management of alerts, even during Maintenance Window periods, ensuring that resolution processes are not disrupted.
+通过在维护窗口抑制中排除这些状态，Keep 允许在维护窗口期间持续准确地管理告警，确保解决过程不会中断。
 
-## Creating a Maintenance Window Rule
+## 创建维护窗口规则
 
-To create a Maintenance Window rule:
+创建维护窗口规则：
 
 <Frame width="100" height="200">
   <img height="10" src="/images/maintenance-window-creation.png" />
 </Frame>
 
-1. **Define the Maintenance Window Name and Description**: Provide a name and optional description for the Maintenance Window rule to easily identify its purpose.
-2. **Specify the CEL Query**: Use CEL to define the conditions under which alerts should be suppressed (e.g., `source == "database"`).
-3. **Set the Time Window**: Choose a specific start and end time, or define a relative duration for the Maintenance Window.
-4. **Enable the Rule**: Decide whether the rule should be active immediately or scheduled for future use.
+1. **定义维护窗口名称和描述**：为维护窗口规则提供名称和可选的描述，以便于识别其用途。
+2. **指定 CEL 查询**：使用 CEL 定义告警应被抑制的条件（例如，`source == "database"`）。
+3. **设置时间窗口**：选择特定的开始和结束时间，或为维护窗口定义相对持续时间。
+4. **启用规则**：决定规则是立即生效还是计划将来使用。
 
-## Best Practices
+## 最佳实践
 
-- **Plan Maintenance Windows in Advance**: Schedule Maintenance Window periods in advance for known maintenance windows to prevent unnecessary alerts.
-- **Use Specific Conditions**: Define precise CEL queries to ensure only the intended alerts are suppressed.
-- **Review and Update Maintenance Windows**: Regularly review active Maintenance Window rules to ensure they are still relevant and adjust them as necessary.
+- **提前规划维护窗口**：为已知的维护窗口提前安排维护窗口时段，以防止不必要的告警。
+- **使用具体的条件**：定义精确的 CEL 查询，确保只有预期的告警被抑制。
+- **审查和更新维护窗口**：定期审查活跃的维护窗口规则，确保它们仍然相关，并根据需要进行调整。
 
+## 策略
 
-## Strategies
+为了在维护窗口期间处理告警，Keep 提供了一些策略来处理这些告警的处理方式：
 
-In order to handle the alerts during Maintenance Windows, Keep provides some Strategies to handle how these alerts are treated:
+### 1. 默认
 
-### 1. Default
+维护窗口的默认行为是**抑制**匹配已定义条件的告警。
 
-The default behaviour of Maintenance Windows is to **Suppressed** alerts that match the defined conditions.
+### 2. 恢复状态
 
-### 2. Recover status
-
-This strategy relies on the following premise:
+此策略基于以下前提：
 <Tip>
-   An alert received inside the Maintenance Window must be inhibited and once the Maintenance Window is over, the alert must recover its previous flow.
+   在维护窗口内收到的告警必须被阻止，一旦维护窗口结束，告警必须恢复其之前的流程。
 </Tip>
 
-The following actions will therefore be taken with a new alert:
-- When an alert is received, it will be checked against the Maintenance Window rules.
-- If the alert matches any Maintenance Window rule, its status will be set to **Maintenance**.
-- Workflows and Incidents handling are skipped.
+因此，对新告警将采取以下操作：
+- 收到告警时，将根据维护窗口规则对其进行检查。
+- 如果告警匹配任何维护窗口规则，其状态将设置为 **Maintenance**。
+- 跳过工作流和事件处理。
 
-Every WATCHER_LAPSED_TIME seconds, the watcher will check whether there is any active Maintenance Window for every alert with a Maintenance status.
-If so, the following actions will be taken:
-- The alert will swap its status, and previous status.
-- Workflows, Incidents handling, Pusher and Presets notifications will be launched in the same way as a new alert.
+每 WATCHER_LAPSED_TIME 秒，监控器将检查每条状态为 Maintenance 的告警是否存在活跃的维护窗口。
+如果是，将采取以下操作：
+- 告警将交换其状态和之前的状态。
+- 工作流、事件处理、推送器和预设通知将以与新告警相同的方式启动。
 
-#### 2.1 What is an expired Maintenance Window?
+#### 2.1 什么是过期的维护窗口？
 
-For a maintenance window to be considered expired, the following conditions must be met:
-- The **End Time** must be earlier than the current time.
-- The **Enabled** flag must be set to **False**.
+要使维护窗口被视为过期，必须满足以下条件：
+- **结束时间**必须早于当前时间。
+- **已启用**标志必须设置为 **False**。
 
-#### 2.2 What are the specific conditions to use the Recover Status Strategy?
-- Set **MAINTENANCE_WINDOW_STRATEGY** environment variable to **recover_previous_status**.
-- "Alerts will show in suppressed status" option must be set to **True** in the Maintenance Window rule configuration.
-- **Enabled** flag must be set to **True** in the Maintenance Window rule configuration.
+#### 2.2 使用恢复状态策略的具体条件是什么？
+- 将 **MAINTENANCE_WINDOW_STRATEGY** 环境变量设置为 **recover_previous_status**。
+- 维护窗口规则配置中"告警将以抑制状态显示"选项必须设置为 **True**。
+- 维护窗口规则配置中**已启用**标志必须设置为 **True**。

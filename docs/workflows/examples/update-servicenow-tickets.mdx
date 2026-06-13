@@ -1,19 +1,19 @@
 ---
-title: "Update ServiceNow Tickets"
+title: "更新 ServiceNow 工单"
 ---
 
 <Info>
 
-Link to the [workflow](https://github.com/keephq/keep/blob/main/examples/workflows/update_service_now_tickets_status.yml).
+链接到[工作流](https://github.com/keephq/keep/blob/main/examples/workflows/update_service_now_tickets_status.yml)。
 
 </Info>
 
-This example demonstrates how to periodically update the status of ServiceNow tickets associated with alerts.
+此示例演示了如何定期更新与告警关联的 ServiceNow 工单状态。
 
-Explanation:
-- Trigger: The workflow can be triggered manually, simulating the scheduled execution.
-- Step 1: Fetch all alerts with a `ticket_type` of `servicenow` using the Keep provider.
-- Action: Iterate over the fetched alerts and update their associated ServiceNow tickets with the latest status.
+说明：
+- 触发器：工作流可以手动触发，模拟定时执行。
+- 步骤 1：使用 Keep 提供者获取所有 `ticket_type` 为 `servicenow` 的告警。
+- 动作：遍历获取到的告警，并使用最新状态更新其关联的 ServiceNow 工单。
 
 
 ```yaml

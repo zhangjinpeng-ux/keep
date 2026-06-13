@@ -1,33 +1,32 @@
 ---
-title: "Push vs Pull alerts"
+title: "推送 vs 拉取告警"
 ---
 
-There are primarily two ways to get alerts into Keep:
-
+将告警导入 Keep 主要有两种方式：
 
 <Tip>
-  We strongly recommend using the push method for alerting, as pulling does not
-  include a lot of the features, like workflow automation. It is mainly used for
-  a quick way to get alerts into Keep and start exploring the value.
+  我们强烈建议使用推送方式进行告警，因为拉取不包含
+  很多功能，如工作流自动化。它主要用于
+  快速将告警导入 Keep 并开始探索其价值。
 </Tip>
 
-### Push
+### 推送
 
-When you connect a [Provider](/providers), Keep automatically instruments the tools to send alerts to Keep via webhook.
-As an example, when you connect Grafana, Keep will automatically create a new Webhook contact point in Grafana, and a new Notification Policy to send all alerts to Keep.
+当您连接一个[提供商](/providers)时，Keep 会自动配置工具通过 Webhook 将告警发送到 Keep。
+例如，当您连接 Grafana 时，Keep 会自动在 Grafana 中创建一个新的 Webhook 联系人，以及一个新的通知策略以将所有告警发送到 Keep。
 
-You can configure which providers you want to push from by checking the `Install Webhook` checkbox in the provider settings.
+您可以通过在提供商设置中勾选 `Install Webhook` 复选框来配置要从哪些提供商推送。
 
 <Frame>
   <img src="/images/pushing-enabled.png" />
 </Frame>
 
-### Pull
+### 拉取
 
-When you connect a [Provider](/providers), Keep will start pulling alerts from the tool automatically.
-Pulling interval is defined by the `KEEP_PULL_INTERVAL` environment variable and defaults to 7 days (in minutes) and can be completely turned off by using the `KEEP_PULL_DATA_ENABLED` environment variable.
+当您连接一个[提供商](/providers)时，Keep 将自动开始从该工具拉取告警。
+拉取间隔由 `KEEP_PULL_INTERVAL` 环境变量定义，默认为 7 天（以分钟为单位），并可以通过使用 `KEEP_PULL_DATA_ENABLED` 环境变量完全关闭。
 
-You can also configure which providers you want to pull from by checking the `Pulling Enabled` checkbox in the provider settings.
+您还可以通过在提供商设置中勾选 `Pulling Enabled` 复选框来配置要从哪些提供商拉取。
 
 <Frame>
   <img src="/images/pulling-enabled.png" />

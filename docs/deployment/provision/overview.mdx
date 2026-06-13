@@ -2,40 +2,39 @@
 title: "Overview"
 ---
 
-Keep supports various deployment and provisioning strategies to accommodate different environments and use cases, from development setups to production deployments.
+Keep 支持各种部署和预置策略，以适应不同的环境和用例，从开发设置到生产部署。
 
-### Provisioning Options
+### 预置选项
 
-Keep offers four main provisioning options:
+Keep 提供四种主要的预置选项：
 
-1. [**Provider Provisioning**](/deployment/provision/provider) - Set up and manage data providers with their deduplication rules for Keep.
-2. [**Workflow Provisioning**](/deployment/provision/workflow) - Configure and manage workflows within Keep.
-3. [**Dashboard Provisioning**](/deployment/provision/dashboard) - Configure and manage dashboards within Keep.
-4. [**Mapping Rule Provisioning**](/deployment/provision/mapping) - Configure and manage CSV-style alert enrichment rules within Keep.
+1. [**提供商预置**](/deployment/provision/provider) - 为 Keep 设置和管理数据提供商及其去重规则。
+2. [**工作流预置**](/deployment/provision/workflow) - 在 Keep 中配置和管理工作流。
+3. [**仪表板预置**](/deployment/provision/dashboard) - 在 Keep 中配置和管理仪表板。
+4. [**映射规则预置**](/deployment/provision/mapping) - 在 Keep 中配置和管理 CSV 风格的告警增强规则。
 
 
-Choosing the right provisioning strategy depends on your specific use case, deployment environment, and scalability requirements. You can read more about each provisioning option in their respective sections.
+选择合适的预置策略取决于您的具体用例、部署环境和可扩展性需求。您可以在各自的章节中阅读更多关于每种预置选项的信息。
 
-### How To Configure Provisioning
+### 如何配置预置
 
 <Tip>
-  Some provisioning options require additional environment variables. These will
-  be covered in detail on the specific provisioning pages.
+  某些预置选项需要额外的环境变量。这些将在特定的预置页面上详细说明。
 </Tip>
 
-Provisioning in Keep is controlled through environment variables and configuration files. The main environment variables for provisioning are:
+Keep 中的预置通过环境变量和配置文件控制。预置的主要环境变量有：
 
-| Provisioning Type      | Environment Variable           | Purpose                                                                   |
+| 预置类型      | 环境变量           | 用途                                                                   |
 | ---------------------- | ------------------------------ | ------------------------------------------------------------------------- |
-| **Provider**           | `KEEP_PROVIDERS`               | JSON string containing provider configurations with deduplication rules   |
-| **Workflow**           | `KEEP_WORKFLOW`                | One workflow to provision right from the env variable.                    |
-| **Workflows**          | `KEEP_WORKFLOWS_DIRECTORY`     | Directory path containing workflow configuration files                    |
-| **Dashboard**          | `KEEP_DASHBOARDS`              | JSON string containing dashboard configurations                           |
-| **Mapping Rules**      | `KEEP_MAPPINGS_DIRECTORY`      | Directory path containing mapping rule YAML manifests                     |
+| **提供商**           | `KEEP_PROVIDERS`               | 包含提供商配置及去重规则的 JSON 字符串   |
+| **工作流**           | `KEEP_WORKFLOW`                | 直接从环境变量预置的一个工作流。                    |
+| **工作流**          | `KEEP_WORKFLOWS_DIRECTORY`     | 包含工作流配置文件的目录路径                    |
+| **仪表板**          | `KEEP_DASHBOARDS`              | 包含仪表板配置的 JSON 字符串                           |
+| **映射规则**      | `KEEP_MAPPINGS_DIRECTORY`      | 包含映射规则 YAML 清单的目录路径                     |
 
-Hint: use the script to get 1-liner from the workflow file for KEEP_WORKFLOW:
+提示：使用以下脚本从工作流文件中获取单行格式用于 KEEP_WORKFLOW：
 ```
-Use `cat workflow_file.yaml | awk '{printf "%s\\n", $0}' | tr -d '\n'; echo` to get the workflow in 1-string format.
+使用 `cat workflow_file.yaml | awk '{printf "%s\\n", $0}' | tr -d '\n'; echo` 将工作流转换为单字符串格式。
 ```
 
-For more details on each provisioning strategy, including setup instructions and implications, refer to the respective sections.
+有关每种预置策略的更多详细信息，包括设置说明和影响，请参阅相应章节。

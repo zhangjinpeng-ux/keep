@@ -2,7 +2,7 @@
 sidebarTitle: "keep extraction create"
 ---
 
-Create a extraction rule.
+创建提取规则。
 
 ## Usage
 
@@ -17,56 +17,56 @@ Usage: keep extraction create [OPTIONS]
   * Default: ``
   * Usage: `--name <extraction-name>`
 
-  The name of the extraction.
+  提取规则的名称。
 
 * `description`
   * Type: STRING
   * Default: ``
   * Usage: `--description <extraction-description>`
 
-  The description of the extraction.
+  提取规则的描述。
 
 * `priority`
   * Type: INTEGER RANGE
   * Default: `0`
   * Usage: `--priority <priority>`
 
-  The priority of the extraction, higher priority means this rule will execute first. `0<=x<=100`.
+  提取规则的优先级，优先级越高，此规则越先执行。`0<=x<=100`。
 
 * `pre`
   * Type: BOOL
   * Default: `false`
   * Usage: `--pre <pre>`
 
-  Whether this rule should be applied before or after the alert is standardized
+  此规则应在告警标准化之前还是之后应用
 
 * `attribute`
   * Type: STRING
   * Default: ``
   * Usage: `--attribute <extraction-attribute>`
 
-  Event attribute name to extract from.
+  要从中提取的事件属性名称。
 
 * `regex`
   * Type: STRING
   * Default: ``
   * Usage: `--attribute <regex-regex>`
 
-  The regex rule to extract by. Regex format should be like python regex pattern for group matching.
+  用于提取的正则表达式规则。正则格式应类似于 Python 正则表达式模式，用于分组匹配。
 
 * `condition`
   * Type: STRING
   * Default: ``
   * Usage: `--condition <condition-attribute>`
 
-  CEL based condition.
+  基于 CEL 的条件。
 
 * `help`:
   * Type: BOOL
   * Default: `false`
   * Usage: `--help`
 
-  Show this message and exit.
+  显示此帮助信息并退出。
 
 ## CLI Help
 

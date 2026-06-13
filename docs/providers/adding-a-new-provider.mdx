@@ -3,24 +3,24 @@ title: "Adding a new Provider"
 sidebarTitle: "Adding a New Provider"
 ---
 
-This guide explains how to create a new provider for Keep. Providers are integrations that allow Keep to interact with external services for alerting, querying data, managing incidents, or building topology maps.
+本指南介绍如何为 Keep 创建新的提供者。提供者是一种集成，允许 Keep 与外部服务交互，用于告警、查询数据、管理事件或构建拓扑图。
 
-## Table of contents
-- [Provider structure](#provider-structure)
-- [Step-by-step implementation](#step-by-step-implementation)
-- [Provider attributes](#provider-attributes)
-- [Abstract methods](#abstract-methods)
-- [Provider types and capabilities](#provider-types-and-capabilities)
-- [Authentication configuration](#authentication-configuration)
-- [Testing your provider](#testing-your-provider)
-- [Best practices](#best-practices)
-- [Common patterns](#common-patterns)
-- [Complete provider example](#complete-provider-example)
-- [Checklist](#checklist)
+## 目录
+- [提供者结构](#provider-structure)
+- [分步实现](#step-by-step-implementation)
+- [提供者属性](#provider-attributes)
+- [抽象方法](#abstract-methods)
+- [提供者类型与能力](#provider-types-and-capabilities)
+- [认证配置](#authentication-configuration)
+- [测试你的提供者](#testing-your-provider)
+- [最佳实践](#best-practices)
+- [常见模式](#common-patterns)
+- [完整提供者示例](#complete-provider-example)
+- [检查清单](#checklist)
 
-## Provider structure
+## 提供者结构
 
-Each provider in Keep follows a specific structure:
+Keep 中的每个提供者遵循特定的结构：
 
 ```
 keep/providers/
@@ -29,24 +29,24 @@ keep/providers/
 │   └── yourservice_provider.py
 ```
 
-**Important Notes:**
-- Keep's ProvidersFactory automatically discovers providers based on the directory naming convention (`*_provider`).
-- You don't need to register them explicitly - just follow the naming pattern.
-- The provider type is automatically extracted from the class name (for example, `ServiceNowProvider` → `servicenow`).
+**重要说明：**
+- Keep 的 ProvidersFactory 会根据目录命名约定（`*_provider`）自动发现提供者。
+- 你不需要显式注册它们——只需遵循命名模式即可。
+- 提供者类型会自动从类名中提取（例如，`ServiceNowProvider` → `servicenow`）。
 
-## Step-by-step implementation
+## 分步实现
 
-### 1. Create provider directory
+### 1. 创建提供者目录
 
-Create a new directory under `keep/providers/` with the pattern `{service}_provider`:
+在 `keep/providers/` 下创建一个遵循 `{service}_provider` 模式的新目录：
 
 ```bash
 mkdir keep/providers/yourservice_provider
 ```
 
-### 2. Create the provider module
+### 2. 创建提供者模块
 
-Create `yourservice_provider.py` with the following structure:
+创建 `yourservice_provider.py`，结构如下：
 
 ```python
 """
@@ -70,21 +70,21 @@ from keep.providers.models.provider_method import ProviderMethod
 
 @pydantic.dataclasses.dataclass
 class YourserviceProviderAuthConfig:
-    """YourService authentication configuration."""
+    """YourService 认证配置。"""
     
     api_endpoint: str = dataclasses.field(
         metadata={
             "required": True,
-            "description": "YourService API endpoint URL",
-            "validation": "https_url",  # Optional: validates HTTPS URLs
+            "description": "YourService API 端点 URL",
+            "validation": "https_url",  # 可选：验证 HTTPS URL
         }
     )
     
     api_key: str = dataclasses.field(
         metadata={
             "required": True,
-            "description": "API key for YourService",
-            "sensitive": True,  # Marks field as sensitive in UI
+            "description": "YourService 的 API 密钥",
+            "sensitive": True,  # 在 UI 中将字段标记为敏感信息
         }
     )
     
@@ -92,7 +92,7 @@ class YourserviceProviderAuthConfig:
         default="us-east-1",
         metadata={
             "required": False,
-            "description": "YourService region",
+            "description": "YourService 区域",
             "type": "select",
             "options": ["us-east-1", "eu-west-1", "ap-south-1"],
         }
@@ -100,55 +100,55 @@ class YourserviceProviderAuthConfig:
 
 
 class YourserviceProvider(BaseProvider):
-    """Send alerts and fetch data from YourService."""
+    """发送告警并从 YourService 获取数据。"""
     
-    # Required: Display name shown in UI
+    # 必需：UI 中显示的显示名称
     PROVIDER_DISPLAY_NAME = "YourService"
     
-    # Required: Categories for provider classification
+    # 必需：提供者分类的类别
     PROVIDER_CATEGORY = ["Monitoring"]
     
-    # Optional: Tags for searchability
+    # 可选：用于可搜索性的标签
     PROVIDER_TAGS = ["alert", "data"]
     
-    # Optional: Define required scopes/permissions
+    # 可选：定义所需的权限范围
     PROVIDER_SCOPES = [
         ProviderScope(
             name="read:alerts",
-            description="Read alerts from YourService",
+            description="从 YourService 读取告警",
             mandatory=True,
             documentation_url="https://docs.yourservice.com/permissions",
-            alias="Read Alerts",
+            alias="读取告警",
         ),
         ProviderScope(
             name="write:alerts",
-            description="Create and update alerts",
+            description="创建和更新告警",
             mandatory=False,
-            mandatory_for_webhook=True,  # Required only for webhook setup
+            mandatory_for_webhook=True,  # 仅在 webhook 设置时需要
         ),
     ]
     
-    # Optional: OAuth2 URL (MUST be set as class attribute, not in __init__)
-    OAUTH2_URL = None  # Or os.environ.get("YOURSERVICE_OAUTH2_URL")
+    # 可选：OAuth2 URL（必须设置为类属性，而非在 __init__ 中设置）
+    OAUTH2_URL = None  # 或 os.environ.get("YOURSERVICE_OAUTH2_URL")
     
     def __init__(
         self, context_manager: ContextManager, provider_id: str, config: ProviderConfig
     ):
         super().__init__(context_manager, provider_id, config)
-        # Initialize any client libraries or state here
-        # Note: Logger is automatically available as self.logger
+        # 在此处初始化任何客户端库或状态
+        # 注意：Logger 会自动作为 self.logger 可用
         
-        # Context manager provides access to:
-        # - self.context_manager.tenant_id: Current tenant ID
-        # - self.context_manager.workflow_id: Current workflow ID
-        # - self.context_manager.workflow_execution_id: Current execution ID
-        # - self.context_manager.get_full_context(): Full workflow context
+        # 上下文管理器提供以下访问：
+        # - self.context_manager.tenant_id: 当前租户 ID
+        # - self.context_manager.workflow_id: 当前工作流 ID
+        # - self.context_manager.workflow_execution_id: 当前执行 ID
+        # - self.context_manager.get_full_context(): 完整工作流上下文
         
     def validate_config(self):
         """
-        Validates required configuration for YourService provider.
+        验证 YourService 提供者的必需配置。
         
-        This is an abstract method that MUST be implemented.
+        这是一个必须实现的抽象方法。
         """
         self.authentication_config = YourserviceProviderAuthConfig(
             **self.config.authentication
@@ -156,16 +156,16 @@ class YourserviceProvider(BaseProvider):
         
     def dispose(self):
         """
-        Cleanup any resources when provider is disposed.
+        当提供者被销毁时清理所有资源。
         
-        This is an abstract method that MUST be implemented, even if it just passes.
+        这是一个必须实现的抽象方法，即使它只是 pass。
         """
         pass
 ```
 
-### 3. Create the __init__.py File
+### 3. 创建 __init__.py 文件
 
-Create `keep/providers/yourservice_provider/__init__.py`:
+创建 `keep/providers/yourservice_provider/__init__.py`：
 
 ```python
 from keep.providers.yourservice_provider.yourservice_provider import (
@@ -176,53 +176,53 @@ from keep.providers.yourservice_provider.yourservice_provider import (
 __all__ = ["YourserviceProvider", "YourserviceProviderAuthConfig"]
 ```
 
-### 4. Add provider documentation
+### 4. 添加提供者文档
 
-Create `docs/providers/documentation/yourservice-provider.mdx` following the documentation template.
-
-<Note>
-Provider configuration fields are automatically documented through auto-generated snippets. Keep generates the snippet files in `docs/snippets/providers/` from the provider's AuthConfig metadata and includes them in the documentation automatically.
-</Note>
-
-## Provider architecture
-
-### Abstract methods
-
-Every provider must implement these two abstract methods from BaseProvider:
-
-1. **`validate_config(self)`** - Validates and processes the provider configuration
-2. **`dispose(self)`** - Clean up resources when the provider is disposed of
-
-### Provider capabilities
-
-Providers expose capabilities through standard methods:
-
-- **`_notify(**kwargs)`** - Send notifications or alerts
-- **`_query(**kwargs)`** - Query data from the provider
-- **`_get_alerts()`** - Fetch alerts for monitoring
-- **`setup_webhook(...)`** - Configure webhook endpoints
-- **`validate_scopes()`** - Check provider permissions
-- **`expose()`** - Return parameters calculated during execution for use in workflows
+按照文档模板创建 `docs/providers/documentation/yourservice-provider.mdx`。
 
 <Note>
-The public methods `notify()` and `query()` wrap the private implementations (`_notify()` and `_query()`) with additional capabilities like enrichment and error handling. Always implement the private methods.
+提供者配置字段通过自动生成的代码片段自动记录。Keep 根据提供者的 AuthConfig 元数据在 `docs/snippets/providers/` 中生成代码片段文件，并自动将其包含在文档中。
 </Note>
 
-### Provider discovery
+## 提供者架构
 
-Keep automatically discovers providers based on naming conventions:
+### 抽象方法
 
-- Location: `keep/providers/` directory
-- Directory naming: Must end with `_provider` (for example, `slack_provider`)
-- Main file: Must match directory name with `.py` extension (for example, `slack_provider.py`)
-- No explicit registration needed - just follow the naming convention
+每个提供者必须实现 BaseProvider 中的以下两个抽象方法：
 
-### Implementation examples
+1. **`validate_config(self)`** - 验证并处理提供者配置
+2. **`dispose(self)`** - 在提供者被销毁时清理资源
+
+### 提供者能力
+
+提供者通过标准方法暴露能力：
+
+- **`_notify(**kwargs)`** - 发送通知或告警
+- **`_query(**kwargs)`** - 从提供者查询数据
+- **`_get_alerts()`** - 获取用于监控的告警
+- **`setup_webhook(...)`** - 配置 webhook 端点
+- **`validate_scopes()`** - 检查提供者权限
+- **`expose()`** - 返回执行期间计算的参数，供工作流使用
+
+<Note>
+公共方法 `notify()` 和 `query()` 包装了私有实现（`_notify()` 和 `_query()`），并附加了数据富化和错误处理等额外能力。始终实现私有方法。
+</Note>
+
+### 提供者发现
+
+Keep 根据命名约定自动发现提供者：
+
+- 位置：`keep/providers/` 目录
+- 目录命名：必须以 `_provider` 结尾（例如，`slack_provider`）
+- 主文件：必须与目录名称匹配，扩展名为 `.py`（例如，`slack_provider.py`）
+- 无需显式注册——只需遵循命名约定即可
+
+### 实现示例
 
 #### Validate_config()
 ```python
 def validate_config(self):
-    """Validate and process provider configuration."""
+    """验证并处理提供者配置。"""
     self.authentication_config = YourserviceProviderAuthConfig(
         **self.config.authentication
     )
@@ -231,38 +231,38 @@ def validate_config(self):
 #### Dispose()
 ```python
 def dispose(self):
-    """Cleanup any resources."""
-    # Close connections, cleanup clients, etc.
-    # Can just pass if no cleanup needed
+    """清理所有资源。"""
+    # 关闭连接、清理客户端等。
+    # 如果无需清理，可以直接 pass
     pass
 ```
 
-### Provider type extraction
+### 提供者类型提取
 
-The provider type is automatically extracted from your class name:
+提供者类型会自动从类名中提取：
 - `YourserviceProvider` → `yourservice`
 - `ServiceNowProvider` → `service.now` 
 - `DatadogProvider` → `datadog`
 
-This happens via the `_extract_type()` method in BaseProvider.
+这是通过 BaseProvider 中的 `_extract_type()` 方法实现的。
 
-### Provider attributes
+### 提供者属性
 
-Providers should define the following class attributes:
+提供者应定义以下类属性：
 
-- `PROVIDER_DISPLAY_NAME`: String used for UI display (for example, "Slack")
-- `PROVIDER_CATEGORY`: List of categories from the allowed values (see Provider Categories section)
-- `PROVIDER_COMING_SOON`: Boolean flag to mark providers as not ready (default: False)
-- `WEBHOOK_INSTALLATION_REQUIRED`: Boolean to make webhook setup mandatory in UI (default: False)
-- `PROVIDER_TAGS`: List of tags describing provider capabilities (for example, ["alert", "messaging"])
-- `PROVIDER_SCOPES`: List of ProviderScope objects defining required permissions
-- `PROVIDER_METHODS`: List of ProviderMethod objects for additional capabilities (see [Provider Methods](/providers/provider-methods))
-- `FINGERPRINT_FIELDS`: List of field names used to calculate alert fingerprints
-- `OAUTH2_URL`: OAuth 2.0 authorization URL if provider supports OAuth 2.0 authentication
+- `PROVIDER_DISPLAY_NAME`：用于 UI 显示的字符串（例如，"Slack"）
+- `PROVIDER_CATEGORY`：来自允许值的类别列表（参见提供者类别部分）
+- `PROVIDER_COMING_SOON`：布尔标志，将提供者标记为尚未就绪（默认值：False）
+- `WEBHOOK_INSTALLATION_REQUIRED`：布尔值，使 webhook 设置在 UI 中为必填项（默认值：False）
+- `PROVIDER_TAGS`：描述提供者能力的标签列表（例如，["alert", "messaging"]）
+- `PROVIDER_SCOPES`：定义所需权限的 ProviderScope 对象列表
+- `PROVIDER_METHODS`：用于附加能力的 ProviderMethod 对象列表（参见[提供者方法](/providers/provider-methods)）
+- `FINGERPRINT_FIELDS`：用于计算告警指纹的字段名称列表
+- `OAUTH2_URL`：如果提供者支持 OAuth 2.0 认证，则为 OAuth 2.0 授权 URL
 
-### Provider categories
+### 提供者类别
 
-Providers must specify one or more categories from the following list:
+提供者必须从以下列表中指定一个或多个类别：
 
 ```python
 PROVIDER_CATEGORY: list[Literal[
@@ -273,32 +273,32 @@ PROVIDER_CATEGORY: list[Literal[
 ]]
 ```
 
-### Provider tags
+### 提供者标签
 
-Valid options for `PROVIDER_TAGS`:
-- `"alert"` - Provider handles alerts
-- `"ticketing"` - Provider manages tickets
-- `"messaging"` - Provider sends messages
-- `"data"` - Provider queries data
-- `"queue"` - Provider manages queues
-- `"topology"` - Provider provides topology data
-- `"incident"` - Provider manages incidents
+`PROVIDER_TAGS` 的有效选项：
+- `"alert"` - 提供者处理告警
+- `"ticketing"` - 提供者管理工单
+- `"messaging"` - 提供者发送消息
+- `"data"` - 提供者查询数据
+- `"queue"` - 提供者管理队列
+- `"topology"` - 提供者提供拓扑数据
+- `"incident"` - 提供者管理事件
 
-### Provider scope
+### 提供者权限范围
 
 ```python
 @dataclass
 class ProviderScope:
     """
-    Provider scope model.
+    提供者权限范围模型。
 
     Args:
-        name (str): The name of the scope.
-        description (Optional[str]): The description of the scope.
-        mandatory (bool): Whether the scope is mandatory.
-        mandatory_for_webhook (bool): Whether the scope is mandatory for webhook auto installation.
-        documentation_url (Optional[str]): The documentation url of the scope.
-        alias (Optional[str]): Another alias of the scope.
+        name (str): 权限范围的名称。
+        description (Optional[str]): 权限范围的描述。
+        mandatory (bool): 权限范围是否为必填项。
+        mandatory_for_webhook (bool): 权限范围是否对于 webhook 自动安装为必填项。
+        documentation_url (Optional[str]): 权限范围的文档 URL。
+        alias (Optional[str]): 权限范围的别名。
     """
 
     name: str
@@ -309,17 +309,17 @@ class ProviderScope:
     alias: Optional[str] = None
 ```
 
-### Provider config
+### 提供者配置
 
 ```python
 @dataclass
 class ProviderConfig:
     """
-    Provider configuration model.
+    提供者配置模型。
 
     Args:
-        description (Optional[str]): The description of the provider.
-        authentication (dict): The configuration for the provider.
+        description (Optional[str]): 提供者的描述。
+        authentication (dict): 提供者的配置。
     """
 
     authentication: Optional[dict]
@@ -338,11 +338,11 @@ class ProviderConfig:
                 self.authentication[key] = chevron.render(value, {"env": os.environ})
 ```
 
-### Base provider
+### 基础提供者
 
 ```python
 """
-Base class for all providers.
+所有提供者的基类。
 """
 class BaseProvider(metaclass=abc.ABCMeta):
     OAUTH2_URL = None
@@ -368,11 +368,11 @@ class BaseProvider(metaclass=abc.ABCMeta):
         provider_description: Optional[str] = None,
     ):
         """
-        Initialize a provider.
+        初始化一个提供者。
 
         Args:
-            provider_id (str): The provider id.
-            **kwargs: Provider configuration loaded from the provider yaml file.
+            provider_id (str): 提供者 ID。
+            **kwargs: 从提供者 YAML 文件加载的提供者配置。
         """
         self.provider_id = provider_id
 
@@ -388,15 +388,15 @@ class BaseProvider(metaclass=abc.ABCMeta):
         )
         self.provider_type = self._extract_type()
         self.results = []
-        # tb: we can have this overriden by customer configuration, when initializing the provider
+        # tb: 我们可以在初始化提供者时通过客户配置覆盖此项
         self.fingerprint_fields = self.FINGERPRINT_FIELDS
 
     def _extract_type(self):
         """
-        Extract the provider type from the provider class name.
+        从提供者类名中提取提供者类型。
 
         Returns:
-            str: The provider type.
+            str: 提供者类型。
         """
         name = self.__class__.__name__
         name_without_provider = name.replace("Provider", "")
@@ -408,37 +408,37 @@ class BaseProvider(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def dispose(self):
         """
-        Dispose of the provider.
+        销毁提供者。
         """
         raise NotImplementedError("dispose() method not implemented")
 
     @abc.abstractmethod
     def validate_config(self):
         """
-        Validate provider configuration.
+        验证提供者配置。
         """
         raise NotImplementedError("validate_config() method not implemented")
 
     def validate_scopes(self) -> dict[str, bool | str]:
         """
-        Validate provider scopes.
+        验证提供者权限范围。
 
         Returns:
-            dict: where key is the scope name and value is whether the scope is valid (True boolean) or string with error message.
+            dict: 其中键是权限范围名称，值是权限范围是否有效（True 布尔值）或带有错误消息的字符串。
         """
         return {}
 
     def notify(self, **kwargs):
         """
-        Output alert message.
+        输出告警消息。
 
         Args:
-            **kwargs (dict): The provider context (with statement)
+            **kwargs (dict): 提供者上下文（with 语句）
         """
-        # trigger the provider
+        # 触发提供者
         results = self._notify(**kwargs)
         self.results.append(results)
-        # if the alert should be enriched, enrich it
+        # 如果告警需要富化，则进行富化
         enrich_alert = kwargs.get("enrich_alert", [])
         if not enrich_alert or not results:
             return results if results else None
@@ -448,28 +448,27 @@ class BaseProvider(metaclass=abc.ABCMeta):
 
     def _enrich(self, enrichments, results, audit_enabled=True):
         """
-        Enrich alert or incident with provider specific data.
+        用提供者特定数据富化告警或事件。
         
-        This method replaces the deprecated _enrich_alert method and supports both
-        alert and incident enrichment.
+        此方法替代了已弃用的 _enrich_alert 方法，同时支持告警和事件富化。
         
         Args:
-            enrichments: List of enrichment configurations
-            results: Results from the provider action
-            audit_enabled: Whether to audit the enrichment operation (default: True)
+            enrichments: 富化配置列表
+            results: 提供者操作的结果
+            audit_enabled: 是否审计富化操作（默认值：True）
         """
         self.logger.debug("Extracting the fingerprint from the alert")
         if "fingerprint" in results:
             fingerprint = results["fingerprint"]
         elif self.context_manager.foreach_context.get("value", {}):
-            # TODO: if it's zipped, we need to extract the fingerprint from the zip (i.e. multiple foreach)
+            # TODO: 如果是压缩的，我们需要从压缩中提取指纹（即多个 foreach）
             fingerprint = self.context_manager.foreach_context.get("value", {}).get(
                 "fingerprint"
             )
-        # else, if we are in an event context, use the event fingerprint
+        # 否则，如果我们在事件上下文中，使用事件指纹
         elif self.context_manager.event_context:
-            # TODO: map all cases event_context is dict and update them to the DTO
-            #       and remove this if statement
+            # TODO: 将所有 event_context 是 dict 的情况映射到 DTO
+            #       然后移除此 if 语句
             if isinstance(self.context_manager.event_context, dict):
                 fingerprint = self.context_manager.event_context.get("fingerprint")
             # Alert DTO
@@ -487,7 +486,7 @@ class BaseProvider(metaclass=abc.ABCMeta):
         self.logger.debug("Fingerprint extracted", extra={"fingerprint": fingerprint})
 
         _enrichments = {}
-        # enrich only the requested fields
+        # 仅富化请求的字段
         for enrichment in enrichments:
             try:
                 if enrichment["value"].startswith("results."):
@@ -518,19 +517,19 @@ class BaseProvider(metaclass=abc.ABCMeta):
 
     def _notify(self, **kwargs):
         """
-        Output alert message.
+        输出告警消息。
 
         Args:
-            **kwargs (dict): The provider context (with statement)
+            **kwargs (dict): 提供者上下文（with 语句）
         """
         raise NotImplementedError("notify() method not implemented")
 
     def _query(self, **kwargs: dict):
         """
-        Query the provider using the given query
+        使用给定的查询对提供者进行查询。
 
         Args:
-            kwargs (dict): The provider context (with statement)
+            kwargs (dict): 提供者上下文（with 语句）
 
         Raises:
             NotImplementedError: _description_
@@ -538,9 +537,9 @@ class BaseProvider(metaclass=abc.ABCMeta):
         raise NotImplementedError("query() method not implemented")
 
     def query(self, **kwargs: dict):
-        # just run the query
+        # 直接运行查询
         results = self._query(**kwargs)
-        # now add the type of the results to the global context
+        # 现在将结果类型添加到全局上下文
         if results and isinstance(results, list):
             self.context_manager.dependencies.add(results[0].__class__)
         elif results:
@@ -549,7 +548,7 @@ class BaseProvider(metaclass=abc.ABCMeta):
         enrich_alert = kwargs.get("enrich_alert", [])
         if enrich_alert:
             self._enrich(enrich_alert, results)
-        # and return the results
+        # 并返回结果
         return results
 
     @staticmethod
@@ -557,14 +556,14 @@ class BaseProvider(metaclass=abc.ABCMeta):
         event: dict | list[dict], provider_instance: "BaseProvider" = None
     ) -> AlertDto | list[AlertDto]:
         """
-        Format incoming event(s) into AlertDto object(s).
+        将传入事件格式化为 AlertDto 对象。
         
         Args:
-            event: Single event dict or list of event dicts
-            provider_instance: Optional provider instance for context
+            event: 单个事件 dict 或事件 dict 列表
+            provider_instance: 可选的提供者实例，用于上下文
             
         Returns:
-            AlertDto or list of AlertDto objects
+            AlertDto 或 AlertDto 对象列表
         """
         raise NotImplementedError("format_alert() method not implemented")
 
@@ -579,14 +578,14 @@ class BaseProvider(metaclass=abc.ABCMeta):
     @staticmethod
     def get_alert_fingerprint(alert: AlertDto, fingerprint_fields: list = []) -> str:
         """
-        Get the fingerprint of an alert.
+        获取告警的指纹。
 
         Args:
-            event (AlertDto): The alert to get the fingerprint of.
-            fingerprint_fields (list, optional): The fields we calculate the fingerprint upon. Defaults to [].
+            event (AlertDto): 要获取指纹的告警。
+            fingerprint_fields (list, optional): 我们计算指纹所依据的字段。默认为 []。
 
         Returns:
-            str: hexdigest of the fingerprint or the event.name if no fingerprint_fields were given.
+            str: 指纹的 hexdigest 或 event.name（如果没有给出 fingerprint_fields）。
         """
         if not fingerprint_fields:
             return alert.name
@@ -602,54 +601,54 @@ class BaseProvider(metaclass=abc.ABCMeta):
 
     def get_alerts_configuration(self, alert_id: Optional[str] = None):
         """
-        Get configuration of alerts from the provider.
+        从提供者获取告警配置。
 
         Args:
-            alert_id (Optional[str], optional): If given, gets a specific alert by id. Defaults to None.
+            alert_id (Optional[str], optional): 如果提供，则按 ID 获取特定告警。默认为 None。
         """
-        # todo: we'd want to have a common alert model for all providers (also for consistent output from GPT)
+        # todo: 我们希望为所有提供者建立一个通用告警模型（也为了 GPT 输出的一致性）
         raise NotImplementedError("get_alerts() method not implemented")
 
     def deploy_alert(self, alert: dict, alert_id: Optional[str] = None):
         """
-        Deploy an alert to the provider.
+        将告警部署到提供者。
 
         Args:
-            alert (dict): The alert to deploy.
-            alert_id (Optional[str], optional): If given, deploys a specific alert by id. Defaults to None.
+            alert (dict): 要部署的告警。
+            alert_id (Optional[str], optional): 如果提供，则按 ID 部署特定告警。默认为 None。
         """
         raise NotImplementedError("deploy_alert() method not implemented")
 
     def _get_alerts(self) -> list[AlertDto]:
         """
-        Get alerts from the provider.
+        从提供者获取告警。
         """
         raise NotImplementedError("get_alerts() method not implemented")
 
     def get_alerts(self) -> list[AlertDto]:
         """
-        Get alerts from the provider.
+        从提供者获取告警。
         """
         with tracer.start_as_current_span(f"{self.__class__.__name__}-get_alerts"):
             alerts = self._get_alerts()
-            # enrich alerts with provider id
+            # 用提供者 ID 富化告警
             for alert in alerts:
                 alert.providerId = self.provider_id
             return alerts
 
     def get_alerts_by_fingerprint(self, tenant_id: str) -> dict[str, list[AlertDto]]:
         """
-        Get alerts from the provider grouped by fingerprint, sorted by lastReceived.
+        从提供者获取按指纹分组的告警，按 lastReceived 排序。
 
         Returns:
-            dict[str, list[AlertDto]]: A dict of alerts grouped by fingerprint, sorted by lastReceived.
+            dict[str, list[AlertDto]]: 按指纹分组的告警字典，按 lastReceived 排序。
         """
         alerts = self.get_alerts()
 
         if not alerts:
             return {}
 
-        # get alerts, group by fingerprint and sort them by lastReceived
+        # 获取告警，按指纹分组并按 lastReceived 排序
         with tracer.start_as_current_span(f"{self.__class__.__name__}-get_last_alerts"):
             get_attr = operator.attrgetter("fingerprint")
             grouped_alerts = {
@@ -663,7 +662,7 @@ class BaseProvider(metaclass=abc.ABCMeta):
                 )
             }
 
-        # enrich alerts
+        # 富化告警
         with tracer.start_as_current_span(f"{self.__class__.__name__}-enrich_alerts"):
             pulled_alerts_enrichments = get_enrichments(
                 tenant_id=tenant_id,
@@ -679,7 +678,7 @@ class BaseProvider(metaclass=abc.ABCMeta):
                             alert_to_enrich, alert_enrichment.enrichments
                         )
                         for enrichment in alert_enrichment.enrichments:
-                            # set the enrichment
+                            # 设置富化内容
                             setattr(
                                 alert_to_enrich,
                                 enrichment,
@@ -692,30 +691,30 @@ class BaseProvider(metaclass=abc.ABCMeta):
         self, tenant_id: str, keep_api_url: str, api_key: str, setup_alerts: bool = True
     ) -> dict | None:
         """
-        Setup a webhook for the provider.
+        为提供者设置 webhook。
 
         Args:
-            tenant_id (str): The tenant ID
-            keep_api_url (str): The Keep API URL for webhook callbacks
-            api_key (str): The API key for authentication
-            setup_alerts (bool, optional): Whether to setup alerts. Defaults to True.
+            tenant_id (str): 租户 ID
+            keep_api_url (str): 用于 webhook 回调的 Keep API URL
+            api_key (str): 用于认证的 API 密钥
+            setup_alerts (bool, optional): 是否设置告警。默认为 True。
 
         Returns:
-            dict | None: Dictionary of secrets to be saved if any, None otherwise
+            dict | None: 如果需要保存的密钥字典，否则为 None
             
         Raises:
-            NotImplementedError: If not implemented by the provider
+            NotImplementedError: 如果提供者未实现
         """
         raise NotImplementedError("setup_webhook() method not implemented")
 
     @staticmethod
     def get_alert_schema() -> dict:
         """
-        Get the alert schema description for the provider.
-            e.g. How to define an alert for the provider that can be pushed via the API.
+        获取提供者的告警模式描述。
+            例如，如何为提供者定义可以通过 API 推送的告警。
 
         Returns:
-            str: The alert format description.
+            str: 告警格式描述。
         """
         raise NotImplementedError(
             "get_alert_format_description() method not implemented"
@@ -724,31 +723,31 @@ class BaseProvider(metaclass=abc.ABCMeta):
     @staticmethod
     def oauth2_logic(**payload) -> dict:
         """
-        Logic for oauth2 authentication.
+        OAuth2 认证逻辑。
 
-        For example, in Slack oauth2, we need to get the code from the payload and exchange it for a token.
+        例如，在 Slack OAuth2 中，我们需要从 payload 中获取 code 并将其交换为 token。
 
-        return: dict: The secrets to be saved as the provider configuration. (e.g. the Slack access token)
+        return: dict: 要保存为提供者配置的密钥。（例如 Slack 访问令牌）
         """
         raise NotImplementedError("oauth2_logic() method not implemented")
 
     @staticmethod
     def parse_event_raw_body(raw_body: bytes | dict) -> dict:
         """
-        Parse the raw body of an event and create an ingestible dict from it.
+        解析事件的原始 body 并从中创建可摄入的 dict。
 
-        For instance, in parseable, the "event" is just a string
+        例如，在 Parseable 中，"event" 只是一个字符串
         > b'Alert: Server side error triggered on teststream1\nMessage: server reporting status as 500\nFailing Condition: status column equal to abcd, 2 times'
-        and we want to return an object
+        我们想返回一个对象
         > {'alert': 'Server side error triggered on teststream1', 'message': 'server reporting status as 500', 'failing_condition': 'status column equal to abcd, 2 times'}
 
-        If this method is not implemented for a provider, it should convert the raw body to a dict.
+        如果提供者未实现此方法，它应该将原始 body 转换为 dict。
 
         Args:
-            raw_body (bytes | dict): The raw body of the incoming event (can be bytes or dict)
+            raw_body (bytes | dict): 传入事件的原始 body（可以是 bytes 或 dict）
 
         Returns:
-            dict: Ingestible event dictionary
+            dict: 可摄入的事件字典
         """
         if isinstance(raw_body, dict):
             return raw_body
@@ -756,50 +755,50 @@ class BaseProvider(metaclass=abc.ABCMeta):
 
     def get_logs(self, limit: int = 5) -> list:
         """
-        Get logs from the provider.
+        从提供者获取日志。
 
         Args:
-            limit (int): The number of logs to get.
+            limit (int): 要获取的日志数量。
         """
         raise NotImplementedError("get_logs() method not implemented")
 
     def expose(self):
-        """Expose parameters that were calculated during query time.
+        """暴露在查询期间计算的参数。
 
-        Each provider can expose parameters that were calculated during query time.
-        E.g. parameters that were supplied by the user and were rendered by the provider.
+        每个提供者可以暴露在查询期间计算的参数。
+        例如，由用户提供并由提供者渲染的参数。
 
-        A concrete example is the "_from" and "to" of the Datadog Provider which are calculated during execution.
+        一个具体例子是 Datadog 提供者的 "_from" 和 "to"，它们在执行期间计算。
         """
-        # TODO - implement dynamically using decorators and
+        # TODO - 使用装饰器动态实现
         return {}
 
     def start_consume(self):
-        """Get the consumer for the provider.
+        """获取提供者的消费者。
 
-        should be implemented by the provider if it has a consumer.
+        如果提供者有消费者，则应由提供者实现。
 
-        for an example, see Kafka Provider
+        有关示例，请参阅 Kafka 提供者
 
         Returns:
-            Consumer: The consumer for the provider.
+            Consumer: 提供者的消费者。
         """
         return
 
     def status(self) -> bool:
-        """Return the status of the provider.
+        """返回提供者的状态。
 
         Returns:
-            bool: The status of the provider.
+            bool: 提供者的状态。
         """
         return {
-            "status": "should be implemented by the provider if it has a consumer",
+            "status": "如果提供者有消费者，则应实现此方法",
             "error": "",
         }
 
     @property
     def is_consumer(self) -> bool:
-        """Return consumer if the inherited class has a start_consume method.
+        """如果继承的类有 start_consume 方法，则返回 consumer。
 
         Returns:
             bool: _description_
@@ -808,12 +807,12 @@ class BaseProvider(metaclass=abc.ABCMeta):
 
     def _push_alert(self, alert: dict):
         """
-        Push an alert to the provider.
+        将告警推送到提供者。
 
         Args:
-            alert (dict): The alert to push.
+            alert (dict): 要推送的告警。
         """
-        # if this is not a dict, try to convert it to a dict
+        # 如果这不是 dict，尝试将其转换为 dict
         if not isinstance(alert, dict):
             try:
                 alert_data = json.loads(alert)
@@ -822,16 +821,16 @@ class BaseProvider(metaclass=abc.ABCMeta):
         else:
             alert_data = alert
 
-        # if this is still not a dict, we can't push it
+        # 如果这仍然不是 dict，我们无法推送它
         if not isinstance(alert_data, dict):
             self.logger.warning(
                 "We currently support only alert represented as a dict, dismissing alert",
                 extra={"alert": alert},
             )
             return
-        # now try to build the alert model
-        # we will have a lot of default values here to support all providers and all cases, the
-        # way to fine tune those would be to use the provider specific model or enforce that the event from the queue will be casted into the fields
+        # 现在尝试构建告警模型
+        # 我们将有很多默认值来支持所有提供者和所有情况，
+        # 微调的方法是使用提供者特定模型或强制将队列中的事件转换为字段
         alert_model = AlertDto(
             id=alert_data.get("id", str(uuid.uuid4())),
             name=alert_data.get("name", "alert-from-event-queue"),
@@ -850,7 +849,7 @@ class BaseProvider(metaclass=abc.ABCMeta):
             url=alert_data.get("url", None),
             fingerprint=alert_data.get("fingerprint", None),
         )
-        # push the alert to the provider
+        # 将告警推送到提供者
         url = f'{os.environ["KEEP_API_URL"]}/alerts/event'
         headers = {
             "Content-Type": "application/json",
@@ -867,87 +866,87 @@ class BaseProvider(metaclass=abc.ABCMeta):
             )
 ```
 
-## Provider types and capabilities
+## 提供者类型与能力
 
-### Base provider types
+### 基础提供者类型
 
-Keep supports several base provider types, each with specific capabilities:
+Keep 支持几种基础提供者类型，每种都有特定的能力：
 
 1. **BaseProvider** (`keep/providers/base/base_provider.py`)
-   - Basic provider capabilities
-   - Methods: `_notify()`, `_query()`, `_get_alerts()`
-   - Use for: General integrations
+   - 基本提供者能力
+   - 方法：`_notify()`、`_query()`、`_get_alerts()`
+   - 适用于：通用集成
 
 2. **BaseTopologyProvider** (`keep/providers/base/base_provider.py`)
-   - Extends BaseProvider
-   - Methods: `pull_topology()` 
-   - Use for: Services that provide infrastructure topology data
-   - Example: Datadog Provider (`keep/providers/datadog_provider/datadog_provider.py`)
+   - 扩展 BaseProvider
+   - 方法：`pull_topology()` 
+   - 适用于：提供基础设施拓扑数据的服务
+   - 示例：Datadog 提供者 (`keep/providers/datadog_provider/datadog_provider.py`)
 
 3. **BaseIncidentProvider** (`keep/providers/base/base_provider.py`)
-   - Extends BaseProvider
-   - Methods: `_get_incidents()`, `_format_incident()` (static), `format_incident()` (classmethod), `setup_incident_webhook()`
-   - Use for: Incident management systems
-   - Example: PagerDuty Provider (`keep/providers/pagerduty_provider/pagerduty_provider.py`)
+   - 扩展 BaseProvider
+   - 方法：`_get_incidents()`、`_format_incident()`（静态）、`format_incident()`（类方法）、`setup_incident_webhook()`
+   - 适用于：事件管理系统
+   - 示例：PagerDuty 提供者 (`keep/providers/pagerduty_provider/pagerduty_provider.py`)
 
-### Common capabilities
+### 通用能力
 
-#### 1. Notification (`_notify`)
-Send alerts or messages to external services:
+#### 1. 通知 (`_notify`)
+向外部服务发送告警或消息：
 ```python
 def _notify(self, title: str, description: str = "", **kwargs) -> dict:
-    # Implementation
+    # 实现
 ```
 
-#### 2. Query (`_query`)
-Fetch data from external services:
+#### 2. 查询 (`_query`)
+从外部服务获取数据：
 ```python
 def _query(self, query: str, **kwargs) -> list:
-    # Implementation
+    # 实现
 ```
 
-#### 3. Alert Fetching (`_get_alerts`)
-Pull alerts for monitoring:
+#### 3. 告警拉取 (`_get_alerts`)
+拉取告警用于监控：
 ```python
 def _get_alerts(self) -> List[AlertDto]:
-    # Implementation
+    # 实现
 ```
 
-#### 4. Webhook support
-Handle incoming webhooks:
+#### 4. Webhook 支持
+处理传入的 webhook：
 ```python
 @staticmethod
 def parse_event_raw_body(raw_body: bytes | str) -> dict:
-    # Parse webhook payload
+    # 解析 webhook 负载
     
 @staticmethod
 def _format_alert(event: dict, provider_instance: "BaseProvider" = None) -> AlertDto | list[AlertDto]:
-    # Format webhook events into alerts
+    # 将 webhook 事件格式化为告警
 ```
 
-#### 5. OAuth 2.0 support
-Handle OAuth 2.0 authentication:
+#### 5. OAuth 2.0 支持
+处理 OAuth 2.0 认证：
 ```python
-# IMPORTANT: Define OAUTH2_URL as a class attribute at the class level, NOT in __init__
+# 重要：将 OAUTH2_URL 定义为类级别的类属性，而不是在 __init__ 中
 class YourserviceProvider(BaseProvider):
-    OAUTH2_URL = os.environ.get("YOURSERVICE_OAUTH2_URL")  # Must be at class level
+    OAUTH2_URL = os.environ.get("YOURSERVICE_OAUTH2_URL")  # 必须在类级别
 
 @staticmethod
 def oauth2_logic(**payload) -> dict:
-    # OAuth 2.0 implementation
+    # OAuth 2.0 实现
 ```
 
-#### 6. Consumer providers
-For providers that consume messages from queues or streams:
+#### 6. 消费者提供者
+用于从队列或流中消费消息的提供者：
 ```python
 def start_consume(self):
     """
-    Start consuming messages from the provider.
+    开始从提供者消费消息。
     
-    This method is called when Keep starts the provider as a consumer.
-    Implement long-running consumption logic here.
+    当 Keep 将提供者作为消费者启动时，会调用此方法。
+    在此处实现长时间运行的消费逻辑。
     """
-    # Example: Kafka consumer
+    # 示例：Kafka 消费者
     while True:
         message = self.consumer.poll()
         if message:
@@ -955,24 +954,24 @@ def start_consume(self):
             
 @property
 def is_consumer(self) -> bool:
-    """Provider is automatically detected as consumer if start_consume is implemented."""
-    return True  # Automatically set if start_consume is overridden
+    """如果实现了 start_consume，提供者会自动被检测为消费者。"""
+    return True  # 如果覆盖了 start_consume，则自动设置
     
 def status(self) -> dict:
-    """Return the status of the consumer."""
+    """返回消费者的状态。"""
     return {
         "status": "running" if self.consumer_active else "stopped",
         "error": self.last_error if hasattr(self, 'last_error') else ""
     }
 ```
 
-### Specialized base classes
+### 专用基类
 
-Keep provides specialized base classes for specific provider types:
+Keep 为特定提供者类型提供了专用基类：
 
-#### Base topology provider
+#### BaseTopologyProvider
 
-For providers that manage infrastructure topology and service dependencies:
+用于管理基础设施拓扑和服务依赖的提供者：
 
 ```python
 from keep.providers.base.base_topology_provider import BaseTopologyProvider
@@ -980,18 +979,18 @@ from keep.providers.base.base_topology_provider import BaseTopologyProvider
 class MyTopologyProvider(BaseTopologyProvider):
     def pull_topology(self) -> tuple[list[TopologyServiceInDto], dict]:
         """
-        Pull topology data from the provider.
+        从提供者拉取拓扑数据。
         
         Returns:
-            tuple: A tuple of (services list, edges dict)
+            tuple: 一个包含（服务列表，边字典）的元组
         """
-        # Implement topology fetching logic
+        # 实现拓扑拉取逻辑
         pass
 ```
 
 #### BaseIncidentProvider
 
-For providers that manage incidents and incident response:
+用于管理事件和事件响应的提供者：
 
 ```python
 from keep.providers.base.base_incident_provider import BaseIncidentProvider
@@ -999,12 +998,12 @@ from keep.providers.base.base_incident_provider import BaseIncidentProvider
 class MyIncidentProvider(BaseIncidentProvider):
     def _get_incidents(self) -> list[IncidentDto]:
         """
-        Fetch incidents from the provider (abstract method).
+        从提供者获取事件（抽象方法）。
         
         Returns:
-            list[IncidentDto]: List of incidents
+            list[IncidentDto]: 事件列表
         """
-        # Implement incident fetching logic
+        # 实现事件拉取逻辑
         pass
     
     @staticmethod
@@ -1012,16 +1011,16 @@ class MyIncidentProvider(BaseIncidentProvider):
         event: dict, provider_instance: "BaseProvider" = None
     ) -> IncidentDto | list[IncidentDto]:
         """
-        Format raw incident data into IncidentDto objects.
+        将原始事件数据格式化为 IncidentDto 对象。
         
         Args:
-            event: Raw incident data from webhook or API
-            provider_instance: Optional provider instance for context
+            event: 来自 webhook 或 API 的原始事件数据
+            provider_instance: 可选的提供者实例，用于上下文
             
         Returns:
-            IncidentDto or list of IncidentDto objects
+            IncidentDto 或 IncidentDto 对象列表
         """
-        # Implement incident formatting logic
+        # 实现事件格式化逻辑
         pass
     
     def setup_incident_webhook(
@@ -1032,26 +1031,26 @@ class MyIncidentProvider(BaseIncidentProvider):
         setup_alerts: bool = True,
     ) -> dict | None:
         """
-        Setup webhook for incident updates.
+        设置用于事件更新的 webhook。
         
         Args:
-            tenant_id: Tenant identifier
-            keep_api_url: Keep API URL for callbacks
-            api_key: API key for authentication
-            setup_alerts: Whether to also setup alert webhooks
+            tenant_id: 租户标识符
+            keep_api_url: 用于回调的 Keep API URL
+            api_key: 用于认证的 API 密钥
+            setup_alerts: 是否同时设置告警 webhook
             
         Returns:
-            dict | None: Secrets to save if any
+            dict | None: 如果有需要保存的密钥
         """
-        # Implement webhook setup logic
+        # 实现 webhook 设置逻辑
         pass
 ```
 
-Note: The `get_incidents()` method is automatically provided by the base class and wraps `_get_incidents()`. The `format_incident()` class method handles provider loading and calls `_format_incident()`.
+注意：`get_incidents()` 方法由基类自动提供，并包装 `_get_incidents()`。`format_incident()` 类方法处理提供者加载并调用 `_format_incident()`。
 
-### Authentication configuration
+### 认证配置
 
-Providers should define an authentication configuration class as a dataclass with proper field types and validation:
+提供者应将认证配置类定义为具有正确字段类型和验证的 dataclass：
 
 ```python
 import dataclasses
@@ -1060,13 +1059,13 @@ from keep.validation.fields import HttpsUrl, NoSchemeUrl, UrlPort
 
 @pydantic.dataclasses.dataclass
 class MyProviderAuthConfig:
-    """Configuration for MyProvider authentication."""
+    """MyProvider 认证的配置。"""
     
     api_key: str = dataclasses.field(
         metadata={
             "required": True,
-            "description": "API Key for authentication",
-            "sensitive": True,  # Masks the field value in UI
+            "description": "用于认证的 API 密钥",
+            "sensitive": True,  # 在 UI 中掩码字段值
         }
     )
     
@@ -1074,18 +1073,18 @@ class MyProviderAuthConfig:
         default="https://api.example.com",
         metadata={
             "required": False,
-            "description": "API endpoint URL (HTTPS only)",
+            "description": "API 端点 URL（仅 HTTPS）",
             "documentation_url": "https://docs.example.com/api",
-            "validation": "https_url",  # Maps to HttpsUrl validator
+            "validation": "https_url",  # 映射到 HttpsUrl 验证器
         }
     )
     
     host: NoSchemeUrl = dataclasses.field(
         metadata={
             "required": True,
-            "description": "Service hostname",
-            "hint": "example.com or 192.168.1.1",
-            "validation": "no_scheme_url",  # Maps to NoSchemeUrl validator
+            "description": "服务主机名",
+            "hint": "example.com 或 192.168.1.1",
+            "validation": "no_scheme_url",  # 映射到 NoSchemeUrl 验证器
         }
     )
     
@@ -1093,16 +1092,16 @@ class MyProviderAuthConfig:
         default=443,
         metadata={
             "required": False,
-            "description": "Service port",
-            "validation": "port",  # Validates port range 1-65535
+            "description": "服务端口",
+            "validation": "port",  # 验证端口范围 1-65535
         }
     )
     
     workspace_id: str = dataclasses.field(
         metadata={
             "required": True,
-            "description": "Workspace identifier",
-            "hint": "Can be found in Settings > Workspace",
+            "description": "工作区标识符",
+            "hint": "可在 设置 > 工作区 中找到",
         }
     )
     
@@ -1110,59 +1109,59 @@ class MyProviderAuthConfig:
         default="us-east-1",
         metadata={
             "required": False,
-            "description": "Service region",
-            "type": "select",  # Renders as dropdown in UI
+            "description": "服务区域",
+            "type": "select",  # 在 UI 中渲染为下拉菜单
             "options": ["us-east-1", "eu-west-1", "ap-south-1"],
         }
     )
 ```
 
-#### Field validation
+#### 字段验证
 
-Keep provides built-in field validation through custom Pydantic field types:
+Keep 通过自定义 Pydantic 字段类型提供内置字段验证：
 
-| Validation Type | Field Type | Description | Example |
+| 验证类型 | 字段类型 | 描述 | 示例 |
 |----------------|------------|-------------|---------|
-| `"https_url"` | `HttpsUrl` | Validates HTTPS URLs only | `https://api.example.com` |
-| `"any_http_url"` | `pydantic.AnyHttpUrl` | Validates any HTTP/HTTPS URL | `http://example.com` |
-| `"no_scheme_url"` | `NoSchemeUrl` | Validates URLs without scheme | `example.com:8080` |
-| `"port"` | `UrlPort` | Validates port numbers (1-65535) | `443` |
-| `"multihost_url"` | `MultiHostUrl` | Validates multi-host URLs | `mongodb://host1:27017,host2:27017` |
-| `"no_scheme_multihost_url"` | `NoSchemeMultiHostUrl` | Multi-host URLs without scheme | `host1:9092,host2:9092` |
+| `"https_url"` | `HttpsUrl` | 仅验证 HTTPS URL | `https://api.example.com` |
+| `"any_http_url"` | `pydantic.AnyHttpUrl` | 验证任何 HTTP/HTTPS URL | `http://example.com` |
+| `"no_scheme_url"` | `NoSchemeUrl` | 验证无 scheme 的 URL | `example.com:8080` |
+| `"port"` | `UrlPort` | 验证端口号（1-65535） | `443` |
+| `"multihost_url"` | `MultiHostUrl` | 验证多主机 URL | `mongodb://host1:27017,host2:27017` |
+| `"no_scheme_multihost_url"` | `NoSchemeMultiHostUrl` | 无 scheme 的多主机 URL | `host1:9092,host2:9092` |
 
-To use validation:
-1. Import the appropriate field type from `keep.validation.fields`
-2. Use it as the field type annotation
-3. Add the corresponding validation string in metadata
+使用验证的方法：
+1. 从 `keep.validation.fields` 导入相应的字段类型
+2. 将其用作字段类型注解
+3. 在元数据中添加相应的验证字符串
 
-Example implementations:
+实现示例：
 
 ```python
-# HTTPS-only webhook URL
+# 仅 HTTPS 的 webhook URL
 webhook_url: HttpsUrl = dataclasses.field(
     metadata={
         "required": True,
-        "description": "Webhook endpoint (HTTPS required)",
+        "description": "Webhook 端点（需要 HTTPS）",
         "sensitive": True,
         "validation": "https_url",
     }
 )
 
-# Database connection with multiple hosts
+# 具有多个主机的数据库连接
 connection_string: MultiHostUrl = dataclasses.field(
     metadata={
         "required": True,
-        "description": "Database connection string",
+        "description": "数据库连接字符串",
         "hint": "mongodb://host1:27017,host2:27017/dbname",
         "validation": "multihost_url",
     }
 )
 
-# SSH connection
+# SSH 连接
 ssh_host: NoSchemeUrl = dataclasses.field(
     metadata={
         "required": True,
-        "description": "SSH hostname or IP",
+        "description": "SSH 主机名或 IP",
         "validation": "no_scheme_url",
     }
 )
@@ -1171,35 +1170,35 @@ ssh_port: UrlPort = dataclasses.field(
     default=22,
     metadata={
         "required": False,
-        "description": "SSH port",
+        "description": "SSH 端口",
         "validation": "port",
     }
 )
 ```
 
-#### Metadata fields reference
+#### 元数据字段参考
 
-- `required`: Whether the field is mandatory
-- `description`: Field description shown in UI
-- `sensitive`: Whether to mask the field value (for secrets)
-- `hidden`: Whether to hide the field in UI
-- `documentation_url`: Link to relevant documentation
-- `hint`: Help text for users
-- `validation`: Validation type string (see preceding table)
-- `type`: UI input type (for example, "select" for dropdown)
-- `options`: List of valid options for select fields
-- `config_main_group`: Group name for organizing fields in UI
-- `config_sub_group`: Sub-group name for nested organization
+- `required`：字段是否为必填项
+- `description`：在 UI 中显示的字段描述
+- `sensitive`：是否掩码字段值（用于密钥）
+- `hidden`：是否在 UI 中隐藏字段
+- `documentation_url`：相关文档的链接
+- `hint`：用户的帮助文本
+- `validation`：验证类型字符串（参见前面的表格）
+- `type`：UI 输入类型（例如，"select" 表示下拉菜单）
+- `options`：select 字段的有效选项列表
+- `config_main_group`：在 UI 中组织字段的组名
+- `config_sub_group`：嵌套组织的子组名
 
 <Note>
-The validation system ensures that configuration values are valid before Keep instantiates the provider. Invalid values are rejected with clear error messages, improving the user experience and preventing runtime errors.
+验证系统确保在 Keep 实例化提供者之前配置值是有效的。无效值会被拒绝并显示清晰的错误消息，从而改善用户体验并防止运行时错误。
 </Note>
 
-## Testing your provider
+## 测试你的提供者
 
-### 1. Unit test
+### 1. 单元测试
 
-Create `tests/test_yourservice_provider.py`:
+创建 `tests/test_yourservice_provider.py`：
 
 ```python
 import pytest
@@ -1209,7 +1208,7 @@ from keep.contextmanager.contextmanager import ContextManager
 
 
 def test_yourservice_provider_init():
-    """Test provider initialization."""
+    """测试提供者初始化。"""
     config = ProviderConfig(
         authentication={
             "api_endpoint": "https://api.yourservice.com",
@@ -1230,7 +1229,7 @@ def test_yourservice_provider_init():
 
 @pytest.fixture
 def mock_requests(monkeypatch):
-    """Mock requests module."""
+    """Mock requests 模块。"""
     import requests
     class MockResponse:
         def __init__(self, json_data, status_code=200):
@@ -1254,7 +1253,7 @@ def mock_requests(monkeypatch):
 
 
 def test_yourservice_notify(mock_requests):
-    """Test notification sending."""
+    """测试通知发送。"""
     config = ProviderConfig(
         authentication={
             "api_endpoint": "https://api.yourservice.com",
@@ -1273,41 +1272,41 @@ def test_yourservice_notify(mock_requests):
     assert result["success"] is True
 ```
 
-### 2. Integration test
+### 2. 集成测试
 
-Test with the provider factory:
+使用提供者工厂进行测试：
 
 ```python
 def test_provider_factory_loading():
-    """Test that provider loads correctly through factory."""
+    """测试提供者是否通过工厂正确加载。"""
     from keep.providers.providers_factory import ProvidersFactory
     
-    # Get provider class
+    # 获取提供者类
     provider_class = ProvidersFactory.get_provider_class("yourservice")
     assert provider_class.__name__ == "YourserviceProvider"
     
-    # Get all providers
+    # 获取所有提供者
     all_providers = ProvidersFactory.get_all_providers()
     yourservice = next((p for p in all_providers if p.type == "yourservice"), None)
     assert yourservice is not None
     assert yourservice.display_name == "YourService"
 ```
 
-### 3. Manual testing
+### 3. 手动测试
 
-You can test your provider by running it directly:
+你可以通过直接运行提供者来测试它：
 ```bash
 cd keep
 python -m keep.providers.yourservice_provider.yourservice_provider
 ```
 
-The `if __name__ == "__main__":` block allows you to test provider initialization and basic capabilities.
+`if __name__ == "__main__":` 代码块允许你测试提供者初始化和基本能力。
 
-Add a test block to your provider for direct execution:
+在你的提供者中添加一个测试代码块，用于直接执行：
 
 ```python
 if __name__ == "__main__":
-    # Test the provider directly
+    # 直接测试提供者
     import logging
     
     logging.basicConfig(level=logging.DEBUG, handlers=[logging.StreamHandler()])
@@ -1316,7 +1315,7 @@ if __name__ == "__main__":
         workflow_id="test",
     )
     
-    # Initialize the provider with test config
+    # 使用测试配置初始化提供者
     config = ProviderConfig(
         authentication={
             "api_endpoint": "https://api.yourservice.com",
@@ -1330,10 +1329,10 @@ if __name__ == "__main__":
         config=config
     )
     
-    # Test provider methods
+    # 测试提供者方法
     print("Provider initialized successfully!")
     
-    # Test specific functionality
+    # 测试特定功能
     try:
         result = provider._query("test query")
         print(f"Query result: {result}")
@@ -1341,11 +1340,11 @@ if __name__ == "__main__":
         print(f"Query failed: {e}")
 ```
 
-## Best practices
+## 最佳实践
 
-### 1. Error handling
+### 1. 错误处理
 
-Always handle API errors gracefully:
+始终优雅地处理 API 错误：
 
 ```python
 from keep.exceptions.provider_exception import ProviderException
@@ -1357,18 +1356,18 @@ except requests.exceptions.RequestException as e:
     raise ProviderException(f"Failed to fetch data: {str(e)}")
 ```
 
-### 2. Logging
+### 2. 日志记录
 
-Use the provider's logger:
+使用提供者的 logger：
 
 ```python
 self.logger.info("Fetching alerts from YourService")
 self.logger.error(f"Failed to connect: {str(e)}")
 ```
 
-### 3. Configuration validation
+### 3. 配置验证
 
-Validate configuration in `validate_config()`:
+在 `validate_config()` 中验证配置：
 
 ```python
 def validate_config(self):
@@ -1376,14 +1375,14 @@ def validate_config(self):
         **self.config.authentication
     )
     
-    # Additional validation
+    # 附加验证
     if not self.authentication_config.api_endpoint.startswith("https://"):
         raise ValueError("API endpoint must use HTTPS")
 ```
 
-### 4. Alert formatting
+### 4. 告警格式化
 
-When returning alerts, use Keep's standard format:
+返回告警时，使用 Keep 的标准格式：
 
 ```python
 from keep.api.models.alert import AlertDto, AlertSeverity, AlertStatus
@@ -1402,9 +1401,9 @@ alert = AlertDto(
 )
 ```
 
-### 5. Secrets management
+### 5. 密钥管理
 
-Never hardcode secrets. Use environment variables or configuration:
+永远不要硬编码密钥。使用环境变量或配置：
 
 ```python
 client_id = os.environ.get("YOURSERVICE_CLIENT_ID")
@@ -1412,11 +1411,11 @@ if not client_id:
     raise ProviderException("YOURSERVICE_CLIENT_ID environment variable not set")
 ```
 
-## Common patterns
+## 常见模式
 
-### 1. Provider health checks
+### 1. 提供者健康检查
 
-Implement health monitoring using the `ProviderHealthMixin`:
+使用 `ProviderHealthMixin` 实现健康监控：
 
 ```python
 from keep.providers.base.base_provider import BaseProvider, ProviderHealthMixin
@@ -1424,19 +1423,19 @@ from keep.providers.base.base_provider import BaseProvider, ProviderHealthMixin
 class YourserviceProvider(BaseProvider, ProviderHealthMixin):
     HAS_HEALTH_CHECK = True
     
-    # The mixin provides automatic health checking for:
-    # - Topology coverage validation
-    # - Spammy alerts detection
-    # - Alerting rule usage monitoring
+    # mixin 提供以下自动健康检查：
+    # - 拓扑覆盖率验证
+    # - 垃圾告警检测
+    # - 告警规则使用监控
 ```
 
 <Note>
-The health check mixin is particularly useful for monitoring providers that collect topology data or handle high volumes of alerts.
+健康检查 mixin 对于监控收集拓扑数据或处理大量告警的提供者特别有用。
 </Note>
 
-### 2. Pagination
+### 2. 分页
 
-Handle paginated API responses:
+处理分页的 API 响应：
 
 ```python
 def _get_all_items(self):
@@ -1454,9 +1453,9 @@ def _get_all_items(self):
     return items
 ```
 
-### 3. Rate limiting
+### 3. 速率限制
 
-Respect API rate limits:
+遵守 API 速率限制：
 
 ```python
 import time
@@ -1468,7 +1467,7 @@ def _rate_limited_request(self, url: str, **kwargs) -> Any:
     for attempt in range(max_retries):
         try:
             response = requests.get(url, **kwargs)
-            if response.status_code == 429:  # Rate limited
+            if response.status_code == 429:  # 被限速
                 retry_after = int(response.headers.get("Retry-After", 60))
                 self.logger.warning(f"Rate limited, waiting {retry_after}s")
                 time.sleep(retry_after)
@@ -1478,12 +1477,12 @@ def _rate_limited_request(self, url: str, **kwargs) -> Any:
         except Exception as e:
             if attempt == max_retries - 1:
                 raise
-            time.sleep(2 ** attempt)  # Exponential backoff
+            time.sleep(2 ** attempt)  # 指数退避
 ```
 
-### 4. Caching
+### 4. 缓存
 
-Cache frequently accessed data:
+缓存频繁访问的数据：
 
 ```python
 from datetime import datetime, timedelta
@@ -1505,9 +1504,9 @@ class YourserviceProvider(BaseProvider):
         self._cache[key] = (data, datetime.now())
 ```
 
-### 5. Webhook signature verification
+### 5. Webhook 签名验证
 
-Verify webhook authenticity:
+验证 webhook 的真实性：
 
 ```python
 import hmac
@@ -1523,9 +1522,9 @@ def verify_webhook_signature(raw_body: bytes, signature: str, secret: str) -> bo
     return hmac.compare_digest(expected, signature)
 ```
 
-### 6. Exposing runtime parameters
+### 6. 暴露运行时参数
 
-Use the `expose()` method to make runtime-calculated values available to workflows:
+使用 `expose()` 方法使运行时计算的值可用于工作流：
 
 ```python
 class YourserviceProvider(BaseProvider):
@@ -1535,15 +1534,15 @@ class YourserviceProvider(BaseProvider):
         self._to_timestamp = None
     
     def _query(self, metric: str, from_time: str = "1h", **kwargs):
-        # Calculate actual timestamps
+        # 计算实际时间戳
         self._to_timestamp = datetime.now()
         self._from_timestamp = self._to_timestamp - parse_duration(from_time)
         
-        # Query with calculated timestamps
+        # 使用计算的时间戳进行查询
         return self._fetch_metrics(metric, self._from_timestamp, self._to_timestamp)
     
     def expose(self):
-        """Expose calculated parameters for workflow use."""
+        """暴露计算的参数供工作流使用。"""
         exposed = {}
         if self._from_timestamp:
             exposed["from"] = self._from_timestamp.isoformat()
@@ -1552,11 +1551,11 @@ class YourserviceProvider(BaseProvider):
         return exposed
 ```
 
-This allows workflows to access the actual timestamps used in queries, not just the relative time strings.
+这允许工作流访问查询中使用的实际时间戳，而不仅仅是相对时间字符串。
 
-## Complete provider example
+## 完整提供者示例
 
-Here's a minimal example of a complete provider implementation:
+以下是一个完整提供者实现的最小示例：
 
 ```python
 from keep.providers.base.base_provider import BaseProvider
@@ -1585,66 +1584,66 @@ class MyProvider(BaseProvider):
         )
         
     def validate_config(self):
-        # Validate the provider configuration
+        # 验证提供者配置
         pass
         
     def dispose(self):
-        # Clean up resources
+        # 清理资源
         pass
         
     def _query(self, **kwargs):
-        # Implement query logic
+        # 实现查询逻辑
         pass
         
     def _notify(self, **kwargs):
-        # Implement notification logic
+        # 实现通知逻辑
         pass
 ```
 
-## File references
+## 文件参考
 
-- **Base Provider Classes**: `keep/providers/base/base_provider.py`
-- **Provider Models**: `keep/providers/models/`
-- **Provider Factory**: `keep/providers/providers_factory.py`
-- **Provider Exceptions**: `keep/exceptions/provider_exception.py`
-- **Example Providers**:
-  - Simple: `keep/providers/slack_provider/slack_provider.py`
-  - Complex: `keep/providers/datadog_provider/datadog_provider.py`
-  - Database: `keep/providers/clickhouse_provider/clickhouse_provider.py`
-  - Incident: `keep/providers/pagerduty_provider/pagerduty_provider.py`
-  - Topology: `keep/providers/datadog_provider/datadog_provider.py`
-- **Tests**: `tests/test_*_provider.py`
-- **Documentation**: `docs/providers/documentation/`
-- **Additional Docs**: 
+- **基础提供者类**：`keep/providers/base/base_provider.py`
+- **提供者模型**：`keep/providers/models/`
+- **提供者工厂**：`keep/providers/providers_factory.py`
+- **提供者异常**：`keep/exceptions/provider_exception.py`
+- **示例提供者**：
+  - 简单：`keep/providers/slack_provider/slack_provider.py`
+  - 复杂：`keep/providers/datadog_provider/datadog_provider.py`
+  - 数据库：`keep/providers/clickhouse_provider/clickhouse_provider.py`
+  - 事件：`keep/providers/pagerduty_provider/pagerduty_provider.py`
+  - 拓扑：`keep/providers/datadog_provider/datadog_provider.py`
+- **测试**：`tests/test_*_provider.py`
+- **文档**：`docs/providers/documentation/`
+- **附加文档**： 
   - `docs/providers/adding-a-new-provider.mdx`
   - `docs/providers/provider-methods.mdx`
   - `docs/providers/linked-providers.mdx`
 
-## Checklist
+## 检查清单
 
-- [ ] Create provider directory and files
-- [ ] Implement AuthConfig class with proper metadata
-- [ ] Implement provider class with required methods
-- [ ] Add provider to `__init__.py`
-- [ ] Set appropriate PROVIDER_DISPLAY_NAME, PROVIDER_CATEGORY, and PROVIDER_TAGS
-- [ ] Implement `validate_config()` and `dispose()`
-- [ ] Add at least one capability (`_notify`, `_query`, or `_get_alerts`)
-- [ ] Create documentation in `docs/providers/documentation/`
-- [ ] Write unit tests
-- [ ] Test with provider factory
-- [ ] Handle errors gracefully
-- [ ] Add logging statements
-- [ ] Validate in Keep UI
-- [ ] If supporting webhooks, implement `_format_alert()` static method
-- [ ] If supporting OAuth 2.0, set OAUTH2_URL as class attribute
-- [ ] Consider implementing `validate_scopes()` for scope validation
-- [ ] Consider implementing `get_provider_metadata()` for provider versioning
+- [ ] 创建提供者目录和文件
+- [ ] 实现具有正确元数据的 AuthConfig 类
+- [ ] 实现具有所需方法的提供者类
+- [ ] 将提供者添加到 `__init__.py`
+- [ ] 设置适当的 PROVIDER_DISPLAY_NAME、PROVIDER_CATEGORY 和 PROVIDER_TAGS
+- [ ] 实现 `validate_config()` 和 `dispose()`
+- [ ] 添加至少一个能力（`_notify`、`_query` 或 `_get_alerts`）
+- [ ] 在 `docs/providers/documentation/` 中创建文档
+- [ ] 编写单元测试
+- [ ] 使用提供者工厂进行测试
+- [ ] 优雅地处理错误
+- [ ] 添加日志记录语句
+- [ ] 在 Keep UI 中验证
+- [ ] 如果支持 webhook，实现 `_format_alert()` 静态方法
+- [ ] 如果支持 OAuth 2.0，将 OAUTH2_URL 设置为类属性
+- [ ] 考虑实现 `validate_scopes()` 进行权限范围验证
+- [ ] 考虑实现 `get_provider_metadata()` 进行提供者版本管理
 
-## Getting help
+## 获取帮助
 
-- Review existing providers for examples
-- Check the base provider classes for available methods
-- Look at test files for testing patterns
-- Ask in Keep's GitHub discussions or issues
-- Review the [Provider Methods documentation](/providers/provider-methods) for advanced capabilities
-- Understand [Linked vs Connected Providers](/providers/linked-providers)
+- 查阅现有提供者以获取示例
+- 查看基础提供者类以了解可用方法
+- 查看测试文件以了解测试模式
+- 在 Keep 的 GitHub 讨论或 issues 中提问
+- 查阅[提供者方法文档](/providers/provider-methods)以了解高级能力
+- 了解[链接提供者与连接提供者](/providers/linked-providers)

@@ -3,110 +3,110 @@ title: ""
 sidebarTitle: "Specifications"
 ---
 
-# Specifications and Stress Testing of Keep
-<Tip>If you are using Keep and have performance issues, we will be more than happy to help you. Just join our [slack](https://slack.keepqh.dev) and shoot a message on the **#help** channel.</Tip>
+# Keep 的规格说明与压力测试
+<Tip>如果您正在使用 Keep 并遇到性能问题，我们非常乐意帮助您。只需加入我们的 [Slack](https://slack.keepqh.dev) 并在 **#help** 频道发送消息。</Tip>
 
-## Overview
+## 概述
 
-Spec and stress testing are crucial to ensuring the robust performance and scalability of Keep.
-This documentation outlines the key areas of focus for testing Keep under different load conditions, considering both the simplicity of setup for smaller environments and the scalability mechanisms for larger deployments.
+规格和压力测试对于确保 Keep 的健壮性能和可扩展性至关重要。
+本文档概述了在不同负载条件下测试 Keep 的关键关注领域，同时考虑了小型环境的设置简便性和大型部署的可扩展性机制。
 
-Keep was initially designed to be user-friendly for setups handling less than 10,000 alerts. However, as alert volumes increase, users can leverage advanced features such as Elasticsearch for document storage and Redis + ARQ for queue-based alert ingestion. While these advanced configurations are not fully documented here, they are supported and can be discussed further in our Slack community.
+Keep 最初设计为对处理少于 10,000 条告警的设置用户友好。然而，随着告警量增加，用户可以利用高级功能，如使用 Elasticsearch 进行文档存储以及使用 Redis + ARQ 进行基于队列的告警接入。虽然这些高级配置未在此处完全记录，但它们受支持，可以在我们的 Slack 社区中进一步讨论。
 
-## How To Reproduce
+## 如何复现
 
-To reproduce the stress testing scenarios mentioned above, please refer to the [STRESS.md](https://github.com/keephq/keep/blob/main/STRESS.md) file in Keep's repository. This document provides step-by-step instructions on how to set up, run, and measure the performance of Keep under different load conditions.
+要复现上述压力测试场景，请参阅 Keep 仓库中的 [STRESS.md](https://github.com/keephq/keep/blob/main/STRESS.md) 文件。该文档提供了如何在不同的负载条件下设置、运行和测量 Keep 性能的逐步说明。
 
-## Performance Testing
+## 性能测试
 
-### Factors Affecting Specifications
+### 影响规格的因素
 
-The primary parameters that affect the specification requirements for Keep are:
-1. **Alerts Volume**: The rate at which alerts are ingested into the system.
-2. **Total Alerts**: The cumulative number of alerts stored in the system.
-3. **Number of Workflows**: How many automation run as a result of alert.
+影响 Keep 规格需求的主要参数有：
+1. **告警量**：告警接入系统的速率。
+2. **总告警数**：系统中存储的累积告警数量。
+3. **工作流数量**：由告警触发执行的自动化数量。
 
-### Main Components:
-- **Keep Backend** - API and business logic. A container that serves FastAPI on top of gunicorn.
-- **Keep Frontend** - Web app. A container that serves the react app.
-- **Database** - Stores the alerts and any other operational data.
-- **Elasticsearch** (opt out by default) - Stores alerts as document for better search performance.
-- **Redis** (opt out by default) - Used, together with ARQ, as an alerts queue.
+### 主要组件：
+- **Keep Backend** - API 和业务逻辑。一个在 Gunicorn 上运行 FastAPI 的容器。
+- **Keep Frontend** - Web 应用。一个运行 React 应用的容器。
+- **Database** - 存储告警和其他运营数据。
+- **Elasticsearch**（默认不启用） - 将告警作为文档存储以获得更好的搜索性能。
+- **Redis**（默认不启用） - 与 ARQ 一起用作告警队列。
 
-### Testing Scenarios:
+### 测试场景：
 
-- **Low Volume (< 10,000 total alerts, hundreds of alerts per day)**:
-   - **Setup**: Use a standard relational database (e.g., MySQL, PostgreSQL) with default configurations.
-   - **Expectations**: Keep should handle queries and alert ingestion with minimal resource usage.
+- **低容量 (< 10,000 总告警数，每天数百条告警)**：
+   - **设置**：使用标准关系型数据库（如 MySQL、PostgreSQL）及默认配置。
+   - **预期**：Keep 应以最小的资源使用量处理查询和告警接入。
 
-- **Medium Volume (10,000 - 100,000 total alerts, thousands of alerts per day)**:
-   - **Setup**: Scale the database to larger instances or clusters. Adjust best practices to the DB (e.g. increasing innodb_buffer_pool_size)
-   - **Expectations**: CPU and RAM usage should increase proportionally but remain within acceptable limits.
+- **中等容量 (10,000 - 100,000 总告警数，每天数千条告警)**：
+   - **设置**：将数据库扩展到更大的实例或集群。调整数据库的最佳实践（例如增加 innodb_buffer_pool_size）
+   - **预期**：CPU 和 RAM 使用量应按比例增加，但保持在可接受的限度内。
 
-3. **High Volume (100,000 - 1,000,000 total alerts, >five thousands of alerts per day)**:
-   - **Setup**: Deploy Keep with Elasticsearch for storing alerts as documents.
-   - **Expectations**: The system should maintain performance levels despite the large alert volume, with increased resource usage managed through scaling strategies.
-4. **Very High Volume (> 1,000,000 total alerts, tens of thousands of alerts per day)**:
-    - **Setup**: Deploy Keep with Elasticsearch for storing alerts as documents.
-    - **Setup #2**: Deploy Keep with Redis and with ARQ to use Redis as a queue.
+3. **高容量 (100,000 - 1,000,000 总告警数，每天超过五千条告警)**：
+   - **设置**：部署 Keep 并使用 Elasticsearch 将告警存储为文档。
+   - **预期**：尽管告警量很大，系统应保持性能水平，通过扩展策略管理增加的资源使用。
+4. **极高容量 (> 1,000,000 总告警数，每天数万条告警)**：
+    - **设置**：部署 Keep 并使用 Elasticsearch 将告警存储为文档。
+    - **设置 #2**：部署 Keep 并使用 Redis 和 ARQ 将 Redis 作为队列。
 
-## Recommended Specifications by Alert Volume
+## 按告警量推荐的规格
 
-| **Number of Alerts**   | **Keep Backend**                               | **Keep Database**                               | **Redis**                                       | **Elasticsearch**                              |
+| **告警数量**   | **Keep Backend**                               | **Keep Database**                               | **Redis**                                       | **Elasticsearch**                              |
 |------------------------|------------------------------------------------|-------------------------------------------------|------------------------------------------------|------------------------------------------------|
-| **< 10,000**           | 1 vCPUs, 2GB RAM                               | 2 vCPUs, 8GB RAM                                | Not required                                    | Not required                                   |
-| **10,000 - 100,000**   | 4 vCPUs, 8GB RAM            | 8 vCPUs, 32GB RAM, optimized indexing           | Not required                                | Not required                   |
-| **100,000 - 500,000**  | 8 vCPUs, 16GB RAM         | 8 vCPUs, 32GB RAM, advanced indexing           | 4 vCPUs, 8GB RAM            | 8 vCPUs, 32GB RAM, 2-3 nodes                   |
-| **> 500,000**          | 8 vCPUs, 16GB RAM         | 8 vCPUs, 32GB RAM, advanced indexing, sharding| 4 vCPUs, 8GB RAM             | 8 vCPUs, 32GB RAM, 2-3 nodes  |
+| **< 10,000**           | 1 vCPU, 2GB RAM                               | 2 vCPU, 8GB RAM                                | 不需要                                    | 不需要                                   |
+| **10,000 - 100,000**   | 4 vCPU, 8GB RAM            | 8 vCPU, 32GB RAM, 优化索引           | 不需要                                | 不需要                   |
+| **100,000 - 500,000**  | 8 vCPU, 16GB RAM         | 8 vCPU, 32GB RAM, 高级索引           | 4 vCPU, 8GB RAM            | 8 vCPU, 32GB RAM, 2-3 节点                   |
+| **> 500,000**          | 8 vCPU, 16GB RAM         | 8 vCPU, 32GB RAM, 高级索引, 分片| 4 vCPU, 8GB RAM             | 8 vCPU, 32GB RAM, 2-3 节点  |
 
-## Performance by Operation Type, Load, and Specification
+## 按操作类型、负载和规格的性能
 
-| **Operation Type**    | **Load**                   | **Specification**            | **Execution Time**                |
+| **操作类型**    | **负载**                   | **规格**            | **执行时间**                |
 |-----------------------|----------------------------|------------------------------|-----------------------------------|
-| Digest Alert          | 100 alerts per minute      | 4 vCPUs, 8GB RAM              | ~0.5 seconds                      |
-| Digest Alert          | 500 alerts per minute      | 8 vCPUs, 16GB RAM             | ~1 second                         |
-| Digest Alert          | 1,000 alerts per minute    | 16 vCPUs, 32GB RAM            | ~1.5 seconds                      |
-| Run Workflow          | 10 workflows per minute   | 4 vCPUs, 8GB RAM              | ~1 second                         |
-| Run Workflow          | 50 workflows per minute   | 8 vCPUs, 16GB RAM             | ~2 seconds                        |
-| Run Workflow          | 100 workflows per minute | 16 vCPUs, 32GB RAM            | ~3 seconds                        |
-| Ingest via Queue      | 100 alerts per minute      | 4 vCPUs, 8GB RAM, Redis       | ~0.3 seconds                      |
-| Ingest via Queue      | 500 alerts per minute      | 8 vCPUs, 16GB RAM, Redis      | ~0.8 seconds                      |
-| Ingest via Queue      | 1,000 alerts per minute    | 16 vCPUs, 32GB RAM, Redis     | ~1.2 seconds                      |
+| 消化告警          | 每分钟 100 条告警      | 4 vCPU, 8GB RAM              | ~0.5 秒                      |
+| 消化告警          | 每分钟 500 条告警      | 8 vCPU, 16GB RAM             | ~1 秒                         |
+| 消化告警          | 每分钟 1,000 条告警    | 16 vCPU, 32GB RAM            | ~1.5 秒                      |
+| 运行工作流          | 每分钟 10 个工作流   | 4 vCPU, 8GB RAM              | ~1 秒                         |
+| 运行工作流          | 每分钟 50 个工作流   | 8 vCPU, 16GB RAM             | ~2 秒                        |
+| 运行工作流          | 每分钟 100 个工作流 | 16 vCPU, 32GB RAM            | ~3 秒                        |
+| 通过队列接入      | 每分钟 100 条告警      | 4 vCPU, 8GB RAM, Redis       | ~0.3 秒                      |
+| 通过队列接入      | 每分钟 500 条告警      | 8 vCPU, 16GB RAM, Redis      | ~0.8 秒                      |
+| 通过队列接入      | 每分钟 1,000 条告警    | 16 vCPU, 32GB RAM, Redis     | ~1.2 秒                      |
 
-### Table Explanation:
-- **Operation Type**: The specific operation being tested (e.g., digesting alerts, running workflows).
-- **Load**: The number of operations per minute being processed (e.g., number of alerts per minute).
-- **Specification**: The CPU, RAM, and additional services used for the operation.
-- **Execution Time**: Approximate time taken to complete the operation under the given load and specification.
-
-
-## Fine Tuning
-
-As any deployment has its own characteristics, such as the balance between volume vs. total count of alerts or volume vs. number of workflows, Keep can be fine-tuned with the following parameters:
-
-1. **Number of Workers**: Adjust the number of Gunicorn workers to handle API requests more efficiently. You can also start additional API servers to distribute the load.
-2. **Distinguish Between API Server Workers and Digesting Alerts Workers**: Separate the workers dedicated to handling API requests from those responsible for digesting alerts, ensuring that each set of tasks is optimized according to its specific needs.
-3. **Add More RAM to the Database**: Increasing the RAM allocated to your database can help manage larger datasets and improve query performance, particularly when dealing with high volumes of alerts.
-4. **Optimize Database Configuration**: Keep was mainly tested on MySQL and PostgreSQL. Different database may have different fine tuning mechanisms.
-5. **Horizontal Scaling**: Consider deploying additional instances of the API and database services to distribute the load more effectively.
+### 表格说明：
+- **操作类型**：正在测试的特定操作（例如，消化告警、运行工作流）。
+- **负载**：每分钟正在处理的操作数（例如，每分钟告警数）。
+- **规格**：用于操作的 CPU、RAM 和其他服务。
+- **执行时间**：在给定负载和规格下完成操作的大致时间。
 
 
+## 精细调优
 
-## FAQ
+由于每个部署都有其自身的特点，例如告警量 vs. 总告警数或告警量 vs. 工作流数量的平衡，Keep 可以通过以下参数进行精细调优：
 
-### 1. How do I estimate the spec I need for Keep?
-To estimate the specifications required for Keep, consider both the number of alerts per minute and the total number of alerts you expect to handle. Refer to the **Recommended Specifications by Alert Volume** table above to match your expected load with the appropriate resources.
+1. **工作进程数量**：调整 Gunicorn 工作进程数量以更高效地处理 API 请求。您还可以启动额外的 API 服务器来分配负载。
+2. **区分 API 服务器工作进程和消化告警工作进程**：将专门处理 API 请求的工作进程与负责消化告警的工作进程分开，确保每组任务根据其特定需求进行优化。
+3. **为数据库增加更多 RAM**：增加分配给数据库的 RAM 有助于管理更大的数据集并提高查询性能，特别是在处理高告警量时。
+4. **优化数据库配置**：Keep 主要在 MySQL 和 PostgreSQL 上进行了测试。不同的数据库可能有不同的精细调优机制。
+5. **水平扩展**：考虑部署额外的 API 和数据库服务实例以更有效地分配负载。
 
-### 2. How do I know if I need Elasticsearch?
-Elasticsearch is typically needed when you are dealing with more than 50,000 total alerts or if you require advanced search and query capabilities that are not efficiently handled by a traditional relational database. If your system’s performance degrades significantly as alert volume increases, it may be time to consider Elasticsearch.
 
-### 3. How do I know if I need Redis?
-Redis is recommended when your alert ingestion rate exceeds 1,000 alerts per minute or when you notice that the API is becoming a bottleneck due to high ingestion rates. Redis, combined with ARQ (Asynchronous Redis Queue), can help manage and distribute the load more effectively.
 
-### 4. What should I do if Keep's performance is still inadequate?
-If you have scaled according to the recommendations and are still facing performance issues, consider:
-- **Optimizing your database configuration**: Indexing, sharding, and query optimization can make a significant difference.
-- **Horizontal scaling**: Distribute the load across multiple instances of the API and database services.
-- **Reach out to our Slack community**: For personalized support, reach out to us on Slack, and we’ll help you troubleshoot and optimize your Keep deployment.
+## 常见问题
 
-For any additional questions or tailored advice, feel free to join our Slack community where our team and other users are available to assist you.
+### 1. 如何估算 Keep 所需的规格？
+要估算 Keep 所需的规格，请同时考虑每分钟的告警数和您期望处理的总告警数。参考上方的**按告警量推荐的规格**表格，将您期望的负载与适当的资源相匹配。
+
+### 2. 如何判断是否需要 Elasticsearch？
+当您处理超过 50,000 条总告警数，或需要传统关系型数据库无法高效处理的高级搜索和查询能力时，通常需要 Elasticsearch。如果您的系统性能随着告警量增加而显著下降，可能是时候考虑使用 Elasticsearch。
+
+### 3. 如何判断是否需要 Redis？
+当您的告警接入速率超过每分钟 1,000 条，或当您注意到由于高接入速率导致 API 成为瓶颈时，建议使用 Redis。Redis 结合 ARQ（异步 Redis 队列）可以帮助更有效地管理和分配负载。
+
+### 4. 如果 Keep 的性能仍然不足，我该怎么办？
+如果您已根据建议进行了扩展但仍然面临性能问题，请考虑：
+- **优化数据库配置**：索引、分片和查询优化可以产生显著的差异。
+- **水平扩展**：将负载分布到 API 和数据库服务的多个实例上。
+- **联系我们的 Slack 社区**：如需个性化支持，请在 Slack 上联系我们，我们将帮助您排查并优化您的 Keep 部署。
+
+如有任何其他问题或定制化建议，欢迎加入我们的 Slack 社区，我们的团队和其他用户随时为您提供帮助。

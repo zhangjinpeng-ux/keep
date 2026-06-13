@@ -8,32 +8,32 @@ Keep Enterprise On-Premises: ✅ <br/>
 Keep Open Source: (experimental)
 </Tip>
 
-Delegate authentication to Oauth2Proxy.
+将认证委托给 Oauth2Proxy。
 
-### When to Use
+### 何时使用
 
-- **oauth2-proxy user:** Use this authentication method if you want to delegate authentication to an external Oauth2Proxy service.
+- **oauth2-proxy 用户：** 如果您想将认证委托给外部的 Oauth2Proxy 服务，请使用此认证方法。
 
-### Setup Instructions
+### 设置说明
 
-To start Keep with Oauth2Proxy authentication, set the following environment variables:
+要使用 Oauth2Proxy 认证启动 Keep，请设置以下环境变量：
 
-#### Frontend Environment Variables
+#### 前端环境变量
 
-| Environment Variable | Description | Required | Default Value |
+| 环境变量 | 描述 | 是否必需 | 默认值 |
 |--------------------|-----------|:--------:|:-------------:|
-| AUTH_TYPE | Set to 'OAUTH2PROXY' for OAUTH2PROXY authentication | Yes | - |
-| KEEP_OAUTH2_PROXY_USER_HEADER | Header for the authenticated user's email | Yes | x-forwarded-email |
-| KEEP_OAUTH2_PROXY_ROLE_HEADER | Header for the authenticated user's role | Yes | x-forwarded-groups |
+| AUTH_TYPE | 设置为 'OAUTH2PROXY' 以启用 OAUTH2PROXY 认证 | 是 | - |
+| KEEP_OAUTH2_PROXY_USER_HEADER | 已认证用户邮箱的请求头 | 是 | x-forwarded-email |
+| KEEP_OAUTH2_PROXY_ROLE_HEADER | 已认证用户角色的请求头 | 是 | x-forwarded-groups |
 
-#### Backend Environment Variables
+#### 后端环境变量
 
-| Environment Variable | Description | Required | Default Value |
+| 环境变量 | 描述 | 是否必需 | 默认值 |
 |--------------------|-----------|:--------:|:-------------:|
-| AUTH_TYPE | Set to 'OAUTH2PROXY' for OAUTH2PROXY authentication | Yes | - |
-| KEEP_OAUTH2_PROXY_USER_HEADER | Header for the authenticated user's email | Yes | x-forwarded-email |
-| KEEP_OAUTH2_PROXY_ROLE_HEADER | Header for the authenticated user's role | Yes | x-forwarded-groups |
-| KEEP_OAUTH2_PROXY_AUTO_CREATE_USER | Automatically create user if not exists | No | true |
-| KEEP_OAUTH2_PROXY_ADMIN_ROLES | Role names for admin users | No | admin |
-| KEEP_OAUTH2_PROXY_NOC_ROLES | Role names for NOC (Network Operations Center) users | No | noc |
-| KEEP_OAUTH2_PROXY_WEBHOOK_ROLES | Role names for webhook users | No | webhook |
+| AUTH_TYPE | 设置为 'OAUTH2PROXY' 以启用 OAUTH2PROXY 认证 | 是 | - |
+| KEEP_OAUTH2_PROXY_USER_HEADER | 已认证用户邮箱的请求头 | 是 | x-forwarded-email |
+| KEEP_OAUTH2_PROXY_ROLE_HEADER | 已认证用户角色的请求头 | 是 | x-forwarded-groups |
+| KEEP_OAUTH2_PROXY_AUTO_CREATE_USER | 如果用户不存在则自动创建 | 否 | true |
+| KEEP_OAUTH2_PROXY_ADMIN_ROLES | 管理员用户的角色名称 | 否 | admin |
+| KEEP_OAUTH2_PROXY_NOC_ROLES | NOC（网络运营中心）用户的角色名称 | 否 | noc |
+| KEEP_OAUTH2_PROXY_WEBHOOK_ROLES | Webhook 用户的角色名称 | 否 | webhook |

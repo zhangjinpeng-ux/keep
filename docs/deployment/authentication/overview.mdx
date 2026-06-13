@@ -2,53 +2,52 @@
 title: "Overview"
 ---
 
-<Tip>For every authentication-related question or issue, please join our [Slack](https://slack.keephq.dev).</Tip>
+<Tip>对于任何认证相关的问题，请加入我们的 [Slack](https://slack.keephq.dev)。</Tip>
 
-Keep supports various authentication providers and architectures to accommodate different deployment strategies and security needs, from development environments to production setups.
+Keep 支持各种认证提供商和架构，以适应不同的部署策略和安全需求，从开发环境到生产环境设置。
 
+### 认证提供商
 
-### Authentication Providers
+- [**无认证**](/deployment/authentication/no-auth) - 快速设置，适用于测试或内部使用场景。
+- [**DB**](/deployment/authentication/db-auth) - 简单的用户名/密码认证。适用于小型团队或开发/预发布环境。用户和哈希密码存储在数据库中。
+- [**Auth0**](/deployment/authentication/auth0-auth) - 利用 Auth0 实现可扩展的、基于 auth0 的认证。
+- [**Keycloak**](/deployment/authentication/keycloak-auth) - 利用 Keycloak 实现企业级认证方法，如 SSO/SAML/OIDC、具有自定义角色的高级 RBAC、资源级权限以及与用户目录 (LDAP) 的集成。
+- [**AzureAD**](/deployment/authentication/azuread-auth) - 利用 Azure AD 实现 SSO/SAML/OIDC 企业级认证。
+- [**Okta**](/deployment/authentication/okta-auth) - 利用 Okta 实现 SSO/OIDC 认证。
+- [**OneLogin**](/deployment/authentication/onelogin-auth) - 利用 OneLogin 实现 SSO/OIDC 认证。
 
-- [**No Authentication**](/deployment/authentication/no-auth) - Quick setup for testing or internal use cases.
-- [**DB**](/deployment/authentication/db-auth) - Simple username/password authentication. Works well for small teams or for dev/stage environments. Users and hashed password are stored on DB.
-- [**Auth0**](/deployment/authentication/auth0-auth) - Utilize Auth0 for scalable, auth0-based authentication.
-- [**Keycloak**](/deployment/authentication/keycloak-auth) - Utilize Keycloak for enterprise authentication methods such as SSO/SAML/OIDC, advanced RBAC with custom roles, resource-level permissions, and integration with user directories (LDAP).
-- [**AzureAD**](/deployment/authentication/azuread-auth) - Utilize Azure AD for SSO/SAML/OIDC nterprise authentication.
-- [**Okta**](/deployment/authentication/okta-auth) - Utilize Okta for SSO/OIDC authentication.
-- [**OneLogin**](/deployment/authentication/onelogin-auth) - Utilize OneLogin for SSO/OIDC authentication.
-
-Choosing the right authentication strategy depends on your specific use case, security requirements, and deployment environment. You can read more about each authentication provider.
-
+选择合适的认证策略取决于您的具体使用场景、安全需求和部署环境。您可以阅读更多关于每个认证提供商的信息。
 
 
-### Authentication Features Comparison
 
-| Identity Provider | RBAC | SAML/OIDC/SSO | LDAP | Resource-based permission | User Management | Group Management | On Prem | License |
+### 认证功能对比
+
+| 身份提供商 | RBAC | SAML/OIDC/SSO | LDAP | 基于资源的权限 | 用户管理 | 组管理 | 本地部署 | 许可证 |
 |:---:|:----:|:---------:|:----:|:-------------------------:|:----------------:|:-----------------:|:-------:|:-------:|
-| **No Auth** |  ❌   |     ❌     |  ❌   |             ❌            |        ❌        |         ❌         |    ✅    |   **OSS**   |
-| **DB** |  ✅ <br />(Predefiend roles)  |     ❌     |  ❌   |             ✅            |        ✅        |         ❌         |    ✅    |   **OSS**   |
-| **Auth0**             |  ✅ <br />(Predefiend roles)  |     ✅     |  🚧  |             🚧            |        ✅        |         🚧        |    ❌    |   **EE**   |
-| **Keycloak**          |  ✅ <br />(Custom roles)  |     ✅     |  ✅   |             ✅            |        ✅        |         ✅         |    ✅    |   **EE**    |
-| **Oauth2Proxy**       |  ✅ <br />(Predefiend roles)  |     ✅     |  ❌   |             ❌            |        N/A        |         N/A         |    ✅    |   **OSS**   |
-| **Azure AD**       |  ✅ <br />(Predefiend roles)  |     ✅     |  ❌   |             ❌            |        By Azure AD        |         By Azure AD         |    ✅    |   **EE**   |
-| **Okta**           |  ✅ <br />(Predefiend roles)  |     ✅     |  ❌   |             ✅            |        ❌        |         ❌         |    ✅    |   **OSS**   |
-| **OneLogin**           |  ✅ <br />(Predefiend roles)  |     ✅     |  ❌   |             ✅            |        ❌        |         ❌         |    ✅    |   **OSS**   |
-### How To Configure
+| **无认证** |  ❌   |     ❌     |  ❌   |             ❌            |        ❌        |         ❌         |    ✅    |   **OSS**   |
+| **DB** |  ✅ <br />（预定义角色）  |     ❌     |  ❌   |             ✅            |        ✅        |         ❌         |    ✅    |   **OSS**   |
+| **Auth0**             |  ✅ <br />（预定义角色）  |     ✅     |  🚧  |             🚧            |        ✅        |         🚧        |    ❌    |   **EE**   |
+| **Keycloak**          |  ✅ <br />（自定义角色）  |     ✅     |  ✅   |             ✅            |        ✅        |         ✅         |    ✅    |   **EE**    |
+| **Oauth2Proxy**       |  ✅ <br />（预定义角色）  |     ✅     |  ❌   |             ❌            |        不适用        |         不适用         |    ✅    |   **OSS**   |
+| **Azure AD**       |  ✅ <br />（预定义角色）  |     ✅     |  ❌   |             ❌            |        由 Azure AD 管理        |         由 Azure AD 管理         |    ✅    |   **EE**   |
+| **Okta**           |  ✅ <br />（预定义角色）  |     ✅     |  ❌   |             ✅            |        ❌        |         ❌         |    ✅    |   **OSS**   |
+| **OneLogin**           |  ✅ <br />（预定义角色）  |     ✅     |  ❌   |             ✅            |        ❌        |         ❌         |    ✅    |   **OSS**   |
+### 如何配置
 <Tip>
-Some authentication providers require additional environment variables. These will be covered in detail on the specific authentication provider pages.
+某些认证提供商需要额外的环境变量。这些将在特定认证提供商页面上详细说明。
 </Tip>
-The authentication scheme on Keep is controlled with environment variables both on the backend (Keep API) and the frontend (Keep UI).
+Keep 的认证方案通过后端（Keep API）和前端（Keep UI）的环境变量来控制。
 
 
-|  Identity Provider  | Environment Variable | Additional Variables Required |
+|  身份提供商  | 环境变量 | 需要额外变量 |
 | ------------------------------------- | -------------------------------------------------------------- | ---------------------------- |
-| **No Auth** | `AUTH_TYPE=NOAUTH`| None |
+| **无认证** | `AUTH_TYPE=NOAUTH`| 无 |
 | **DB** | `AUTH_TYPE=DB`  | `KEEP_JWT_SECRET` |
 | **Auth0**                           |  `AUTH_TYPE=AUTH0`  | `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID`, `AUTH0_CLIENT_SECRET` |
 | **Keycloak** | `AUTH_TYPE=KEYCLOAK` | `KEYCLOAK_URL`, `KEYCLOAK_REALM`, `KEYCLOAK_CLIENT_ID`, `KEYCLOAK_CLIENT_SECRET` |
 | **Oauth2Proxy** | `AUTH_TYPE=OAUTH2PROXY` | `OAUTH2_PROXY_USER_HEADER`, `OAUTH2_PROXY_ROLE_HEADER`, `OAUTH2_PROXY_AUTO_CREATE_USER` |
-| **AzureAD** | `AUTH_TYPE=AZUREAD` | See [AzureAD Configuration](/deployment/authentication/azuread-auth) |
+| **AzureAD** | `AUTH_TYPE=AZUREAD` | 参见 [AzureAD 配置](/deployment/authentication/azuread-auth) |
 | **Okta** | `AUTH_TYPE=OKTA` | `OKTA_DOMAIN`, `OKTA_CLIENT_ID`, `OKTA_CLIENT_SECRET` |
-| **OneLogin** | `AUTH_TYPE=ONELOGIN` | See [OneLogin Configuration](/deployment/authentication/onelogin-auth) |
+| **OneLogin** | `AUTH_TYPE=ONELOGIN` | 参见 [OneLogin 配置](/deployment/authentication/onelogin-auth) |
 
-For more details on each authentication strategy, including setup instructions and implications, refer to the respective sections.
+有关每种认证策略的更多详细信息，包括设置说明和影响，请参阅相应章节。

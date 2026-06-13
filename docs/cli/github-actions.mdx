@@ -1,27 +1,27 @@
 ---
-title: "Sync Keep Workflows With Github Action"
+title: "使用 GitHub Action 同步 Keep 工作流"
 ---
 
-This documentation provides a detailed guide on how to use the Keep CLI within a GitHub Actions workflow to synchronize and manage Keep workflows from a directory. This setup automates the process of uploading workflows to Keep, making it easier to maintain and update them.
+本文档详细介绍了如何在 GitHub Actions 工作流中使用 Keep CLI 来同步和管理目录中的 Keep 工作流。此设置可自动执行将工作流上传到 Keep 的过程，使其更易于维护和更新。
 
 
 
 
 
-### Configuration
-To set up this workflow in your repository:
+### 配置
+要在你的仓库中设置此工作流：
 
-- Add the workflow YAML file to your repository under `.github/workflows/`.
-- Set your Keep API Key and URL as secrets in your repository settings if you haven't already.
-- Make changes to your workflows in the specified directory or trigger the workflow manually through the GitHub UI.
-- Change 'example/workflows/**' to the directory you store your Keep Workflows.
+- 将工作流 YAML 文件添加到仓库的 `.github/workflows/` 目录下。
+- 如果尚未设置，请在仓库设置中将你的 Keep API Key 和 URL 设置为 secrets。
+- 对指定目录中的工作流进行更改，或通过 GitHub UI 手动触发工作流。
+- 将 'example/workflows/**' 更改为你存储 Keep 工作流的目录。
 
 
-### GitHub Action Workflow
-This GitHub Actions workflow automatically synchronizes workflows from a specified directory to Keep whenever there are changes. It also allows for manual triggering with optional parameters.
+### GitHub Action 工作流
+此 GitHub Actions 工作流会在有更改时自动将指定目录中的工作流同步到 Keep。它还支持通过可选参数手动触发。
 
 ```yaml
-# A workflow that sync Keep workflows from a directory
+# 一个同步 Keep 工作流的 workflow
 name: "Sync Keep Workflows"
 
 on:

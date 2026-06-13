@@ -2,35 +2,35 @@
 title: "Workflow Provisioning"
 ---
 
-<Tip>For any questions or issues related to workflow provisioning, please join our [Slack](https://slack.keephq.dev) community.</Tip>
+<Tip>对于任何与工作流预置相关的问题，请加入我们的 [Slack](https://slack.keephq.dev) 社区。</Tip>
 
-Workflow provisioning in Keep allows you to set up and manage workflows dynamically. This feature enables you to configure various automated processes and tasks within your Keep deployment.
+Keep 中的工作流预置允许您动态设置和管理工作流。此功能使您能够在 Keep 部署中配置各种自动化流程和任务。
 
-### Configuring Workflows
+### 配置工作流
 
-To provision workflows, follow these steps:
+要预置工作流，请按照以下步骤操作：
 
-1. Set the `KEEP_WORKFLOWS_DIRECTORY` environment variable to the path of your workflow configuration directory.
-2. Create workflow configuration files in the specified directory.
+1. 将 `KEEP_WORKFLOWS_DIRECTORY` 环境变量设置为工作流配置目录的路径。
+2. 在指定目录中创建工作流配置文件。
 
-Example directory structure:
+目录结构示例：
 ```
 /path/to/workflows/
 ├── workflow1.yaml
 ├── workflow2.yaml
 └── workflow3.yaml
 ```
-### Update Provisioned Workflows
+### 更新已预置的工作流
 
-On every restart, Keep reads the `KEEP_WORKFLOWS_DIRECTORY` environment variable and determines which workflows need to be added, removed, or updated.
+每次重启时，Keep 读取 `KEEP_WORKFLOWS_DIRECTORY` 环境变量并确定哪些工作流需要添加、移除或更新。
 
-This process allows for flexible management of workflows without requiring manual intervention. By simply updating the workflow files in the `KEEP_WORKFLOWS_DIRECTORY` and restarting the application, you can efficiently add new workflows, remove existing ones, or modify their configurations.
+此过程允许灵活管理工作流，无需人工干预。通过简单地更新 `KEEP_WORKFLOWS_DIRECTORY` 中的工作流文件并重启应用程序，您可以高效地添加新工作流、移除现有工作流或修改其配置。
 
-The high-level provisioning mechanism:
-1. Keep reads the `KEEP_WORKFLOWS_DIRECTORY` value.
-2. Keep lists all workflow files under the `KEEP_WORKFLOWS_DIRECTORY` directory.
-3. Keep compares the current workflow files with the previously provisioned workflows:
-   - New workflow files are provisioned.
-   - Missing workflow files are deprovisioned.
-   - Updated workflow files are re-provisioned with the new configuration.
-4. Keep updates its internal state to reflect the current set of provisioned workflows.
+高层预置机制：
+1. Keep 读取 `KEEP_WORKFLOWS_DIRECTORY` 的值。
+2. Keep 列出 `KEEP_WORKFLOWS_DIRECTORY` 目录下的所有工作流文件。
+3. Keep 将当前工作流文件与之前预置的工作流进行比较：
+   - 新的工作流文件被预置。
+   - 缺失的工作流文件被取消预置。
+   - 更新的工作流文件使用新配置重新预置。
+4. Keep 更新其内部状态以反映当前预置的工作流集合。

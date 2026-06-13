@@ -3,63 +3,62 @@ title: "Running Keep with LiteLLM"
 ---
 
 <Info>
-  This guide is for users who want to run Keep with locally hosted LLM models.
-  If you encounter any issues, please talk to us at our (Slack
-  community)[https://slack.keephq.dev].
+  本指南面向希望使用本地托管的 LLM 模型运行 Keep 的用户。
+  如果您遇到任何问题，请在我们的 (Slack
+  社区)[https://slack.keephq.dev] 中与我们联系。
 </Info>
 
-## Overview
+## 概述
 
-This guide will help you set up Keep with LiteLLM, a versatile tool that supports over 100 LLM providers. LiteLLM acts as a proxy that adheres to OpenAI standards, allowing seamless integration with Keep. By following this guide, you can easily configure Keep to work with various LLM providers using LiteLLM.
+本指南将帮助您使用 LiteLLM 设置 Keep，LiteLLM 是一个支持超过 100 个 LLM 提供商的多功能工具。LiteLLM 充当遵循 OpenAI 标准的代理，允许与 Keep 无缝集成。通过遵循本指南，您可以轻松配置 Keep 使用 LiteLLM 与各种 LLM 提供商配合工作。
 
-### Motivation
+### 动机
 
-Incorporating LiteLLM with Keep allows organizations to run local models in on-premises and air-gapped environments. This setup is particularly beneficial for leveraging AIOps capabilities while ensuring that sensitive data does not leave the premises. By using LiteLLM as a proxy, you can seamlessly integrate with Keep and access a wide range of LLM providers without compromising data security. This approach is ideal for organizations that prioritize data privacy and need to comply with strict regulatory requirements.
+将 LiteLLM 与 Keep 结合使用，使组织能够在本地部署和气隙环境中运行本地模型。此设置特别有利于利用 AIOps 功能，同时确保敏感数据不会离开本地环境。通过使用 LiteLLM 作为代理，您可以与 Keep 无缝集成，并访问各种 LLM 提供商，而不会损害数据安全。此方法非常适合重视数据隐私并需要遵守严格监管要求的组织。
 
-## Prerequisites
+## 前提条件
 
-### Running LiteLLM locally
+### 在本地运行 LiteLLM
 
-1. Ensure you have Python and pip installed on your system.
-2. Install LiteLLM by running the following command:
+1. 确保您的系统上已安装 Python 和 pip。
+2. 运行以下命令安装 LiteLLM：
 
 ```bash
 pip install litellm
 ```
 
-3. Start LiteLLM with your desired model. For example, to use the HuggingFace model:
+3. 使用您所需的模型启动 LiteLLM。例如，使用 HuggingFace 模型：
 
 ```bash
 litellm --model huggingface/bigcode/starcoder
 ```
 
-This will start the proxy server on `http://0.0.0.0:4000`.
+这将在 `http://0.0.0.0:4000` 上启动代理服务器。
 
-### Running LiteLLM with Docker
+### 使用 Docker 运行 LiteLLM
 
-To run LiteLLM using Docker, you can use the following command:
+要使用 Docker 运行 LiteLLM，可以使用以下命令：
 
 ```bash
 docker run -p 4000:4000 litellm/litellm --model huggingface/bigcode/starcoder
 ```
 
-This command will start the LiteLLM proxy in a Docker container, exposing it on port 4000.
+此命令将在 Docker 容器中启动 LiteLLM 代理，暴露在端口 4000 上。
 
-## Configuration
+## 配置
 
 |           Env var           |                   Purpose                   | Required | Default Value |               Valid options               |
 | :-------------------------: | :-----------------------------------------: | :------: | :-----------: | :---------------------------------------: |
-| **OPEN_AI_ORGANIZATION_ID** | Organization ID for OpenAI/LiteLLM services |   Yes    |     None      |       Valid organization ID string        |
-|     **OPEN_AI_API_KEY**     |     API key for OpenAI/LiteLLM services     |   Yes    |     None      |           Valid API key string            |
-|     **OPENAI_BASE_URL**     |       Base URL for the LiteLLM proxy        |   Yes    |     None      | Valid URL (e.g., "http://localhost:4000") |
+| **OPEN_AI_ORGANIZATION_ID** | OpenAI/LiteLLM 服务的组织 ID |   是    |     无     |       有效的组织 ID 字符串        |
+|     **OPEN_AI_API_KEY**     |     OpenAI/LiteLLM 服务的 API 密钥     |   是    |     无     |           有效的 API 密钥字符串            |
+|     **OPENAI_BASE_URL**     |       LiteLLM 代理的基础 URL        |   是    |     无     | 有效的 URL (e.g., "http://localhost:4000") |
 
 <Note>
-  These environment variables should be set on both Keep **frontend** and
-  **backend**.
+  这些环境变量应在 Keep 的**前端**和**后端**都设置。
 </Note>
 
-## Additional Resources
+## 其他资源
 
-- [LiteLLM Documentation](https://docs.litellm.ai/)
+- [LiteLLM 文档](https://docs.litellm.ai/)
 
-By following these steps, you can leverage the power of multiple LLM providers with Keep, using LiteLLM as a flexible and powerful proxy.
+通过遵循这些步骤，您可以使用 LiteLLM 作为灵活且强大的代理，利用多个 LLM 提供商的能力与 Keep 配合使用。

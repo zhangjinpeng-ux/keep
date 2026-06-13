@@ -1,19 +1,19 @@
 ---
-title: "Executing Actions During Business Hours"
+title: "在工作时间内执行动作"
 ---
 
 <Info>
 
-Link to the [workflow](https://github.com/keephq/keep/blob/main/examples/workflows/businesshours.yml).
+链接到[工作流](https://github.com/keephq/keep/blob/main/examples/workflows/businesshours.yml)。
 
 </Info>
 
-This workflow demonstrates how to take actions only during specified business hours.
+此工作流演示了如何仅在指定的工作时间内执行操作。
 
 
-Explanation:
-- Trigger: Activated by an alert or manually.
-- Action: Check if the current time falls within business hours in the `America/New_York` timezone. If yes, enrich the alert with a `businesshours` field set to `true`.
+说明：
+- 触发器：由告警触发或手动触发。
+- 动作：检查当前时间是否在 `America/New_York` 时区的工作时间范围内。如果是，则增强告警，将 `businesshours` 字段设置为 `true`。
 
 
 ```yaml

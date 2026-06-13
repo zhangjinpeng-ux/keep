@@ -1,18 +1,18 @@
 ---
-title: "Functions"
+title: "函数"
 ---
 
-The **Functions** in Keep Workflow Engine are utilities that can be used to manipulate data, check conditions, or perform transformations within workflows. This document provides a brief overview and usage examples for each available function.
+Keep 工作流引擎中的**函数（Functions）**是可用于在工作流中操作数据、检查条件或执行转换的实用工具。本文档提供了每个可用函数的简要概述和使用示例。
 
 ---
 
-## Mathematical Functions
+## 数学函数
 
 ### `add`
 
-**Description:** Adds all provided numbers together. All arguments are converted to integers.
+**描述：** 将所有提供的数字相加。所有参数会被转换为整数。
 
-**Example:**
+**示例：**
 
 ```yaml
 steps:
@@ -28,9 +28,9 @@ steps:
 
 ### `sub`
 
-**Description:** Subtracts all subsequent numbers from the first number. All arguments are converted to integers.
+**描述：** 从第一个数字中减去所有后续数字。所有参数会被转换为整数。
 
-**Example:**
+**示例：**
 
 ```yaml
 steps:
@@ -46,9 +46,9 @@ steps:
 
 ### `mul`
 
-**Description:** Multiplies all provided numbers together. All arguments are converted to integers.
+**描述：** 将所有提供的数字相乘。所有参数会被转换为整数。
 
-**Example:**
+**示例：**
 
 ```yaml
 steps:
@@ -64,9 +64,9 @@ steps:
 
 ### `div`
 
-**Description:** Divides the first number by all subsequent numbers. All arguments are converted to integers. Returns an integer if the division result is whole, otherwise returns a floating-point number.
+**描述：** 将第一个数字依次除以所有后续数字。所有参数会被转换为整数。如果除法结果是整数则返回整数，否则返回浮点数。
 
-**Example:**
+**示例：**
 
 ```yaml
 steps:
@@ -83,9 +83,9 @@ steps:
 
 ### `mod`
 
-**Description:** Calculates the remainder of dividing the first number by all subsequent numbers sequentially. All arguments are converted to integers.
+**描述：** 计算第一个数字依次除以所有后续数字的余数。所有参数会被转换为整数。
 
-**Example:**
+**示例：**
 
 ```yaml
 steps:
@@ -101,9 +101,9 @@ steps:
 
 ### `exp`
 
-**Description:** Raises the first number to the power equal to the product of all subsequent numbers. All arguments are converted to integers.
+**描述：** 将第一个数字的幂次方提升到所有后续数字乘积的值。所有参数会被转换为整数。
 
-**Example:**
+**示例：**
 
 ```yaml
 steps:
@@ -119,9 +119,9 @@ steps:
 
 ### `fdiv`
 
-**Description:** Performs integer division of the first number by all subsequent numbers sequentially. All arguments are converted to integers.
+**描述：** 将第一个数字依次除以所有后续数字并执行整数除法。所有参数会被转换为整数。
 
-**Example:**
+**示例：**
 
 ```yaml
 steps:
@@ -137,9 +137,9 @@ steps:
 
 ### `eq`
 
-**Description:** Checks if two values are equal.
+**描述：** 检查两个值是否相等。
 
-**Example:**
+**示例：**
 
 ```yaml
 steps:
@@ -154,13 +154,13 @@ steps:
 
 ---
 
-## String Functions
+## 字符串函数
 
 ### `uppercase`
 
-**Description:** Converts a string to uppercase.
+**描述：** 将字符串转换为大写。
 
-**Example:**
+**示例：**
 
 ```yaml
 steps:
@@ -175,8 +175,8 @@ steps:
 
 ### `lowercase`
 
-**Description:** Converts a string to lowercase.
-**Example:**
+**描述：** 将字符串转换为小写。
+**示例：**
 
 ```yaml
 steps:
@@ -191,8 +191,8 @@ steps:
 
 ### `capitalize`
 
-**Description:** Capitalizes the first character of a string.
-**Example:**
+**描述：** 将字符串的首字符大写。
+**示例：**
 
 ```yaml
 steps:
@@ -207,8 +207,8 @@ steps:
 
 ### `title`
 
-**Description:** Converts a string to title case (capitalizes each word).
-**Example:**
+**描述：** 将字符串转换为标题大小写（每个单词首字母大写）。
+**示例：**
 
 ```yaml
 steps:
@@ -223,8 +223,8 @@ steps:
 
 ### `split`
 
-**Description:** Splits a string into a list using a delimiter.
-**Example:**
+**描述：** 使用分隔符将字符串拆分为列表。
+**示例：**
 
 ```yaml
 steps:
@@ -239,8 +239,8 @@ steps:
 
 ### `strip`
 
-**Description:** Removes leading and trailing whitespace from a string.
-**Example:**
+**描述：** 移除字符串开头和结尾的空白字符。
+**示例：**
 
 ```yaml
 steps:
@@ -255,8 +255,8 @@ steps:
 
 ### `replace`
 
-**Description:** Replaces occurrences of a substring with another string.
-**Example:**
+**描述：** 将字符串中的子串替换为另一个字符串。
+**示例：**
 
 ```yaml
 steps:
@@ -271,8 +271,8 @@ steps:
 
 ### `remove_newlines`
 
-**Description:** Removes all newline and tab characters from a string.
-**Example:**
+**描述：** 移除字符串中的所有换行符和制表符。
+**示例：**
 
 ```yaml
 steps:
@@ -287,8 +287,8 @@ steps:
 
 ### `encode`
 
-**Description:** URL-encodes a string.
-**Example:**
+**描述：** 对字符串进行 URL 编码。
+**示例：**
 
 ```yaml
 steps:
@@ -303,8 +303,8 @@ steps:
 
 ### `slice`
 
-**Description:** Extracts a portion of a string based on start and end indices.
-**Example:**
+**描述：** 基于起始和结束索引提取字符串的一部分。
+**示例：**
 
 ```yaml
 steps:
@@ -317,12 +317,12 @@ steps:
 
 ---
 
-## List and Dictionary Functions
+## 列表和字典函数
 
 ### `first`
 
-**Description:** Retrieves the first element from a list.
-**Example:**
+**描述：** 获取列表中的第一个元素。
+**示例：**
 
 ```yaml
 steps:
@@ -337,8 +337,8 @@ steps:
 
 ### `last`
 
-**Description:** Retrieves the last element from a list.
-**Example:**
+**描述：** 获取列表中的最后一个元素。
+**示例：**
 
 ```yaml
 steps:
@@ -353,8 +353,8 @@ steps:
 
 ### `index`
 
-**Description:** Retrieves an element at a specific index from a list.
-**Example:**
+**描述：** 获取列表中指定索引处的元素。
+**示例：**
 
 ```yaml
 steps:
@@ -369,8 +369,8 @@ steps:
 
 ### `join`
 
-**Description:** Joins a list of elements into a string using a delimiter.
-**Example:**
+**描述：** 使用分隔符将元素列表合并为字符串。
+**示例：**
 
 ```yaml
 steps:
@@ -385,8 +385,8 @@ steps:
 
 ### `len`
 
-**Description:** Returns the length of a list.
-**Example:**
+**描述：** 返回列表的长度。
+**示例：**
 
 ```yaml
 steps:
@@ -401,8 +401,8 @@ steps:
 
 ### `dict_to_key_value_list`
 
-**Description:** Converts a dictionary into a list of key-value pairs.
-**Example:**
+**描述：** 将字典转换为键值对列表。
+**示例：**
 
 ```yaml
 steps:
@@ -417,8 +417,8 @@ steps:
 
 ### `dict_pop`
 
-**Description:** Removes specified keys from a dictionary.
-**Example:**
+**描述：** 从字典中移除指定的键。
+**示例：**
 
 ```yaml
 steps:
@@ -433,8 +433,8 @@ steps:
 
 ### `dict_pop_prefix`
 
-**Description:** Removes all keys that start with a specified prefix from a dictionary.
-**Example:**
+**描述：** 从字典中移除所有以指定前缀开头的键。
+**示例：**
 
 ```yaml
 steps:
@@ -449,8 +449,8 @@ steps:
 
 ### `dict_filter_by_prefix`
 
-**Description:** Returns only the dictionary entries whose keys start with a specified prefix.
-**Example:**
+**描述：** 仅返回键以指定前缀开头的字典条目。
+**示例：**
 
 ```yaml
 steps:
@@ -465,8 +465,8 @@ steps:
 
 ### `dictget`
 
-**Description:** Gets a value from a dictionary with a default fallback.
-**Example:**
+**描述：** 从字典中获取值，并带有默认回退值。
+**示例：**
 
 ```yaml
 steps:
@@ -479,13 +479,13 @@ steps:
 
 ---
 
-## Date and Time Functions
+## 日期和时间函数
 
 ### `from_timestamp`
 
-**Description:** Converts unix timestamp int, float or string to datetime object, with optional timezone option.
+**描述：** 将 Unix 时间戳（整数、浮点数或字符串）转换为 datetime 对象，可附带可选的时区选项。
 
-**Example:**
+**示例：**
 
 ```yaml
 steps:
@@ -493,15 +493,15 @@ steps:
     provider:
       type: console
       with:
-        message: keep.from_timestamp(1717244449.0) # will print "2024-06-01 12:20:49+00:00"
-        # or with timezone
-        # message: keep.from_timestamp(1717244449.0, "Europe/Berlin") # will print "2024-06-01 14:20:49+02:00"
+        message: keep.from_timestamp(1717244449.0) # 将打印 "2024-06-01 12:20:49+00:00"
+        # 或带时区
+        # message: keep.from_timestamp(1717244449.0, "Europe/Berlin") # 将打印 "2024-06-01 14:20:49+02:00"
 ```
 
 ### `utcnow`
 
-**Description:** Returns the current UTC datetime.
-**Example:**
+**描述：** 返回当前的 UTC 日期时间。
+**示例：**
 
 ```yaml
 steps:
@@ -516,8 +516,8 @@ steps:
 
 ### `utcnowtimestamp`
 
-**Description:** Returns the current UTC datetime as a Unix timestamp (seconds since epoch).
-**Example:**
+**描述：** 将当前 UTC 日期时间以 Unix 时间戳（自纪元以来的秒数）返回。
+**示例：**
 
 ```yaml
 steps:
@@ -532,8 +532,8 @@ steps:
 
 ### `utcnowiso`
 
-**Description:** Returns the current UTC datetime in ISO format.
-**Example:**
+**描述：** 以 ISO 格式返回当前 UTC 日期时间。
+**示例：**
 
 ```yaml
 steps:
@@ -548,8 +548,8 @@ steps:
 
 ### `to_utc`
 
-**Description:** Converts a datetime string or object to UTC.
-**Example:**
+**描述：** 将日期时间字符串或对象转换为 UTC。
+**示例：**
 
 ```yaml
 steps:
@@ -564,8 +564,8 @@ steps:
 
 ### `to_timestamp`
 
-**Description:** Converts a datetime object or string into a Unix timestamp.
-**Example:**
+**描述：** 将 datetime 对象或字符串转换为 Unix 时间戳。
+**示例：**
 
 ```yaml
 steps:
@@ -580,8 +580,8 @@ steps:
 
 ### `datetime_compare`
 
-**Description:** Compares two datetime objects and returns the difference in hours.
-**Example:**
+**描述：** 比较两个 datetime 对象并以小时为单位返回差值。
+**示例：**
 
 ```yaml
 steps:
@@ -596,8 +596,8 @@ steps:
 
 ### `is_business_hours`
 
-**Description:** Checks whether a given time falls within business hours.
-**Example:**
+**描述：** 检查给定时间是否在工作时间范围内。
+**示例：**
 
 ```yaml
 steps:
@@ -616,12 +616,12 @@ steps:
 
 ---
 
-## JSON Functions
+## JSON 函数
 
 ### `json_dumps`
 
-**Description:** Converts a dictionary or string into a formatted JSON string.
-**Example:**
+**描述：** 将字典或字符串转换为格式化的 JSON 字符串。
+**示例：**
 
 ```yaml
 steps:
@@ -636,8 +636,8 @@ steps:
 
 ### `json_loads`
 
-**Description:** Parses a JSON string into a dictionary.
-**Example:**
+**描述：** 将 JSON 字符串解析为字典。
+**示例：**
 
 ```yaml
 steps:
@@ -650,12 +650,12 @@ steps:
 
 ---
 
-## Utility Functions
+## 实用函数
 
 ### `get_firing_time`
 
-**Description:** Calculates the firing duration of an alert in specified time units.
-**Example:**
+**描述：** 以指定时间单位计算告警的触发持续时间。
+**示例：**
 
 ```yaml
 steps:
@@ -670,8 +670,8 @@ steps:
 
 ### `add_time_to_date`
 
-**Description:** Adds time to a date string based on specified time units.
-**Example:**
+**描述：** 基于指定时间单位为日期字符串添加时间。
+**示例：**
 
 ```yaml
 steps:
@@ -686,8 +686,8 @@ steps:
 
 ### `timestamp_delta`
 
-**Description:** Adds or subtracts a time delta to/from a datetime. Use negative values to subtract time.
-**Example:**
+**描述：** 向日期时间添加或减去一个时间增量。使用负值来减去时间。
+**示例：**
 
 ```yaml
 steps:
@@ -695,13 +695,13 @@ steps:
     provider:
       type: mock
       with:
-        # Add 2 hours to the current time
+        # 在当前时间上加 2 小时
         add_hours: keep.timestamp_delta(keep.utcnow(), 2, "hours")
 
-        # Subtract 30 minutes from a specific datetime
+        # 从指定日期时间减去 30 分钟
         subtract_minutes: keep.timestamp_delta("2024-01-01T12:00:00Z", -30, "minutes") # Output: 2024-01-01T11:30:00Z
 
-        # Add 1 week to a datetime
+        # 在日期时间上加 1 周
         add_week: keep.timestamp_delta("2024-01-01T00:00:00Z", 1, "weeks") # Output: 2024-01-08T00:00:00Z
 ```
 
@@ -709,8 +709,8 @@ steps:
 
 ### `is_first_time`
 
-**Description:** Checks if an alert with a given fingerprint is firing for the first time or first time within a specified period.
-**Example:**
+**描述：** 检查具有给定指纹的告警是否是首次触发，或是否在指定时间段内首次触发。
+**示例：**
 
 ```yaml
 steps:
@@ -718,10 +718,10 @@ steps:
     provider:
       type: mock
       with:
-        # Check if this is the first time the alert is firing
+        # 检查该告警是否是首次触发
         first_time: keep.is_first_time(alert.fingerprint, tenant_id="tenant-id")
 
-        # Check if this is the first time the alert is firing in the last 24 hours
+        # 检查该告警是否在过去 24 小时内首次触发
         first_time_24h: keep.is_first_time(alert.fingerprint, "24h", tenant_id="tenant-id")
 ```
 
@@ -729,8 +729,8 @@ steps:
 
 ### `all`
 
-**Description:** Checks if all elements in an iterable are identical.
-**Example:**
+**描述：** 检查可迭代对象中的所有元素是否完全相同。
+**示例：**
 
 ```yaml
 steps:
@@ -745,8 +745,8 @@ steps:
 
 ### `diff`
 
-**Description:** Checks if any elements in an iterable are different (opposite of `all`).
-**Example:**
+**描述：** 检查可迭代对象中是否有任何元素不同（`all` 的反义）。
+**示例：**
 
 ```yaml
 steps:

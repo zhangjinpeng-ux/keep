@@ -1,40 +1,39 @@
 ---
-title: "Deduplication"
+title: "去重"
 ---
 
-Alert deduplication is a crucial feature in Keep that helps reduce noise and streamline incident management by grouping similar alerts together. This process ensures that your team isn't overwhelmed by a flood of notifications for what is essentially the same issue, allowing for more efficient and focused incident response.
+告警去重是 Keep 中的一项关键功能，通过将相似告警分组在一起，帮助减少噪音并简化事件管理。此过程确保您的团队不会被本质上是同一问题的大量通知所淹没，从而实现更高效、更有针对性的事件响应。
 
 <Frame width="100" height="200">
   <img height="10" src="/images/deduplication.png" />
 </Frame>
 
+## 术语表
 
-## Glossary
+- **去重规则**：一组用于确定告警是否应分组在一起的条件。
+- **部分去重**：将告警实例关联为单个告警，考虑到同一告警具有不同状态（例如 firing 和 resolved）的情况。这是默认模式，使用指定字段来识别和分组相关告警。
+- **指纹字段**：用于识别相似告警的特定告警属性。
+- **完全去重**：当所有字段完全匹配（显式忽略的字段除外）时，告警被视为相同的模式。通过丢弃重复告警来避免系统过载。
+- **忽略字段**：在完全去重模式下，比较告警时不考虑的字段。
 
-- **Deduplication Rule**: A set of criteria used to determine if alerts should be grouped together.
-- **Partial Deduplication**: Correlates instances of alerts into single alerts, considering the case of the same alert with different statuses (e.g., firing and resolved). This is the default mode where specified fields are used to identify and group related alerts.
-- **Fingerprint Fields**: Specific alert attributes used to identify similar alerts.
-- **Full Deduplication**: A mode where alerts are considered identical if all fields match exactly (except those explicitly ignored). This helps avoid system overload by discarding duplicate alerts.
-- **Ignore Fields**: In full deduplication mode, these are fields that are not considered when comparing alerts.
+## 去重类型
 
-## Deduplication Types
+### 部分去重
+部分去重允许您指定某些字段（指纹字段）用于识别相似告警。在这些指定字段中具有匹配值的告警被视为重复并分组在一起。此方法灵活，允许对告警去重方式进行细粒度控制。
 
-### Partial Deduplication
-Partial deduplication allows you to specify certain fields (fingerprint fields) that are used to identify similar alerts. Alerts with matching values in these specified fields are considered duplicates and are grouped together. This method is flexible and allows for fine-tuned control over how alerts are deduplicated.
+与 Keep 集成的每个提供商都附带了针对该提供商特定告警格式和常见用例定制的预建部分去重规则。
+默认指纹字段使用提供商代码中的 `FINGERPRINT_FIELDS` 属性定义（例如 [Datadog 提供商](https://github.com/keephq/keep/blob/main/keep/providers/datadog_provider/datadog_provider.py#L188) 或 [GCP 监控提供商](https://github.com/keephq/keep/blob/main/keep/providers/gcpmonitoring_provider/gcpmonitoring_provider.py#L52)）。
 
-Every provider integrated with Keep comes with pre-built partial deduplication rule tailored to that provider's specific alert format and common use cases.
-The default fingerprint fields defined using `FINGERPRINT_FIELDS` attributes in the provider code (e.g. [datadog provider](https://github.com/keephq/keep/blob/main/keep/providers/datadog_provider/datadog_provider.py#L188) or [gcp monitoring provider](https://github.com/keephq/keep/blob/main/keep/providers/gcpmonitoring_provider/gcpmonitoring_provider.py#L52)).
+### 完全去重
+启用完全去重后，Keep 还将丢弃完全相同的事件（忽略字段除外）。此模式在确定重复时考虑告警的所有字段，显式忽略的字段除外。
 
-### Full Deduplication
-When full deduplication is enabled, Keep will also discard exact same events (excluding ignore fields). This mode considers all fields of an alert when determining duplicates, except for explicitly ignored fields.
+默认情况下，除 lastReceived 时间外的完全相同事件会被完全去重并丢弃。这有助于防止重复的相同告警导致系统过载。
 
-By default, exact similar events excluding lastReceived time are fully deduplicated and discarded. This helps prevent system overload from repeated identical alerts.
+## 告警与结果的实际示例
 
-## Real Examples of Alerts and Results
+### 示例 1：部分去重
 
-### Example 1: Partial Deduplication
-
-**Rule** - Deduplicate based on 'service' and 'error_message' fields.
+**规则** - 基于 'service' 和 'error_message' 字段进行去重。
 
 ```json
 # alert 1
@@ -60,15 +59,15 @@ By default, exact similar events excluding lastReceived time are fully deduplica
 }
 ```
 
-**Result**:
-- Alerts 1 and 2 are deduplicated into a single alert, fields are updated.
-- Alert 3 remains separate as it has a different service and error message.
+**结果**：
+- 告警 1 和 2 被去重为单个告警，字段已更新。
+- 告警 3 保持独立，因为它具有不同的服务和错误消息。
 
-### Example 2: Full Deduplication
+### 示例 2：完全去重
 
-**Rule**: Full deduplication with 'timestamp' as an ignore field
+**规则**：完全去重，'timestamp' 为忽略字段
 
-**Incoming Alerts**:
+**传入告警**：
 
 ```json
 
@@ -79,7 +78,7 @@ By default, exact similar events excluding lastReceived time are fully deduplica
     user_id: "12345",
     lastReceived: "2023-05-02T14:00:00Z"
 }
-# alert 2 (discarded as its identical)
+# alert 2 (被丢弃，因为完全相同)
 {
     service: "api",
     error: "Rate limit exceeded",
@@ -95,16 +94,16 @@ By default, exact similar events excluding lastReceived time are fully deduplica
 }
 ```
 
-**Result**:
-- Alerts 1 and 2 are deduplicated as they are identical except for the ignored timestamp field.
-- Alert 3 remains separate due to the different user_id.
+**结果**：
+- 告警 1 和 2 被去重，因为除了被忽略的 timestamp 字段外完全相同。
+- 告警 3 保持独立，因为 user_id 不同。
 
-## How It Works
+## 工作原理
 
-Keep's deduplication process follows these steps:
+Keep 的去重过程遵循以下步骤：
 
-1. **Alert Ingestion**: Every alert received by Keep is first ingested into the system.
+1. **告警摄入**：Keep 接收到的每条告警首先被摄入到系统中。
 
-2. **Enrichment**: After ingestion, each alert undergoes an enrichment process. This step adds additional context or information to the alert, enhancing its value and usefulness.
+2. **富化**：摄入后，每条告警经过富化过程。此步骤为告警添加额外的上下文或信息，增强其价值和实用性。
 
-3. **Deduplication**: Following enrichment, Keep's alert deduplicator comes into play. It applies the defined deduplication rules to the enriched alerts.
+3. **去重**：富化后，Keep 的告警去重器开始工作。它对富化后的告警应用已定义的去重规则。

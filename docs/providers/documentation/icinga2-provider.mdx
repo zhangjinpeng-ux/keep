@@ -13,35 +13,35 @@ import ProviderLogo from '@components/ProviderLogo';
 
 # Icinga2 Provider
 
-The Icinga2 provider allows you to receive alerts from Icinga2 monitoring system within Keep.
-Icinga2 provider supports 2 methods for recieving alerts; Webhooks & API Polling.
+Icinga2 提供者允许你在 Keep 中接收来自 Icinga2 监控系统的告警。
+Icinga2 提供者支持两种接收告警的方法：Webhooks 和 API 轮询。
 
-The recommended and primary method for receiving alerts is via Webhooks.
+接收告警的推荐和主要方法是通过 Webhooks。
 
-## Setup
+## 设置
 
-### Prerequisites
-1. Access to an Icinga2 instance
-2. API user with relevant permissions
-3. Keep instance with webhook capability
+### 前提条件
+1. 访问 Icinga2 实例
+2. 具有相关权限的 API 用户
+3. 具有 webhook 能力的 Keep 实例
 
-### Configuration
+### 配置
 
-The provider requires the following configuration:
+提供者需要以下配置：
 
 ```yaml
 authentication:
-  host_url: "https://icinga2.example.com"  # Your Icinga2 instance URL
-  api_user: "your-api-user"                # Icinga2 API username
-  api_password: "your-api-password"        # Icinga2 API password
+  host_url: "https://icinga2.example.com"  # 你的 Icinga2 实例 URL
+  api_user: "your-api-user"                # Icinga2 API 用户名
+  api_password: "your-api-password"        # Icinga2 API 密码
 ```
 
-### Webhook Configuration
-To configure Icinga2 to send alerts to Keep via webhooks:
+### Webhook 配置
+要将 Icinga2 配置为通过 webhooks 向 Keep 发送告警：
 
-1. Navigate to your Icinga2 configuration directory
-2. Create or edit the ```eventcommands.conf``` file
-3. Add the following event command configuration:
+1. 导航到你的 Icinga2 配置目录
+2. 创建或编辑 ```eventcommands.conf``` 文件
+3. 添加以下事件命令配置：
 
 ```plaintext
 object EventCommand "keep-notification" {
@@ -85,19 +85,19 @@ object EventCommand "keep-notification" {
   }
 }
 ```
-4. Define variables in your Icinga2 Configuration:
-    - ```keep_api_key```: Your Keep API key with webhook role
-    - ```keep_webhook_url```: Your Keep Webhook URL
-5. Create a notification rule that uses this event command
-6. Restart Icinga2 to apply changes
+4. 在你的 Icinga2 配置中定义变量：
+    - ```keep_api_key```：具有 webhook 角色的 Keep API 密钥
+    - ```keep_webhook_url```：你的 Keep Webhook URL
+5. 创建一个使用此事件命令的通知规则
+6. 重启 Icinga2 以应用更改
 
-### State Mapping
+### 状态映射
 
-By Default, Icinga2 states are automatically mapped to Keep alert severities & statuses as follows:
+默认情况下，Icinga2 状态自动映射到 Keep 告警严重程度和状态，如下所示：
 
 <TableWrapper>
-#### Status Mapping
-| Icinga2 State | Keep Status |
+#### 状态映射
+| Icinga2 状态 | Keep 状态 |
 |:--------------|:------------|
 | OK            | RESOLVED    |
 | WARNING       | FIRING      |
@@ -109,8 +109,8 @@ By Default, Icinga2 states are automatically mapped to Keep alert severities & s
 </TableWrapper>
 
 <TableWrapper>
-#### Severity Mapping
-| Icinga2 State | Keep Severity |
+#### 严重程度映射
+| Icinga2 状态 | Keep 严重程度 |
 |:--------------|:--------------|
 | OK            | INFO          |
 | WARNING       | WARNING       |

@@ -1,26 +1,26 @@
 ---
-title: "FAQ"
+title: "常见问题"
 sidebarTitle: FAQ
 ---
 
-## FAQ
+## 常见问题
 
 ### 1. "Failed to copy alert/fingerprint. Please check your browser permissions"
 
-Modern browsers block clipboard access from insecure ("http") origins for security reasons.
+现代浏览器出于安全原因会阻止来自不安全（"http"）来源的剪贴板访问。
 
-To confirm the root cause of the issue, check your website settings in the browser:
+要确认问题的根本原因，请检查浏览器中的网站设置：
 
 <img width="320" src="/images/faq/faq-browser-settings.png" />
 
-If you see the "Blocked to protect your privacy" message or similar text under clipboard settings, this confirms the error is due to an insecure origin:
+如果您在剪贴板设置下看到 "Blocked to protect your privacy" 消息或类似文本，这确认了错误是由于不安全来源造成的：
 
 <img width="480" src="/images/faq/faq-clipboard-blocked.png" />
 
-To resolve this:
+解决方法：
 
-- For production: Configure HTTPS for your Keep deployment
-- For local development: Use "localhost" which browsers treat as a secure origin
-- If using a custom domain locally: Enable HTTPS or switch to "localhost"
+- 生产环境：为您的 Keep 部署配置 HTTPS
+- 本地开发：使用 "localhost"，浏览器将其视为安全来源
+- 如果在本地使用自定义域名：启用 HTTPS 或切换到 "localhost"
 
-If you're accessing Keep from a secure origin and still experiencing this issue, please [reach&nbsp;out](https://slack.keephq.dev) to us.
+如果您从安全来源访问 Keep 仍然遇到此问题，请[联系我们](https://slack.keephq.dev)。

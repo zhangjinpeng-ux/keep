@@ -8,41 +8,41 @@ Keep Enterprise On-Premises: ✅ <br/>
 Keep Open Source: ⛔️
 </Tip>
 
-Keep supports multi-tenant environments through Auth0, enabling separate tenants to operate independently within the same Keep platform.
+Keep 通过 Auth0 支持多租户环境，使独立的租户能够在同一 Keep 平台中独立运行。
 
 <Frame>
   <img src="/images/auth0auth.png" width="500"/>
 </Frame>
 
-### When to Use
+### 何时使用
 
-- **Already using Auth0:** If you are already using Auth0 in your organization, you can leverage it as Keep authentication provider.
-- **SSO/SAML:** Auth0 supports various Single Sign-On (SSO) and SAML protocols, allowing you to integrate Keep with your existing identity management systems.
+- **已在使用 Auth0：** 如果您的组织已在用 Auth0，您可以将其作为 Keep 的认证提供商。
+- **SSO/SAML：** Auth0 支持各种 Single Sign-On (SSO) 和 SAML 协议，允许您将 Keep 与现有的身份管理系统集成。
 
-### Setup Instructions
+### 设置说明
 
-To start Keep with Auth0 authentication, set the following environment variables:
+要使用 Auth0 认证启动 Keep，请设置以下环境变量：
 
-#### Frontend Environment Variables
+#### 前端环境变量
 
-| Environment Variable | Description | Required | Default Value |
+| 环境变量 | 描述 | 是否必需 | 默认值 |
 |--------------------|-----------|:--------:|:-------------:|
-| AUTH_TYPE | Set to 'AUTH0' for Auth0 authentication | Yes | - |
-| AUTH0_DOMAIN | Your Auth0 domain | Yes | - |
-| AUTH0_CLIENT_ID | Your Auth0 client ID | Yes | - |
-| AUTH0_CLIENT_SECRET | Your Auth0 client secret | Yes | - |
-| AUTH0_ISSUER | Your Auth0 API issuer | Yes | - |
+| AUTH_TYPE | 设置为 'AUTH0' 以启用 Auth0 认证 | 是 | - |
+| AUTH0_DOMAIN | 您的 Auth0 域名 | 是 | - |
+| AUTH0_CLIENT_ID | 您的 Auth0 客户端 ID | 是 | - |
+| AUTH0_CLIENT_SECRET | 您的 Auth0 客户端密钥 | 是 | - |
+| AUTH0_ISSUER | 您的 Auth0 API 签发者 | 是 | - |
 
-#### Backend Environment Variables
+#### 后端环境变量
 
-| Environment Variable | Description | Required | Default Value |
+| 环境变量 | 描述 | 是否必需 | 默认值 |
 |--------------------|-----------|:--------:|:-------------:|
-| AUTH_TYPE | Set to 'AUTH0' for Auth0 authentication | Yes | - |
-| AUTH0_MANAGEMENT_DOMAIN | Your Auth0 management domain | Yes | - |
-| AUTH0_CLIENT_ID | Your Auth0 client ID | Yes | - |
-| AUTH0_CLIENT_SECRET | Your Auth0 client secret | Yes | - |
-| AUTH0_AUDIENCE | Your Auth0 API audience | Yes | - |
+| AUTH_TYPE | 设置为 'AUTH0' 以启用 Auth0 认证 | 是 | - |
+| AUTH0_MANAGEMENT_DOMAIN | 您的 Auth0 管理域名 | 是 | - |
+| AUTH0_CLIENT_ID | 您的 Auth0 客户端 ID | 是 | - |
+| AUTH0_CLIENT_SECRET | 您的 Auth0 客户端密钥 | 是 | - |
+| AUTH0_AUDIENCE | 您的 Auth0 API 受众 | 是 | - |
 
-### Example configuration
+### 配置示例
 
-Use the `docker-compose-with-auth0.yml` for an easy setup, which includes necessary environment variables for enabling Auth0 authentication.
+使用 `docker-compose-with-auth0.yml` 进行简单设置，其中包含启用 Auth0 认证所需的环境变量。

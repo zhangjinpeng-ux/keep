@@ -1,10 +1,10 @@
 ---
-title: "Continue on Error"
+title: "出错时继续执行"
 ---
 
-This workflow demonstrates `continue_on_error`, which lets a step or action fail without stopping the rest of the workflow — similar to `continue-on-error` in GitHub Actions.
+此工作流演示了 `continue_on_error` 的用法，它允许某个步骤或动作失败时不会停止工作流的其余部分 —— 类似于 GitHub Actions 中的 `continue-on-error`。
 
-**Use case:** enrich an alert with optional data from an external API, then always send a Slack notification regardless of whether the enrichment succeeded.
+**用例：** 使用来自外部 API 的可选数据增强告警，然后无论增强是否成功，都始终发送 Slack 通知。
 
 ```yaml
 workflow:
@@ -35,12 +35,12 @@ workflow:
             Enrichment: {{ steps.fetch-optional-enrichment.results | default('unavailable') }}
 ```
 
-**How it works:**
+**工作原理：**
 
-1. The `fetch-optional-enrichment` step calls an external API. If the API is down or returns an error, the failure is logged as a warning and execution continues.
-2. The `notify-slack` action always runs, using the enrichment results if available or falling back gracefully if not.
+1. `fetch-optional-enrichment` 步骤调用外部 API。如果 API 宕机或返回错误，该失败会被记录为警告，执行继续。
+2. `notify-slack` 动作始终运行，如果增强结果可用则使用它们，否则优雅地回退。
 
-The same flag works on actions. In the example below, a best-effort ticket is created in ServiceNow and a Slack message is sent regardless of whether the ticket creation succeeded:
+相同的标志也适用于动作。在以下示例中，会尽力在 ServiceNow 中创建一个工单，并且无论工单创建是否成功，都会发送 Slack 消息：
 
 ```yaml
 workflow:
@@ -71,5 +71,5 @@ workflow:
 ```
 
 <Note>
-When `continue_on_error: true` is set, the step or action failure is logged as a warning but does **not** mark the overall workflow execution as failed.
+当设置 `continue_on_error: true` 时，步骤或动作的失败会被记录为警告，但**不会**将整个工作流执行标记为失败。
 </Note>

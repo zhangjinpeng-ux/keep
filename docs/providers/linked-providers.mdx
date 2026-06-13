@@ -3,33 +3,33 @@ title: "Linked providers"
 description: "Understanding linked vs connected providers in Keep"
 ---
 
-# Linked providers
+# 链接提供者
 
-In Keep, providers can be either "connected" or "linked." Understanding the difference is important for proper alert routing and management.
+在 Keep 中，提供者可以是"已连接"或"已链接"的。理解它们之间的区别对于正确的告警路由和管理非常重要。
 
 <Frame>
   <img src="/images/linked-providers.png" />
 </Frame>
 
-## Connected vs linked providers
+## 已连接提供者与已链接提供者
 
-- **Connected Providers**: These are providers that have been explicitly configured in Keep through the UI or API. They have full provider configuration and authentication details.
+- **已连接提供者（Connected Providers）**：这些是在 Keep 中通过 UI 或 API 显式配置的提供者。它们具有完整的提供者配置和认证详细信息。
 
-- **Linked Providers**: These are providers that send alerts to Keep without being explicitly connected. They appear automatically when Keep receives alerts from them through webhooks or push mechanisms.
+- **已链接提供者（Linked Providers）**：这些是向 Keep 发送告警但没有显式连接的提供者。当 Keep 通过 webhook 或推送机制从它们接收告警时，它们会自动出现。
 
-## How linking works
+## 链接的工作原理
 
-When Keep receives alerts from an unconnected provider (like Prometheus pushing alerts), it automatically creates a "linked" provider entry. This allows you to:
+当 Keep 从未连接的提供者（如 Prometheus 推送告警）接收告警时，它会自动创建一个"已链接"的提供者条目。这使你可以：
 
-- Track which systems are sending alerts
-- See when Keep last received an alert
-- Apply deduplication rules specific to that provider
+- 追踪哪些系统正在发送告警
+- 查看 Keep 上次接收告警的时间
+- 应用特定于该提供者的去重规则
 
-## Attaching alerts to connected providers
+## 将告警附加到已连接提供者
 
-If you have a connected provider and want to associate incoming alerts with it instead of creating a linked provider, add the `provider_id` query parameter to the webhook URL.
+如果你有一个已连接的提供者，并希望将传入告警关联到它而不是创建链接的提供者，请在 webhook URL 中添加 `provider_id` 查询参数。
 
-For example, with Prometheus AlertManager:
+例如，对于 Prometheus AlertManager：
 
 ```yaml
 alertmanager:
@@ -40,7 +40,7 @@ alertmanager:
           - url: "https://api.keephq.dev/alerts/event/prometheus?provider_id=your_provider_id"
 ```
 
-Or with other webhook-based integrations:
+或者对于其他基于 webhook 的集成：
 
 ```bash
 # Grafana webhook
@@ -49,35 +49,35 @@ https://api.keephq.dev/alerts/event/grafana?provider_id=grafana-prod
 # Datadog webhook  
 https://api.keephq.dev/alerts/event/datadog?provider_id=datadog-main
 
-# Generic webhook
+# 通用 webhook
 https://api.keephq.dev/alerts/event/webhook?provider_id=custom-webhook
 ```
 
-## Best practices
+## 最佳实践
 
-1. **For Production Systems**: It's recommended to use connected providers when possible, as they provide:
+1. **对于生产系统**：建议尽可能使用已连接提供者，因为它们提供：
 
-   - Better authentication and security
-   - Access to provider-specific features
-   - Clearer audit trail
+   - 更好的认证和安全性
+   - 访问提供者特定功能
+   - 更清晰的审计追踪
 
-2. **For Testing/Development**: Linked providers can be useful for:
+2. **对于测试/开发**：已链接提供者适用于：
 
-   - Quick prototyping
-   - Testing alert flows
-   - Temporary integrations
+   - 快速原型设计
+   - 测试告警流程
+   - 临时集成
 
-3. **Converting Linked to Connected**: If you regularly receive alerts from a linked provider, consider:
-   - Setting up a proper provider connection
-   - Using the `provider_id` parameter to attach alerts to the connected provider
+3. **将已链接转换为已连接**：如果你经常从已链接提供者接收告警，请考虑：
+   - 设置正式的提供者连接
+   - 使用 `provider_id` 参数将告警附加到已连接提供者
 
-## Limitations
+## 限制
 
-Linked providers:
+已链接提供者：
 
-- Can't be used to pull alerts or data
-- Don't have authentication details
-- Can't be used for provider-specific actions
-- May have limited deduplication capabilities
+- 不能用于拉取告警或数据
+- 没有认证详细信息
+- 不能用于提供者特定的操作
+- 可能具有有限的去重能力
 
-For full capabilities, consider converting linked providers to connected providers when they become part of your permanent alerting infrastructure.
+如需完整功能，当已链接提供者成为你永久告警基础设施的一部分时，请考虑将它们转换为已连接提供者。

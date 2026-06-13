@@ -2,23 +2,23 @@
 title: "Dashboard Provisioning"
 ---
 
-Provisioning dashboards in Keep allows you to configure and manage visual representations of your data. This section will guide you through the steps required to set up and provision dashboards.
+在 Keep 中预置仪表板允许您配置和管理数据的可视化表示。本节将指导您完成设置和预置仪表板所需的步骤。
 
-### Dashboard Provisioning Overview
+### 仪表板预置概述
 
-Dashboards in Keep are configured using JSON strings that define the layout, data sources, and visual components. These configurations can be managed through environment variables or configuration files.
+Keep 中的仪表板使用 JSON 字符串配置，定义布局、数据源和可视化组件。这些配置可以通过环境变量或配置文件进行管理。
 
-### Environment Variables
+### 环境变量
 
-To provision dashboards, you need to set the following environment variable:
+要预置仪表板，您需要设置以下环境变量：
 
-| Environment Variable | Purpose                                         |
+| 环境变量 | 用途                                         |
 | -------------------- | ----------------------------------------------- |
-| `KEEP_DASHBOARDS`    | JSON string containing dashboard configurations |
+| `KEEP_DASHBOARDS`    | 包含仪表板配置的 JSON 字符串 |
 
-### Example Configuration
+### 配置示例
 
-Here is an example of how to set the `KEEP_DASHBOARDS` environment variable (dumped from the database):
+以下是如何设置 `KEEP_DASHBOARDS` 环境变量的示例（从数据库中导出）：
 
 ```json
 [
@@ -80,4 +80,4 @@ Here is an example of how to set the `KEEP_DASHBOARDS` environment variable (dum
 ]
 ```
 
-Please read more at https://github.com/react-grid-layout/react-grid-layout for more information on the layout configuration options.
+有关布局配置选项的更多信息，请访问 https://github.com/react-grid-layout/react-grid-layout。

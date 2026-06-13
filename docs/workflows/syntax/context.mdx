@@ -1,56 +1,56 @@
 ---
-title: "Context"
+title: "上下文"
 ---
 
-The **Context** in Keep workflows allows you to reference and utilize data dynamically across different parts of your workflow. Context variables give you access to runtime data such as alert details, results from previous steps or actions, and constants defined in your workflow.
+Keep 工作流中的**上下文（Context）**允许您动态地引用和利用工作流中不同部分的数据。上下文变量使您可以访问运行时数据，例如告警详情、前序步骤或动作的结果，以及工作流中定义的常量。
 
-This capability makes workflows flexible, reusable, and able to handle complex scenarios dynamically.
+此功能使工作流灵活、可重用，并能够动态处理复杂场景。
 
 ---
 
-## Accessing Context
+## 访问上下文
 
-Context variables can be accessed using curly braces (`{{ }}`). You can use these variables directly in triggers, steps, and actions. The context includes:
+上下文变量可以使用双花括号（`{{ }}`）来访问。您可以直接在触发器、步骤和动作中使用这些变量。上下文包括：
 
-1. **Alert Data**: Access data from the alert triggering the workflow.
-2. **Incident Data**: If the workflow is incident-based, you can access the incident's attributes.
-3. **Steps and Actions Results**: Retrieve data produced by previous steps or actions using their unique IDs.
+1. **告警数据（Alert Data）**：访问触发工作流的告警数据。
+2. **事件数据（Incident Data）**：如果工作流是基于事件的，您可以访问事件的属性。
+3. **步骤和动作结果（Steps and Actions Results）**：使用步骤或动作的唯一 ID 获取它们产生的数据。
 
-### Alert Data
+### 告警数据
 
-You can access attributes of the alert anywhere in the workflow:
+您可以在工作流的任何位置访问告警的属性：
 
 ```yaml
 message: "Alert triggered: {{ alert.name }} - Severity: {{ alert.severity }}"
 ```
 
-### Incident Data
+### 事件数据
 
-For incident workflows, access incident-related context:
+对于事件工作流，访问与事件相关的上下文：
 
 ```yaml
 if: "{{ incident.current_tier == 1 }}"
 ```
 
-### Steps Results
+### 步骤结果
 
-Access results from previous steps:
+访问前序步骤的结果：
 
 ```yaml
 message: "Query results: {{ steps.get-max-datetime.results }}"
 ```
 
-### Action Results
+### 动作结果
 
-Retrieve data from completed actions:
+获取已完成动作的数据：
 
 ```yaml
 if: "{{ actions.trigger-email.results.success }}"
 ```
 
-### Constants
+### 常量
 
-Define reusable values in the workflow and access them:
+在工作流中定义可复用的值并访问它们：
 
 ```yaml
 consts:
@@ -70,11 +70,11 @@ actions:
         message: "{{ consts.alert_message }}"
 ```
 
-## Using Context in Loops
+## 在循环中使用上下文
 
-When iterating over data in a `foreach` loop, the context provides `foreach.value` for the current iteration.
+在 `foreach` 循环中遍历数据时，上下文会为当前迭代提供 `foreach.value`。
 
-For example:
+例如：
 
 ```yaml
 steps:
@@ -95,11 +95,11 @@ actions:
 
 ---
 
-## Examples of Context Usage
+## 上下文使用示例
 
-### Dynamic Action Execution
+### 动态动作执行
 
-Using context to trigger actions conditionally:
+使用上下文有条件地触发动作：
 
 ```yaml
 actions:
@@ -111,9 +111,9 @@ actions:
         message: "Critical alert: {{ alert.name }}"
 ```
 
-### Enriching Alerts
+### 增强告警
 
-You can use results from a step to enrich an alert
+您可以使用步骤的结果来增强告警
 
 ```yaml
 steps:
@@ -134,7 +134,7 @@ actions:
             value: "{{ steps.fetch-customer-details.results.name }}"
 ```
 
-### Conditional Logic Based on Step Results
+### 基于步骤结果的条件逻辑
 
 ```yaml
 actions:

@@ -1,22 +1,22 @@
 ---
-title: "Permissions"
+title: "权限"
 ---
 
-# Permissions
+# 权限
 
-Permissions in Keep Workflow Engine define **who can execute a workflow manually**.
+Keep 工作流引擎中的权限定义了**谁可以手动执行工作流**。
 
-They allow you to restrict access to workflows based on user roles or specific email addresses, ensuring that only authorized users can trigger sensitive workflows.
+它们允许您根据用户角色或特定电子邮件地址限制对工作流的访问，确保只有授权用户才能触发敏感的工作流。
 
 <Note>
-Currently, permissions can only be edited directly in the workflow YAML file. The workflow builder UI does not support editing permissions at this time.
+目前，权限只能在工作流 YAML 文件中直接编辑。工作流构建器 UI 尚不支持编辑权限。
 </Note>
 
 ---
 
-## General Structure
+## 总体结构
 
-Permissions are defined at the top level of a workflow YAML file using the `permissions` field, which accepts a list of roles and/or email addresses.
+权限在工作流 YAML 文件的顶层使用 `permissions` 字段定义，该字段接受一个角色和/或电子邮件地址的列表。
 
 ```yaml
 workflow:
@@ -30,28 +30,28 @@ workflow:
     # workflow steps
 ```
 
-## How Permissions Work
+## 权限如何工作
 
-When a workflow has permissions defined:
+当工作流定义了权限时：
 
-1. **Admin users** can always run the workflow regardless of the permissions list
-2. **Non-admin users** can only run the workflow if:
-   - Their role is explicitly listed in the permissions
-   - OR their email address is explicitly listed in the permissions
-3. If the `permissions` field is empty or not defined, any user with the `write:workflows` permission can run the workflow
+1. **管理员用户**无论权限列表如何，始终可以运行该工作流
+2. **非管理员用户**仅在以下情况下可以运行工作流：
+   - 其角色被显式列在权限列表中
+   - 或其电子邮件地址被显式列在权限列表中
+3. 如果 `permissions` 字段为空或未定义，则任何拥有 `write:workflows` 权限的用户都可以运行该工作流
 
-## Supported Role Types
+## 支持的角色类型
 
-Keep supports the following role types that can be used in the permissions list:
+Keep 支持以下可在权限列表中使用的角色类型：
 
-- `admin`: Administrator users with full system access
-- `noc`: Network Operations Center users with read-only access
-- `webhook`: API access for webhook integrations
-- `workflowrunner`: Special role for running workflows via API
+- `admin`：拥有完整系统访问权限的管理员用户
+- `noc`：具有只读访问权限的网络运维中心用户
+- `webhook`：用于 Webhook 集成的 API 访问
+- `workflowrunner`：用于通过 API 运行工作流的特殊角色
 
-## Examples
+## 示例
 
-### Restricting to Admin Users Only
+### 仅限管理员用户
 
 ```yaml
 workflow:
@@ -63,7 +63,7 @@ workflow:
     # workflow steps
 ```
 
-### Allowing Specific Users
+### 允许特定用户
 
 ```yaml
 workflow:
@@ -76,7 +76,7 @@ workflow:
     # workflow steps
 ```
 
-### Combining Roles and Individual Users
+### 组合角色和个体用户
 
 ```yaml
 workflow:
@@ -90,10 +90,10 @@ workflow:
     # workflow steps
 ```
 
-## Best Practices
+## 最佳实践
 
-- Use permissions for workflows that have significant impact on systems or trigger sensitive operations
-- Consider using role-based permissions (like `admin` or `noc`) for groups of users with similar responsibilities
-- List individual email addresses only for exceptions or when very specific access control is needed
-- Review workflow permissions regularly as part of security audits
-- Document which workflows have restricted permissions in your internal documentation
+- 对于对系统有重大影响或触发敏感操作的工作流，使用权限控制
+- 对于具有相似职责的用户组，考虑使用基于角色的权限（如 `admin` 或 `noc`）
+- 仅在例外情况或需要非常具体的访问控制时才列出个人电子邮件地址
+- 作为安全审计的一部分，定期审查工作流权限
+- 在内部文档中记录哪些工作流具有受限权限

@@ -1,23 +1,23 @@
 ---
-title: "Handling High-Severity Sentry Alerts"
+title: "处理高严重性 Sentry 告警"
 ---
 
 <Info>
 
-Link to the [workflow](https://github.com/keephq/keep/blob/main/examples/workflows/create_jira_ticket_upon_alerts.yml).
+链接到[工作流](https://github.com/keephq/keep/blob/main/examples/workflows/create_jira_ticket_upon_alerts.yml)。
 
 </Info>
 
-This workflow handles critical alerts from Sentry based on the service they are associated with.
+此工作流根据 Sentry 告警关联的服务来处理严重告警。
 
 
 
 
-Explanation:
-- Trigger: Activated by critical alerts from Sentry.
-- Actions:
-- - Send a Slack message to the payments team for alerts related to the `payments` service.
-- - Create a Jira ticket for alerts related to the `ftp` service if a ticket ID is not already present.
+说明：
+- 触发器：由来自 Sentry 的严重告警触发。
+- 动作：
+- - 对于与 `payments` 服务相关的告警，向支付团队发送 Slack 消息。
+- - 对于与 `ftp` 服务相关的告警，如果还没有工单 ID，则创建 Jira 工单。
 
 
 

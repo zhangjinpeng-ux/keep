@@ -1,86 +1,86 @@
 ---
-title: "Installation"
+title: "安装"
 ---
-<Info>Missing an installation? submit a <a href="https://github.com/keephq/keep/issues/new?assignees=&labels=&projects=&template=use_case.md&title=">new installation</a>  request and we will add it as soon as we can.</Info>
+<Info>缺少安装方式？提交一个 <a href="https://github.com/keephq/keep/issues/new?assignees=&labels=&projects=&template=use_case.md&title=">新安装请求</a>，我们会尽快添加。</Info>
 
 <Info>
-We recommend to install Keep CLI with Python version 3.11 for optimal compatibility and performance.
-This choice ensures seamless integration with all dependencies, including pyarrow, which currently does not support Python 3.12
+我们建议使用 Python 3.11 版本来安装 Keep CLI，以获得最佳的兼容性和性能。
+此选择可确保与所有依赖项（包括 pyarrow）的无缝集成，pyarrow 目前不支持 Python 3.12。
 </Info>
 
-<Tip>Need Keep CLI on other versions? Feel free to contact us! </Tip>
+<Tip>需要其他版本的 Keep CLI？欢迎联系我们！</Tip>
 
-## Clone and install (Option 1)
+## 克隆并安装（方案一）
 
-### Install
-First, clone Keep repository:
+### 安装
+首先，克隆 Keep 仓库：
 
 ```shell
 git clone https://github.com/keephq/keep.git && cd keep
 ```
 
-Install Keep CLI with `pip`:
+使用 `pip` 安装 Keep CLI：
 
 ```shell
-# MacOS if python or pip not present:
+# MacOS 如果未安装 python 或 pip：
 # brew install python@3.11
 # brew install postgresql
 pip3.11 install .
 ```
-or with `poetry`:
+或使用 `poetry`：
 
 ```shell
 poetry install
 ```
 
-From now on, Keep should be installed locally and accessible from your CLI, test it by executing:
+从现在起，Keep 应该已本地安装并可从你的 CLI 访问，通过执行以下命令进行测试：
 
 ```
 keep version
 ```
 
-### Configuration
+### 配置
 
-To get API key, check Keep UI -> your username (bottom left) -> Settings -> API Keys
+要获取 API key，请查看 Keep UI -> 你的用户名（左下角）-> Settings -> API Keys
 ```
 keep config new --url http://backend.my_keep.my_awesome_org.com:backend_port --api-key your_personal_api_key
 ```
 
-### Test
+### 测试
 
-Now, 
+现在，
 ```
 keep workflow apply -f examples/workflows/query_clickhouse.yml
 ```
 
-Congrats 🥳 Check your UI for the new workflow uploaded from the YAML file.
+恭喜 🥳 检查你的 UI，查看从 YAML 文件上传的新工作流。
 
 
-## Docker image (Option 2)
-### Install
+## Docker 镜像（方案二）
+### 安装
 
 ```
 docker run -v ${PWD}:/app -v ~/.keep.yaml:/root/.keep.yaml -it us-central1-docker.pkg.dev/keephq/keep/keep-cli keep config new --url http://backend.my_keep.my_awesome_org.com:backend_port --api-key your_personal_api_key
 ```
 
-### Test
+### 测试
 ```
 docker run -v ${PWD}:/app -v ~/.keep.yaml:/root/.keep.yaml -it us-central1-docker.pkg.dev/keephq/keep/keep-cli workflow apply -f examples/workflows/query_clickhouse.yml
 ```
 
 
-## Enable Auto Completion
-Keep's CLI supports shell auto-completion, which can make your life a whole lot easier 😌
-If you're using zsh
+## 启用自动补全
+Keep CLI 支持 shell 自动补全，这可以让你的操作更加便捷 😌
+如果你使用 zsh：
 
 ```shell title=~/.zshrc
 eval "$(_KEEP_COMPLETE=zsh_source keep)"
 ```
 
-If you're using bash
+如果你使用 bash：
 
 ```bash title=~/.bashrc
 eval "$(_KEEP_COMPLETE=bash_source keep)"
 ```
 
-<Info>Using eval means that the command is invoked and evaluated every time a shell is started, which can delay shell responsiveness. To speed it up, write the generated script to a file, then source that.</Info>
+<Info>使用 eval 意味着每次启动 shell 时都会调用并执行该命令，这可能会影响 shell 的响应速度。要加快速度，可以将生成的脚本写入文件，然后 source 该文件。</Info>

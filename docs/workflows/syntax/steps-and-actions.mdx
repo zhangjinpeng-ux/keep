@@ -1,25 +1,25 @@
 ---
-title: "Steps and Actions"
+title: "步骤和动作"
 ---
 
-Steps and actions are the building blocks of workflows in Keep Workflow Engine. While they share a similar structure and syntax, the **difference between steps and actions is mostly semantic**:
+步骤（Steps）和动作（Actions）是 Keep 工作流引擎中构建工作流的基础模块。虽然它们共享相似的结构和语法，但**步骤和动作之间的区别主要是语义上的**：
 
-- **Steps**: Focused on querying data or triggering fetch-like operations from providers (e.g., querying databases, fetching logs, or retrieving information).
-- **Actions**: Geared toward notifying or triggering outcomes, such as sending notifications, updating tickets, or invoking external services.
+- **步骤**：侧重于从提供者查询数据或触发类似获取的操作（例如，查询数据库、获取日志或检索信息）。
+- **动作**：侧重于通知或触发结果，例如发送通知、更新工单或调用外部服务。
 
-Together, steps and actions allow workflows to both gather the necessary data and act upon it.
+步骤和动作共同使工作流既能收集必要的数据，又能对其采取行动。
 
 ---
 
-## General Structure
+## 总体结构
 
-Both steps and actions are defined using a similar schema:
+步骤和动作都使用类似的模式定义：
 
-### Steps
+### 步骤
 
-Used for querying or fetching data.
+用于查询或获取数据。
 
-Step uses the `_query` method of each provider.
+步骤使用每个提供者的 `_query` 方法。
 
 ```yaml
 steps:
@@ -31,11 +31,11 @@ steps:
         <provider-specific-parameters>
 ```
 
-### Actions
+### 动作
 
-Used for notifications or triggering effects.
+用于通知或触发效果。
 
-Action uses the `_notify` method of each provider.
+动作使用每个提供者的 `_notify` 方法。
 
 ```yaml
 
@@ -49,10 +49,10 @@ actions:
 ```
 
 
-## Examples
+## 示例
 
 
-### Fetch data from a MySQL database
+### 从 MySQL 数据库获取数据
 
 ```yaml
 
@@ -67,7 +67,7 @@ steps:
 ```
 
 
-### Retrieve logs from Datadog
+### 从 Datadog 获取日志
 
 ```yaml
 steps:
@@ -80,7 +80,7 @@ steps:
         timeframe: "1h"
 ```
 
-### Query Kubernetes for running pods
+### 查询 Kubernetes 运行中的 Pods
 
 ```yaml
 
@@ -93,7 +93,7 @@ steps:
         command_type: get_pods
 ```
 
-### Send an email
+### 发送电子邮件
 
 ```yaml
 actions:
@@ -107,7 +107,7 @@ actions:
         body: "Your account details have been updated."
 ```
 
-### Send a Slack Message
+### 发送 Slack 消息
 
 ```yaml
 actions:
@@ -120,7 +120,7 @@ actions:
 
 ```
 
-### Create a ticket in ServiceNow
+### 在 ServiceNow 中创建工单
 
 ```yaml
 actions:
@@ -135,13 +135,13 @@ actions:
           description: "Please investigate the issue."
 ```
 
-## Combining Steps and Actions
+## 组合步骤和动作
 
-A workflow typically combines steps (for querying data) with actions (for notifications or outcomes).
+工作流通常将步骤（用于查询数据）与动作（用于通知或结果）组合在一起。
 
-Here's few examples:
+以下是几个示例：
 
-### Query and Notify
+### 查询并通知
 
 ```yaml
 workflow:
@@ -165,7 +165,7 @@ workflow:
           message: "User email: {{ steps.get-user-data.results.email }}"
 ```
 
-### Alert and Incident Management
+### 告警和事件管理
 
 ```yaml
 workflow:
@@ -192,9 +192,9 @@ workflow:
             description: "Details: {{ steps.get-alert-details.results.alert_description }}"
 ```
 
-## Error Handling and Retries
+## 错误处理和重试
 
-Both steps and actions support error handling to ensure workflows can recover from failures.
+步骤和动作都支持错误处理，以确保工作流能够从失败中恢复。
 
 
 ```yaml
@@ -208,13 +208,13 @@ steps:
     on-failure:
       retry:
         count: 3
-        # Retry every 5 seconds
+        # 每 5 秒重试一次
         interval: 5
 ```
 
-### Continue on error
+### 出错时继续执行
 
-By default, if a step or action fails the workflow stops immediately and reports a failure. Set `continue_on_error: true` on any step or action to swallow its failure and continue executing the remaining steps/actions — similar to `continue-on-error` in GitHub Actions.
+默认情况下，如果步骤或动作失败，工作流会立即停止并报告失败。在任意步骤或动作上设置 `continue_on_error: true`，可以吞掉其失败并继续执行剩余的步骤/动作 —— 类似于 GitHub Actions 中的 `continue-on-error`。
 
 ```yaml
 steps:
@@ -231,10 +231,10 @@ steps:
       type: slack
       config: "{{ providers.slack-demo }}"
       with:
-        message: "Runs even if optional-enrichment failed"
+        message: "即使 optional-enrichment 失败也会运行"
 ```
 
-The same attribute works on actions:
+相同的属性也适用于动作：
 
 ```yaml
 actions:
@@ -253,9 +253,9 @@ actions:
       type: slack
       config: "{{ providers.slack-demo }}"
       with:
-        message: "Ticket creation may have failed, check ServiceNow"
+        message: "工单创建可能已失败，请检查 ServiceNow"
 ```
 
 <Note>
-When `continue_on_error: true` is set, the step/action failure is logged as a warning but does **not** mark the overall workflow execution as failed.
+当设置 `continue_on_error: true` 时，步骤/动作的失败会被记录为警告，但**不会**将整个工作流执行标记为失败。
 </Note>

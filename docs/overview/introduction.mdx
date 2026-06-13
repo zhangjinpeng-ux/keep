@@ -1,46 +1,45 @@
 ---
-title: "Introduction"
-description: "Keep is an open-source alert management and AIOps platform that is a swiss-knife for alerting, automation, and noise reduction."
+title: "简介"
+description: "Keep 是一个开源的告警管理和 AIOps 平台，是告警、自动化和降噪的瑞士军刀。"
 ---
 
 <Tip>
-  Keep has a new playground! Visit the [Playground](https://playground.keephq.dev) to explore its powerful features, experiment with configurations, and test AIOps techniques in a sandbox environment.
+  Keep 推出了新的 Playground！访问 [Playground](https://playground.keephq.dev) 探索其强大功能，在沙箱环境中体验配置并测试 AIOps 技术。
 
-
-  Once you're ready to start using Keep in your environment, head over to the [Platform](https://platform.keephq.dev) to set up your tenant and get started. Don't forget to join our [Slack community](https://slack.keephq.dev) for help and to share your feedback.
+  当您准备好在自己的环境中开始使用 Keep 时，前往 [Platform](https://platform.keephq.dev) 设置您的租户并开始使用。别忘了加入我们的 [Slack 社区](https://slack.keephq.dev) 获取帮助并分享您的反馈。
 </Tip>
 
-## What's AIOps?
+## 什么是 AIOps？
 
-In simple words, AI for IT Operations (aka AIOps) is about automating repetitive tasks, reducing noise from monitoring tools, and helping teams overcome alert fatigue by turning overwhelming data into actionable insights.
+简单来说，AI for IT Operations（简称 AIOps）是指自动化重复任务、减少监控工具产生的噪音，并通过将海量数据转化为可操作的洞察，帮助团队克服告警疲劳。
 
-With AIOps, teams can eliminate noise, prioritize critical issues, and focus on solving real problems rather than constantly firefighting alerts.
+借助 AIOps，团队可以消除噪音、优先处理关键问题，并专注于解决真正的难题，而不是不断忙于应对告警。
 
-## Why do we build Keep?
+## 我们为什么构建 Keep？
 
-Working with current tools such as BigPanda, Splunk ITSI, or ServiceNow ITOM, we identified a gap:
+在使用 BigPanda、Splunk ITSI 或 ServiceNow ITOM 等现有工具的过程中，我们发现了一个缺口：
 
-- **No Open Source Solution:** We have Grafana for visualization and Prometheus for metrics, but nothing for AIOps. Keep fills this gap as the first open-source solution for AIOps.
-- **Not DevOps/SRE Friendly:** Current tools are enterprise-focused but not in a good way. If you're an SRE team lead or head of IT operations in a company with ~100 employees, the existing tools won't work for you. They're too expensive, and their UX requires a dedicated team just for setup and maintenance. Keep is enterprise-ready (scaling, SSO, etc.) but also designed for small teams that want to adopt AIOps practices.
-- **A "Post LLM Era" AIOps:** Existing tools were built in a different technical era. Keep is designed to leverage the advancements of the large language model (LLM) era, integrating AI more seamlessly into IT operations.
+- **没有开源解决方案：** 我们有 Grafana 用于可视化、Prometheus 用于指标，但没有用于 AIOps 的工具。Keep 填补了这一空白，成为第一个面向 AIOps 的开源解决方案。
+- **对 DevOps/SRE 不友好：** 现有工具面向企业，但方式并不理想。如果您是一家约 100 人公司的 SRE 团队负责人或 IT 运维负责人，现有工具对您来说不适合。它们太昂贵，而且用户体验需要一个专门的团队来进行设置和维护。Keep 具备企业就绪特性（扩展性、SSO 等），同时也为希望采用 AIOps 实践的小团队设计。
+- **"后 LLM 时代"的 AIOps：** 现有工具建立在不同的技术时代。Keep 旨在利用大语言模型（LLM）时代的进步，将 AI 更无缝地集成到 IT 运维中。
 
-## Our Philosophy
+## 我们的理念
 
-- **Easy to start** – Whether locally or on Kubernetes, we provide one-click solutions like `helm install` and `docker-compose` so you can quickly spin up Keep and start exploring its capabilities.
-- **Easy to extend** – Keep is designed with extensibility in mind, making it straightforward to add new integrations or functionality to meet your specific needs.
-- **Easy to deploy** – Every aspect of Keep can be provisioned as code, enabling seamless automation of deployments and integration into your CI/CD pipelines.
-- **Easy to collaborate** – As an open-source project, we truly believe in the power of community and collaboration. We actively listen to user feedback and strive to continuously improve Keep based on the needs and insights of our users.
+- **易于开始** – 无论是在本地还是在 Kubernetes 上，我们提供一键式解决方案，如 `helm install` 和 `docker-compose`，让您可以快速启动 Keep 并开始探索其能力。
+- **易于扩展** – Keep 在设计时就考虑了可扩展性，使其能够轻松添加新的集成或功能以满足您的特定需求。
+- **易于部署** – Keep 的每个方面都可以作为代码进行配置，实现部署的无缝自动化并集成到您的 CI/CD 流水线中。
+- **易于协作** – 作为一个开源项目，我们真诚地相信社区和协作的力量。我们积极倾听用户反馈，并努力根据用户的需求和见解持续改进 Keep。
 
-## Our Vision
+## 我们的愿景
 
-Keep is built so every team can benefit from AIOps.
+Keep 的构建是为了让每个团队都能从 AIOps 中受益。
 
-Whether you're a small team looking for a Kubernetes-local single pane of glass for your Prometheus alerts, or an enterprise with dozens of tools generating alerts and needing to sync with your ServiceNow tickets, Keep is for you.
+无论您是一个小团队，寻找一个 Kubernetes 本地的统一视图来管理 Prometheus 告警，还是一个拥有数十个工具产生告警并需要与 ServiceNow 工单同步的企业，Keep 都适合您。
 
-Our vision is to democratize AIOps, making it accessible and practical for teams of all sizes.
+我们的愿景是让 AIOps 大众化，使其对任何规模的团队都触手可及且实用。
 
-## What you should read next
+## 接下来您应该阅读什么
 
-- [Key Concepts](/overview/glossary): Understand the foundational ideas behind Keep.
-- [Use Cases](/overview/usecases): Learn how Keep can solve specific IT operations challenges.
-- [Playground](/overview/playground): Explore Keep's playground.
+- [关键概念](/overview/glossary)：了解 Keep 背后的基础理念。
+- [使用案例](/overview/usecases)：了解 Keep 如何解决特定的 IT 运维挑战。
+- [Playground](/overview/playground)：探索 Keep 的 Playground。

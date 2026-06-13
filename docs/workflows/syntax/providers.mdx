@@ -1,25 +1,25 @@
 ---
-title: "Providers"
+title: "提供者"
 ---
 
-Providers are a fundamental part of workflows in Keep. They enable workflows to interact with external systems, fetch data, and perform actions. Each provider is designed to handle specific integrations such as Datadog, Slack, ServiceNow, or custom-built APIs.
+提供者（Providers）是 Keep 工作流的基本组成部分。它们使工作流能够与外部系统交互、获取数据并执行操作。每个提供者旨在处理特定的集成，例如 Datadog、Slack、ServiceNow 或自定义 API。
 
-## Key Features of Providers
+## 提供者的核心特性
 
-- **Extensibility:** Providers can be easily extended to support new systems or custom use cases.
+- **可扩展性：** 提供者可以轻松扩展以支持新系统或自定义用例。
   <tip>
-  You can explore and contribute to the existing providers or create your own in the [Keep Providers Code Directory on GitHub](https://github.com/keephq/keep/providers).
+  您可以在 [Keep Providers 代码目录（GitHub）](https://github.com/keephq/keep/providers) 中探索现有提供者、贡献代码或创建自己的提供者。
   </tip>
 
-- **Parameterization:** Parameters under the `with` section are passed directly to the provider. This allows you to configure provider-specific settings for each step or action.
+- **参数化：** `with` 部分下的参数会直接传递给提供者。这允许您为每个步骤或动作配置提供者特定的设置。
 
-- **Provisioning:** Providers can be provisioned via CI/CD pipelines or through the Keep UI, providing flexibility for both automated and manual setups.
+- **配置管理：** 提供者可以通过 CI/CD 流水线或通过 Keep UI 进行配置，为自动化和手动设置提供灵活性。
 
 ---
 
-## Defining a Provider
+## 定义提供者
 
-To define a provider, include its configuration under the `providers` section of your workflow file. Here's an example:
+要定义提供者，请在工作流文件的 `providers` 部分下包含其配置。示例如下：
 
 ```yaml
 providers:
@@ -29,11 +29,11 @@ providers:
       webhook_url: "{{ env.SLACK_WEBHOOK_URL }}"
 ```
 
-## Using a Provider in a Workflow
+## 在工作流中使用提供者
 
-Once a provider is defined, it can be used in workflow steps or actions by specifying its type and configuration.
+定义提供者后，可以通过指定其类型和配置在工作流步骤或动作中使用它。
 
-For example:
+例如：
 
 ```yaml
 actions:
@@ -47,12 +47,12 @@ actions:
 
 ```
 
-- The `config` field links the action to the provider.
-- The `with` section includes parameters that are passed to the provider.
+- `config` 字段将动作链接到提供者。
+- `with` 部分包含传递给提供者的参数。
 
-## Examples
+## 示例
 
-### Fetching Data with a Provider
+### 使用提供者获取数据
 
 ```yaml
 steps:
@@ -65,7 +65,7 @@ steps:
         timeframe: "1h"
 ```
 
-### Sending Notifications with a Provider
+### 使用提供者发送通知
 ```yaml
 actions:
   - name: notify-slack

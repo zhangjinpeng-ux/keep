@@ -2,7 +2,7 @@
 title: "DB Authentication"
 ---
 
-For applications requiring user management and authentication, Keep supports basic authentication with username and password.
+对于需要用户管理和认证的应用程序，Keep 支持使用用户名和密码的基本认证。
 
 <Frame
     width="75"
@@ -11,23 +11,23 @@ For applications requiring user management and authentication, Keep supports bas
 </Frame>
 
 
-### When to Use
+### 何时使用
 
-- **Self-Hosted Deployments:** When you're deploying Keep for individual use or within an organization.
-- **Enhanced Security:** Provides a simple yet effective layer of security for your Keep instance.
+- **自托管部署：** 当您为个人使用或在组织内部署 Keep 时。
+- **增强安全性：** 为您的 Keep 实例提供简单而有效的安全层。
 
-### Setup Instructions
+### 设置说明
 
-To start Keep with DB authentication, set the following environment variables:
+要使用 DB 认证启动 Keep，请设置以下环境变量：
 
-| Environment Variable | Description | Required | Frontend/Backend | Default Value |
+| 环境变量 | 描述 | 是否必需 | 前端/后端 | 默认值 |
 |--------------------|:-----------:|:--------:|:----------------:|:-------------:|
-| AUTH_TYPE | Set to 'DB' for database authentication | Yes | Both | - |
-| KEEP_JWT_SECRET | Secret for JWT token generation | Yes | Backend | - |
-| KEEP_DEFAULT_USERNAME | Default admin username | No | Backend | keep |
-| KEEP_DEFAULT_PASSWORD | Default admin password | No | Backend | keep |
-| KEEP_FORCE_RESET_DEFAULT_PASSWORD | Override the current admin password | No | Backend | false |
+| AUTH_TYPE | 设置为 'DB' 以启用数据库认证 | 是 | 两者 | - |
+| KEEP_JWT_SECRET | JWT 令牌生成的密钥 | 是 | 后端 | - |
+| KEEP_DEFAULT_USERNAME | 默认管理员用户名 | 否 | 后端 | keep |
+| KEEP_DEFAULT_PASSWORD | 默认管理员密码 | 否 | 后端 | keep |
+| KEEP_FORCE_RESET_DEFAULT_PASSWORD | 覆盖当前管理员密码 | 否 | 后端 | false |
 
-### Example configuration
+### 配置示例
 
-Use the `docker-compose-with-auth.yml` for an easy setup, which includes necessary environment variables for enabling basic authentication.
+使用 `docker-compose-with-auth.yml` 进行简单设置，其中包含启用基本认证所需的环境变量。

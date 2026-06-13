@@ -2,63 +2,63 @@
 title: "OneLogin Authentication"
 ---
 
-This document provides comprehensive information about the OneLogin integration in Keep
+本文档提供了 Keep 中 OneLogin 集成的全面信息
 
-## Overview
+## 概述
 
-Keep supports OneLogin as an authentication provider, enabling:
-- Single Sign-On (SSO) via OneLogin
-- OAuth2/OIDC authentication flow
-- Token refresh capabilities
-- Role-based access control through custom claims
-- Session management through NextAuth.js
+Keep 支持 OneLogin 作为认证提供商，支持：
+- 通过 OneLogin 进行 Single Sign-On (SSO)
+- OAuth2/OIDC 认证流程
+- 令牌刷新能力
+- 通过自定义声明实现基于角色的访问控制
+- 通过 NextAuth.js 进行会话管理
 
-## Environment Variables
+## 环境变量
 
-### Backend Environment Variables
+### 后端环境变量
 
-| Variable | Description | Example |
+| 变量 | 描述 | 示例 |
 |----------|-------------|---------|
-| `AUTH_TYPE` | Set to `"ONELOGIN"` to enable OneLogin authentication | `ONELOGIN` |
-| `ONELOGIN_ISSUER` | The issuer URL for your OneLogin application | `https://company.onelogin.com/oidc/2` |
-| `ONELOGIN_CLIENT_ID` | Client ID of your OneLogin application | `abc123def456ghi789` |
-| `ONELOGIN_CLIENT_SECRET` | Client Secret of your OneLogin application | `abcd1234efgh5678ijkl9012` |
-| `ONELOGIN_ADMIN_ROLE` | Role to be mapped to a keep admin role | `KeepAdmin` |
-| `ONELOGIN_NOC_ROLE` | Role to be mapped to a keep noc role | `KeepNoc` |
-| `ONELOGIN_WEBHOOK_ROLE` | Role to be mapped to a keep webhook role | `KeepWebhook` |
-| `ONELOGIN_AUTO_CREATE_USER` | Whether to try and create autocreate users in keep | `True` |
+| `AUTH_TYPE` | 设置为 `"ONELOGIN"` 以启用 OneLogin 认证 | `ONELOGIN` |
+| `ONELOGIN_ISSUER` | OneLogin 应用程序的签发者 URL | `https://company.onelogin.com/oidc/2` |
+| `ONELOGIN_CLIENT_ID` | OneLogin 应用程序的客户端 ID | `abc123def456ghi789` |
+| `ONELOGIN_CLIENT_SECRET` | OneLogin 应用程序的客户端密钥 | `abcd1234efgh5678ijkl9012` |
+| `ONELOGIN_ADMIN_ROLE` | 映射到 Keep 管理员角色的角色 | `KeepAdmin` |
+| `ONELOGIN_NOC_ROLE` | 映射到 Keep NOC 角色的角色 | `KeepNoc` |
+| `ONELOGIN_WEBHOOK_ROLE` | 映射到 Keep webhook 角色的角色 | `KeepWebhook` |
+| `ONELOGIN_AUTO_CREATE_USER` | 是否尝试在 Keep 中自动创建用户 | `True` |
 
-### Frontend Environment Variables
+### 前端环境变量
 
-| Variable | Description | Example |
+| 变量 | 描述 | 示例 |
 |----------|-------------|---------|
-| `AUTH_TYPE` | Set to `"ONELOGIN"` to enable OneLogin authentication | `ONELOGIN` |
-| `ONELOGIN_ISSUER` | The issuer URL for your OneLogin application | `https://company.onelogin.com/oidc/2` |
-| `ONELOGIN_CLIENT_ID` | Client ID of your OneLogin application | `abc123def456ghi789` |
-| `ONELOGIN_CLIENT_SECRET` | Client Secret of your OneLogin application | `abcd1234efgh5678ijkl9012` |
+| `AUTH_TYPE` | 设置为 `"ONELOGIN"` 以启用 OneLogin 认证 | `ONELOGIN` |
+| `ONELOGIN_ISSUER` | OneLogin 应用程序的签发者 URL | `https://company.onelogin.com/oidc/2` |
+| `ONELOGIN_CLIENT_ID` | OneLogin 应用程序的客户端 ID | `abc123def456ghi789` |
+| `ONELOGIN_CLIENT_SECRET` | OneLogin 应用程序的客户端密钥 | `abcd1234efgh5678ijkl9012` |
 
-## OneLogin Configuration
+## OneLogin 配置
 
-### Creating a OneLogin Application
+### 创建 OneLogin 应用程序
 
-1. Sign in to your OneLogin Admin Console
-2. Navigate to **Applications**
-3. Click **Add App**
-4. Search for **OpenId Connect (OIDC)** and select it
-5. Click **Save**
+1. 登录 OneLogin Admin Console
+2. 导航到 **Applications**
+3. 点击 **Add App**
+4. 搜索 **OpenId Connect (OIDC)** 并选择它
+5. 点击 **Save**
 
-### Application Settings
+### 应用程序设置
 
-1. **Display Name**: Enter a name for your application (e.g., "Keep")
-2. **Redirect URIs**: Enter your app's callback URL, e.g., `https://your-keep-domain.com/api/auth/callback/onelogin`
-3. **Login URL**: Enter your app's login URL, e.g., `https://your-keep-domain.com/signin`
-4. **Role Mapping**:
-    - Go to the Parameters tab
-    - Map the groups to user roles or groups with the default value being semicolon delimited input values
-5. Go to the **SSO** tab and configure:
-   - **Application Type**: Web
-   - **Token Endpoint**: Client Secret Post
-6. **Access**:
-   - Assign to appropriate roles or users
-7. Click **Save**
-8. Copy the client id, client secret and issuer URL from the SSO tab
+1. **Display Name**：输入应用程序名称（例如，"Keep"）
+2. **Redirect URIs**：输入您的应用回调 URL，例如 `https://your-keep-domain.com/api/auth/callback/onelogin`
+3. **Login URL**：输入您的应用登录 URL，例如 `https://your-keep-domain.com/signin`
+4. **Role Mapping**：
+    - 进入 Parameters 选项卡
+    - 将组映射到用户角色或组，默认值为分号分隔的输入值
+5. 进入 **SSO** 选项卡并配置：
+   - **Application Type**：Web
+   - **Token Endpoint**：Client Secret Post
+6. **Access**：
+   - 分配给适当的角色或用户
+7. 点击 **Save**
+8. 从 SSO 选项卡复制客户端 ID、客户端密钥和签发者 URL

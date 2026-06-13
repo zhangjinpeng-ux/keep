@@ -2,18 +2,18 @@
 title: "Mapping Rule Provisioning"
 ---
 
-<Tip>For any questions or issues related to mapping rule provisioning, please join our [Slack](https://slack.keephq.dev) community.</Tip>
+<Tip>对于任何与映射规则预置相关的问题，请加入我们的 [Slack](https://slack.keephq.dev) 社区。</Tip>
 
-Mapping rule provisioning in Keep allows you to manage CSV-style alert enrichment rules in version control rather than the UI. This is useful when you want to track mapping changes alongside the rest of your infrastructure-as-code.
+Keep 中的映射规则预置允许您在版本控制中而不是在 UI 中管理 CSV 风格的告警增强规则。当您想要将映射更改与基础设施即代码的其他部分一起追踪时，这非常有用。
 
-### Configuring Mapping Rules
+### 配置映射规则
 
-To provision mapping rules, follow these steps:
+要预置映射规则，请按照以下步骤操作：
 
-1. Set the `KEEP_MAPPINGS_DIRECTORY` environment variable to the path of your mapping configuration directory.
-2. Create one YAML manifest per mapping rule in that directory.
+1. 将 `KEEP_MAPPINGS_DIRECTORY` 环境变量设置为映射配置目录的路径。
+2. 在该目录中为每个映射规则创建一个 YAML 清单文件。
 
-Example directory structure:
+目录结构示例：
 ```
 /path/to/mappings/
 ├── prometheus-by-namespace.yaml
@@ -21,9 +21,9 @@ Example directory structure:
 └── service-topology.yaml
 ```
 
-### Manifest format
+### 清单格式
 
-Each YAML manifest describes one mapping rule. Fields mirror the fields accepted by the REST `POST /mapping` endpoint:
+每个 YAML 清单描述一个映射规则。字段与 REST `POST /mapping` 端点接受的字段对应：
 
 ```yaml
 name: example-prometheus-mapping
@@ -37,39 +37,39 @@ rows:
   - { namespace: default, team: platform }
 ```
 
-| Field | Required | Notes |
+| 字段 | 是否必需 | 备注 |
 | --- | --- | --- |
-| `name` | yes | Lookup key — must be unique across the tenant |
-| `description` | no | Human-readable description |
-| `priority` | no | Integer, default `0`. Higher = evaluated first |
-| `type` | no | `csv` (default) or `topology` |
-| `matchers` | yes | List of attribute groups. Within a list: AND. Between lists: OR |
-| `rows` | yes for `csv` | List of `{key: value}` dicts; rows match against incoming alert attributes |
-| `is_multi_level` | no | Default `false` |
-| `new_property_name` | no | Required if `is_multi_level` is `true` |
-| `prefix_to_remove` | no | Optional, used with multi-level mappings |
+| `name` | 是 | 查找键 — 在租户内必须唯一 |
+| `description` | 否 | 可读的描述 |
+| `priority` | 否 | 整数，默认 `0`。值越高 = 越先评估 |
+| `type` | 否 | `csv`（默认）或 `topology` |
+| `matchers` | 是 | 属性组列表。在列表内：AND。列表之间：OR |
+| `rows` | 是（对于 `csv`） | `{key: value}` 字典列表；行与传入的告警属性匹配 |
+| `is_multi_level` | 否 | 默认 `false` |
+| `new_property_name` | 否 | 如果 `is_multi_level` 为 `true` 则必需 |
+| `prefix_to_remove` | 否 | 可选，用于多级映射 |
 
-### Update Provisioned Mapping Rules
+### 更新已预置的映射规则
 
-On every restart, Keep reads the `KEEP_MAPPINGS_DIRECTORY` environment variable and determines which mapping rules need to be added, removed, or updated.
+每次重启时，Keep 读取 `KEEP_MAPPINGS_DIRECTORY` 环境变量并确定哪些映射规则需要添加、移除或更新。
 
-The high-level provisioning mechanism:
-1. Keep reads the `KEEP_MAPPINGS_DIRECTORY` value.
-2. Keep lists all `.yaml`/`.yml` files under the directory (other files are skipped).
-3. For each manifest: lookup an existing rule by `name`. If found, update it and mark `is_provisioned=True`. If not, create a new provisioned rule.
-4. Provisioned rules whose source file is no longer present in the directory are deprovisioned (deleted).
-5. UI-created rules (`is_provisioned=False`) whose name does not appear in any manifest are untouched.
+高层预置机制：
+1. Keep 读取 `KEEP_MAPPINGS_DIRECTORY` 的值。
+2. Keep 列出目录下所有 `.yaml`/`.yml` 文件（其他文件被跳过）。
+3. 对于每个清单：按 `name` 查找现有规则。如果找到，更新它并标记 `is_provisioned=True`。如果未找到，创建新的预置规则。
+4. 源文件在目录中不再存在的预置规则将被取消预置（删除）。
+5. UI 创建的规则（`is_provisioned=False`），其名称未出现在任何清单中，保持不变。
 
-### Adoption of existing UI rules
+### 采用现有 UI 规则
 
-If a mapping rule already exists in the UI with the same `name` as one of your manifests, the next provisioning run **adopts** it: `is_provisioned` flips to `True`, the rule's `provisioned_file` is recorded, and its content is overwritten from the manifest. The database id is preserved, so any external references to that rule (URLs, dashboards) continue to work.
+如果 UI 中已存在与您的清单同名的映射规则，下一次预置运行将**采用**它：`is_provisioned` 翻转为 `True`，规则的 `provisioned_file` 被记录，其内容从清单覆盖。数据库 ID 被保留，因此对该规则的任何外部引用（URL、仪表板）继续有效。
 
-Fields not present in the manifest schema (`disabled`, `override`, `condition`) are reset to their model defaults on adoption — the manifest is the source of truth, so a rule that was disabled via the UI will be re-enabled when adopted.
+清单模式中不存在的字段（`disabled`、`override`、`condition`）在采用时重置为模型默认值 — 清单是唯一事实来源，因此通过 UI 禁用的规则在被采用时将被重新启用。
 
-### Removing all provisioned mapping rules
+### 移除所有预置的映射规则
 
-If `KEEP_MAPPINGS_DIRECTORY` is unset on a Keep instance that previously had provisioned rules, all of them are deprovisioned (deleted) on the next restart. UI-only rules are unaffected.
+如果 `KEEP_MAPPINGS_DIRECTORY` 在之前有预置规则的 Keep 实例上被取消设置，所有预置规则将在下次重启时被取消预置（删除）。仅 UI 创建的规则不受影响。
 
-### Per-manifest failures
+### 每个清单的失败处理
 
-A malformed manifest (invalid YAML, missing required fields, validation errors) is logged and skipped. Other manifests in the directory still process normally. Each successful manifest is committed in its own transaction, so a later failure does not roll back earlier work.
+格式错误的清单（无效 YAML、缺少必需字段、验证错误）将被记录并跳过。目录中的其他清单仍然正常处理。每个成功的清单在其自己的事务中提交，因此后续失败不会回滚之前的工作。

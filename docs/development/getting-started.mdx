@@ -3,88 +3,88 @@ title: "Getting started"
 sidebarTitle: "Getting started"
 ---
 
-### Docker-compose dev images
-You can use `docker-compose.dev.yaml` to start Keep in a development mode.
+### Docker-compose 开发镜像
+您可以使用 `docker-compose.dev.yaml` 在开发模式下启动 Keep。
 
-First, clone the Keep repo:
+首先，克隆 Keep 仓库：
 ```
 git clone https://github.com/keephq/keep.git && cd keep
 ```
 
-Next, run
+接下来，运行
 ```
 docker compose -f docker-compose.dev.yml up
 ```
 
-### Install Keep CLI
+### 安装 Keep CLI
 
-First, clone Keep repository:
+首先，克隆 Keep 仓库：
 
 ```shell
 git clone https://github.com/keephq/keep.git && cd keep
 ```
 
-Install Keep CLI
+安装 Keep CLI
 
 ```shell
 poetry install
 ```
 
-To access the Keep CLI activate the environment, and access from shell.
+要访问 Keep CLI，激活环境并从 shell 访问。
 
 ```shell
 poetry shell
 ```
 
-From now on, Keep should be installed locally and accessible from your CLI, test it by executing:
+从现在开始，Keep 应该已在本地安装并可通过 CLI 访问，通过执行以下命令测试：
 
 ```
 keep version
 ```
 
-## Enable Auto Completion
+## 启用自动补全
 
-**Keep's CLI supports shell auto-completion, which can make your life a whole lot easier 😌**
+**Keep 的 CLI 支持 shell 自动补全，这可以让您的生活轻松很多 😌**
 
-If you're using zsh
+如果您使用 zsh
 
 ```shell title=~/.zshrc
 eval "$(_KEEP_COMPLETE=zsh_source keep)"
 ```
 
-If you're using bash
+如果您使用 bash
 
 ```bash title=~/.bashrc
 eval "$(_KEEP_COMPLETE=bash_source keep)"
 ```
 
-> Using eval means that the command is invoked and evaluated every time a shell is started, which can delay shell responsiveness. To speed it up, write the generated script to a file, then source that.
+> 使用 eval 意味着该命令在每次启动 shell 时被调用和评估，这可能会延迟 shell 响应。要加快速度，可以将生成的脚本写入文件，然后 source 该文件。
 
 
-### Testing
+### 测试
 
-Run unittests:
+运行单元测试：
 ```bash
 poetry run coverage run --branch -m pytest --ignore=tests/e2e_tests/
 ```
 
-Run E2E tests (run Keep locally before):
+运行 E2E 测试（先本地运行 Keep）：
 ```bash
 poetry run playwright install;
 poetry run coverage run --branch -m pytest -s tests/e2e_tests/
 ```
 
-### Migrations
+### 数据库迁移
 
-Migrations are automatically executed on a server startup. To create a migration:
+迁移在服务器启动时自动执行。要创建迁移：
 ```bash
 alembic -c keep/alembic.ini revision --autogenerate -m "Your message"
 ```
 
-Hint: make sure your models are imported at `./api/models/db/migrations/env.py` for autogenerator to pick them up.
+提示：确保您的模型在 `./api/models/db/migrations/env.py` 中已导入，以便自动生成器能够识别它们。
 
-## VS Code (or Cursor)
-Run Keep from your VS Code (or Cursor) after cloning the repo by adding this configurations to your `.vscode/launch.json`:
+## VS Code (或 Cursor)
+克隆仓库后，通过将此配置添加到 `.vscode/launch.json`，从 VS Code（或 Cursor）运行 Keep：
 
 ```json
 {
@@ -137,7 +137,7 @@ Run Keep from your VS Code (or Cursor) after cloning the repo by adding this con
 }
 ```
 
-Install dependencies:
+安装依赖：
 ```
 python3.11 -m venv venv;
 source venv/bin/activate;
@@ -146,53 +146,53 @@ poetry install;
 cd keep-ui && npm i && cd ..;
 ```
 
-Set frontend envs:
+设置前端环境变量：
 ```
 cp keep-ui/.env.local.example keep-ui/.env.local;
 echo "\n\n\n\nNEXTAUTH_SECRET="$(openssl rand -hex 32) >> keep-ui/.env.local;
 ```
 
-Launch Pusher ([soketi](https://soketi.app/)) container in parallel:
+并行启动 Pusher ([soketi](https://soketi.app/)) 容器：
 ```bash
 docker run -d -p 6001:6001 -p 9601:9601 -e SOKETI_USER_AUTHENTICATION_TIMEOUT=3000 -e SOKETI_DEFAULT_APP_KEY=keepappkey -e SOKETI_DEFAULT_APP_SECRET=keepappsecret -e SOKETI_DEFAULT_APP_ID=1 quay.io/soketi/soketi:1.4-16-debian
 ```
 
 
-## VS Code (or Cursor) + Docker
-<Info>For this guide to work, the [VS Code Docker](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker) extension is required.</Info>
-<Tip>In air-gapped environments, you might consider building the container on an internet-connected computer, exporting the image using docker save, transferring it with docker load in the air-gapped environment, and then using the run configuration.</Tip>
+## VS Code (或 Cursor) + Docker
+<Info>要使本指南生效，需要安装 [VS Code Docker](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker) 扩展。</Info>
+<Tip>在气隙环境中，您可以考虑在联网的计算机上构建容器，使用 docker save 导出镜像，在气隙环境中使用 docker load 传输，然后使用运行配置。</Tip>
 
-In cases where you want to develop Keep but are unable to run it directly on your local laptop (e.g., with Windows), or if you lack access to all of its dependencies (e.g., in air-gapped environments), you can still accomplish this using VS Code (or Cursor) and Docker.
+在您想要开发 Keep 但无法直接在本地笔记本电脑上运行它的情况下（例如使用 Windows），或者如果您无法访问其所有依赖项（例如在气隙环境中），您仍然可以使用 VS Code（或 Cursor）和 Docker 来实现。
 
-To achieve this, follow these steps:
+要实现此目的，请按照以下步骤操作：
 
-1. Clone Keep and open it with VS Code (or Cursor)
-2. Create a tasks.json file to build and run the Keep API and Keep UI containers.
-3. Create a launch.json configuration to start the containers and attach a debugger to them.
-4. Profit.
+1. 克隆 Keep 并使用 VS Code（或 Cursor）打开
+2. 创建一个 tasks.json 文件来构建和运行 Keep API 和 Keep UI 容器。
+3. 创建一个 launch.json 配置来启动容器并将调试器附加到它们。
+4. 完成。
 
 
-### Clone Keep and open it with VS Code (or Cursor)
+### 克隆 Keep 并使用 VS Code（或 Cursor）打开
 ```
 git clone https://github.com/keephq/keep.git && cd keep
 code .
 ```
 
-### Create tasks.json
+### 创建 tasks.json
 
-#### including building the containers
+#### 包括构建容器
 ```
 {
     "version": "2.0.0",
     "tasks": [
-        // The API and UI containers needs to be in the same docker network
+        // API 和 UI 容器需要位于同一个 docker 网络中
         {
             "label": "docker-create-network",
             "type": "shell",
             "command": "docker network create keep-network || true",
             "problemMatcher": []
         },
-        // Build the api container
+        // 构建 api 容器
         {
             "label": "docker-build-api-dev",
             "type": "docker-build",
@@ -202,7 +202,7 @@ code .
                 "tag": "keep-api-dev:latest"
             }
         },
-        // Run the api container
+        // 运行 api 容器
         {
             "label": "docker-run-api-dev",
             "type": "docker-run",
@@ -239,7 +239,7 @@ code .
                 ]
             }
         },
-        // Build the UI container
+        // 构建 UI 容器
         {
             "label": "docker-build-ui",
             "type": "docker-build",
@@ -249,7 +249,7 @@ code .
                 "tag": "keep-ui-dev:latest"
             }
         },
-        // Run the UI container
+        // 运行 UI 容器
         {
             "type": "docker-run",
             "label": "docker-run-ui",
@@ -261,7 +261,7 @@ code .
                 "image": "keep-ui-dev:latest",
                 "containerName": "keep-ui",
                 "env": {
-                    // Uncomment for fully debug
+                    // 取消注释以完全调试
                     // "DEBUG": "*",
                     "NODE_ENV": "development",
                     "API_URL": "http://keep-api:8080",
@@ -295,21 +295,21 @@ code .
 
 ```
 
-#### without building the containers
-<Tip>To start Keep without building the containers, you'll need to have `keep-api-dev` and `keep-ui-dev` images loaded into your docker.</Tip>
+#### 不构建容器
+<Tip>要在不构建容器的情况下启动 Keep，您需要已将 `keep-api-dev` 和 `keep-ui-dev` 镜像加载到您的 docker 中。</Tip>
 
 ```
 {
     "version": "2.0.0",
     "tasks": [
-        # The API and the UI needs to be in the same docker network
+        # API 和 UI 需要位于同一个 docker 网络中
         {
             "label": "docker-create-network",
             "type": "shell",
             "command": "docker network create keep-network || true",
             "problemMatcher": []
         },
-        # Run the API container
+        # 运行 API 容器
         {
             "label": "docker-run-api-dev",
             "type": "docker-run",
@@ -346,7 +346,7 @@ code .
                 ]
             }
         },
-        # Run the UI container
+        # 运行 UI 容器
         {
             "type": "docker-run",
             "label": "docker-run-ui",
@@ -358,7 +358,7 @@ code .
                 "image": "keep-ui-dev:latest",
                 "containerName": "keep-ui",
                 "env": {
-                    // Uncomment for fully debug
+                    // 取消注释以完全调试
                     // "DEBUG": "*",
                     "NODE_ENV": "development",
                     "API_URL": "http://keep-api:8080",
@@ -391,7 +391,7 @@ code .
 }
 ```
 
-### Create launch.json
+### 创建 launch.json
 
 ```
 {

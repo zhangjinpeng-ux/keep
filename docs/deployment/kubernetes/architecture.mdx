@@ -4,129 +4,129 @@ sidebarTitle: "Architecture"
 ---
 
 
-## High Level Architecture
-Keep architecture composes of two main components:
+## 高层架构
+Keep 架构由两个主要组件组成：
 
-1. **Keep API** - A FastAPI-based backend server that handles business logic and API endpoints.
-2. **Keep Frontend** -  A Next.js-based frontend interface for user interaction.
-3. **Websocket Server** - A Soketi server for real-time updates without page refreshes.
-4. **Database Server** - A database used to store and manage persistent data. Supported databases include SQLite, PostgreSQL, MySQL, and SQL Server.
+1. **Keep API** - 一个基于 FastAPI 的后端服务器，处理业务逻辑和 API 端点。
+2. **Keep Frontend** - 一个基于 Next.js 的前端界面，用于用户交互。
+3. **Websocket Server** - 一个 Soketi 服务器，用于无需刷新页面的实时更新。
+4. **Database Server** - 用于存储和管理持久化数据的数据库。支持的数据库包括 SQLite、PostgreSQL、MySQL 和 SQL Server。
 
-## Kubernetes Architecture
+## Kubernetes 架构
 
-Keep uses a single unified NGINX ingress controller to route traffic to all components (frontend, backend, and websocket). The ingress handles path-based routing:
+Keep 使用单一的统一 NGINX Ingress 控制器将所有流量路由到所有组件（前端、后端和 websocket）。Ingress 处理基于路径的路由：
 
-By default:
-- `/` routed to **Frontend** (configurable via `global.ingress.frontendPrefix`)
-- `/v2` routed to **Backend** (configurable via `global.ingress.backendPrefix`)
-- `/websocket` routed to **WebSocket** (configurable via `global.ingress.websocketPrefix`)
+默认情况下：
+- `/` 路由到**前端**（可通过 `global.ingress.frontendPrefix` 配置）
+- `/v2` 路由到**后端**（可通过 `global.ingress.backendPrefix` 配置）
+- `/websocket` 路由到 **WebSocket**（可通过 `global.ingress.websocketPrefix` 配置）
 
-### General Components
+### 通用组件
 
-<Tip>Keep uses kubernetes secret manager to store secrets such as integrations credentials.</Tip>
+<Tip>Keep 使用 Kubernetes 密钥管理器存储密钥，例如集成凭证。</Tip>
 
-| Kubernetes Resource | Purpose | Required/Optional | Source |
+| Kubernetes 资源 | 用途 | 必需/可选 | 源码 |
 |:-------------------:|:-------:|:-----------------:|:------:|
-| ServiceAccount | Provides an identity for processes that run in a Pod. Used mainly for Keep API to access kubernetes secret manager | Required | [serviceaccount.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/serviceaccount.yaml) |
-| Role | Defines permissions for the ServiceAccount to manage secrets | Required | [role-secret-manager.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/role-secret-manager.yaml) |
-| RoleBinding | Associates the Role with the ServiceAccount | Required | [role-binding-secret-manager.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/role-binding-secret-manager.yaml) |
-| Secret Deletion Job | Cleans up Keep-related secrets when the Helm release is deleted | Required | [delete-secret-job.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/delete-secret-job.yaml) |
+| ServiceAccount | 为 Pod 中运行的进程提供身份。主要用于 Keep API 访问 Kubernetes 密钥管理器 | 必需 | [serviceaccount.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/serviceaccount.yaml) |
+| Role | 为 ServiceAccount 定义管理密钥的权限 | 必需 | [role-secret-manager.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/role-secret-manager.yaml) |
+| RoleBinding | 将 Role 与 ServiceAccount 关联 | 必需 | [role-binding-secret-manager.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/role-binding-secret-manager.yaml) |
+| Secret Deletion Job | 在删除 Helm release 时清理 Keep 相关的密钥 | 必需 | [delete-secret-job.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/delete-secret-job.yaml) |
 
-### Ingress Component
-| Kubernetes Resource | Purpose | Required/Optional | Source |
+### Ingress 组件
+| Kubernetes 资源 | 用途 | 必需/可选 | 源码 |
 |:-------------------:|:-------:|:-----------------:|:------:|
-| Shared NGINX Ingress | Routes all external traffic via one entry point | Optional | [nginx-ingress.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/nginx-ingress.yaml) |
+| Shared NGINX Ingress | 通过一个入口点路由所有外部流量 | 可选 | [nginx-ingress.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/nginx-ingress.yaml) |
 
-### Frontend Components
+### 前端组件
 
-| Kubernetes Resource | Purpose | Required/Optional | Source |
+| Kubernetes 资源 | 用途 | 必需/可选 | 源码 |
 |:-------------------:|:-------:|:-----------------:|:------:|
-| Frontend Deployment | Manages the frontend application containers | Required | [frontend.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/frontend.yaml) |
-| Frontend Service | Exposes the frontend deployment within the cluster | Required | [frontend-service.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/frontend-service.yaml) |
-| Frontend Route (OpenShift) | Exposes the frontend service to external traffic on OpenShift | Optional | [frontend-route.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/frontend-route.yaml) |
-| Frontend HorizontalPodAutoscaler | Automatically scales the number of frontend pods | Optional | [frontend-hpa.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/frontend-hpa.yaml) |
+| Frontend Deployment | 管理前端应用容器 | 必需 | [frontend.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/frontend.yaml) |
+| Frontend Service | 在集群内暴露前端部署 | 必需 | [frontend-service.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/frontend-service.yaml) |
+| Frontend Route (OpenShift) | 在 OpenShift 上将前端服务暴露给外部流量 | 可选 | [frontend-route.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/frontend-route.yaml) |
+| Frontend HorizontalPodAutoscaler | 自动扩展前端 Pod 的数量 | 可选 | [frontend-hpa.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/frontend-hpa.yaml) |
 
-#### Backend Components
+#### 后端组件
 
-| Kubernetes Resource | Purpose | Required/Optional | Source |
+| Kubernetes 资源 | 用途 | 必需/可选 | 源码 |
 |:-------------------:|:-------:|:-----------------:|:------:|
-| Backend Deployment | Manages the backend application containers | Required (if backend enabled) | [backend.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/backend.yaml) |
-| Backend Service | Exposes the backend deployment within the cluster | Required (if backend enabled) | [backend-service.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/backend-service.yaml) |
-| Backend Route (OpenShift) | Exposes the backend service to external traffic on OpenShift | Optional | [backend-route.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/backend-route.yaml) |
-| Backend HorizontalPodAutoscaler | Automatically scales the number of backend pods | Optional | [backend-hpa.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/backend-hpa.yaml) |
+| Backend Deployment | 管理后端应用容器 | 必需（如果后端启用） | [backend.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/backend.yaml) |
+| Backend Service | 在集群内暴露后端部署 | 必需（如果后端启用） | [backend-service.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/backend-service.yaml) |
+| Backend Route (OpenShift) | 在 OpenShift 上将后端服务暴露给外部流量 | 可选 | [backend-route.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/backend-route.yaml) |
+| Backend HorizontalPodAutoscaler | 自动扩展后端 Pod 的数量 | 可选 | [backend-hpa.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/backend-hpa.yaml) |
 
-#### Database Components
-<Tip>Database components are optional. You can spin up Keep with your own database.</Tip>
+#### 数据库组件
+<Tip>数据库组件是可选的。您可以使用自己的数据库启动 Keep。</Tip>
 
-| Kubernetes Resource | Purpose | Required/Optional | Source |
+| Kubernetes 资源 | 用途 | 必需/可选 | 源码 |
 |:-------------------:|:-------:|:-----------------:|:------:|
-| Database Deployment | Manages the database containers (e.g. MySQL or Postgres) | Optional | [db.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/db.yaml) |
-| Database Service | Exposes the database deployment within the cluster | Required (if deployment enabled) | [db-service.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/db-service.yaml) |
-| Database PersistentVolume | Provides persistent storage for the database | Optional | [db-pv.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/db-pv.yaml) |
-| Database PersistentVolumeClaim | Claims the persistent storage for the database | Optional | [db-pvc.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/db-pvc.yaml) |
+| Database Deployment | 管理数据库容器（例如 MySQL 或 Postgres） | 可选 | [db.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/db.yaml) |
+| Database Service | 在集群内暴露数据库部署 | 必需（如果部署启用） | [db-service.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/db-service.yaml) |
+| Database PersistentVolume | 为数据库提供持久化存储 | 可选 | [db-pv.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/db-pv.yaml) |
+| Database PersistentVolumeClaim | 为数据库申请持久化存储 | 可选 | [db-pvc.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/db-pvc.yaml) |
 
-#### WebSocket Components
-<Tip>WebSocket components are optional. You can spin up Keep with your own *Pusher compatible* WebSocket server.</Tip>
+#### WebSocket 组件
+<Tip>WebSocket 组件是可选的。您可以使用自己的*兼容 Pusher 的* WebSocket 服务器启动 Keep。</Tip>
 
-| Kubernetes Resource | Purpose | Required/Optional | Source |
+| Kubernetes 资源 | 用途 | 必需/可选 | 源码 |
 |:-------------------:|:-------:|:-----------------:|:------:|
-| WebSocket Deployment | Manages the WebSocket server containers (Soketi) | Optional | [websocket-server.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/websocket-server.yaml) |
-| WebSocket Service | Exposes the WebSocket deployment within the cluster | Required (if WebSocket enabled) | [websocket-server-service.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/websocket-server-service.yaml) |
-| WebSocket Route (OpenShift) | Exposes the WebSocket service to external traffic on OpenShift | Optional | [websocket-server-route.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/websocket-server-route.yaml) |
-| WebSocket HorizontalPodAutoscaler | Automatically scales the number of WebSocket server pods | Optional | [websocket-server-hpa.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/websocket-server-hpa.yaml) |
+| WebSocket Deployment | 管理 WebSocket 服务器容器 (Soketi) | 可选 | [websocket-server.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/websocket-server.yaml) |
+| WebSocket Service | 在集群内暴露 WebSocket 部署 | 必需（如果 WebSocket 启用） | [websocket-server-service.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/websocket-server-service.yaml) |
+| WebSocket Route (OpenShift) | 在 OpenShift 上将 WebSocket 服务暴露给外部流量 | 可选 | [websocket-server-route.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/websocket-server-route.yaml) |
+| WebSocket HorizontalPodAutoscaler | 自动扩展 WebSocket 服务器 Pod 的数量 | 可选 | [websocket-server-hpa.yaml](https://github.com/keephq/helm-charts/blob/main/charts/keep/templates/websocket-server-hpa.yaml) |
 
-These tables provide a comprehensive overview of the Kubernetes resources used in the Keep architecture, organized by component type. Each table describes the purpose of each resource, indicates whether it's required or optional, and provides a direct link to the source template in the Keep Helm charts GitHub repository.
+这些表格提供了 Keep 架构中使用的 Kubernetes 资源的全面概述，按组件类型组织。每个表格描述了每个资源的用途，指明其是必需还是可选，并提供了 Keep Helm Charts GitHub 仓库中源模板的直接链接。
 
-### Kubernetes Configuration
-<Tip>This sections covers only kubernetes-specific configuration. To learn about Keep-specific configuration, controlled by environment variables, see [Keep Configuration](/deployment/configuration)</Tip>
+### Kubernetes 配置
+<Tip>本节仅涵盖 Kubernetes 特定的配置。要了解由环境变量控制的 Keep 特定配置，请参阅 [Keep 配置](/deployment/configuration)</Tip>
 
-Each of these components can be customized via the `values.yaml` file in the Helm chart.
+每个组件都可以通过 Helm chart 中的 `values.yaml` 文件进行自定义。
 
 
-Below are key configurations that can be adjusted for each component.
+以下是每个组件可以调整的关键配置。
 
-#### 1. Frontend Configuration
+#### 1. 前端配置
 ```yaml
 frontend:
-  enabled: true                 # Enable or disable the frontend deployment.
-  replicaCount: 1               # Number of frontend replicas.
+  enabled: true                 # 启用或禁用前端部署。
+  replicaCount: 1               # 前端副本数量。
   image:
     repository: us-central1-docker.pkg.dev/keephq/keep/keep-ui
-    pullPolicy: Always          # Image pull policy (Always, IfNotPresent).
+    pullPolicy: Always          # 镜像拉取策略 (Always, IfNotPresent)。
     tag: latest
   serviceAccount:
-    create: true                # Create a new service account.
-    name: ""                    # Service account name (empty for default).
-  podAnnotations: {}            # Annotations for frontend pods.
-  podSecurityContext: {}        # Security context for the frontend pods.
-  securityContext: {}           # Security context for the containers.
+    create: true                # 创建新的服务账号。
+    name: ""                    # 服务账号名称（为空则使用默认值）。
+  podAnnotations: {}            # 前端 Pod 的注解。
+  podSecurityContext: {}        # 前端 Pod 的安全上下文。
+  securityContext: {}           # 容器的安全上下文。
   service:
-    type: ClusterIP              # Service type (ClusterIP, NodePort, LoadBalancer).
-    port: 3000                  # Port on which the frontend service is exposed.
+    type: ClusterIP              # 服务类型 (ClusterIP, NodePort, LoadBalancer)。
+    port: 3000                  # 前端服务暴露的端口。
 ```
 
-#### 2. Backend Configuration
+#### 2. 后端配置
 ```yaml
 backend:
-  enabled: true                # Enable or disable the backend deployment.
-  replicaCount: 1              # Number of backend replicas.
+  enabled: true                # 启用或禁用后端部署。
+  replicaCount: 1              # 后端副本数量。
   image:
     repository: us-central1-docker.pkg.dev/keephq/keep/keep-api
-    pullPolicy: Always         # Image pull policy (Always, IfNotPresent).
+    pullPolicy: Always         # 镜像拉取策略 (Always, IfNotPresent)。
   serviceAccount:
-    create: true               # Create a new service account.
-    name: ""                   # Service account name (empty for default).
-  podAnnotations: {}           # Annotations for backend pods.
-  podSecurityContext: {}       # Security context for backend pods.
-  securityContext: {}          # Security context for containers.
+    create: true               # 创建新的服务账号。
+    name: ""                   # 服务账号名称（为空则使用默认值）。
+  podAnnotations: {}           # 后端 Pod 的注解。
+  podSecurityContext: {}       # 后端 Pod 的安全上下文。
+  securityContext: {}          # 容器的安全上下文。
   service:
-    type: ClusterIP      # Service type (ClusterIP, NodePort, LoadBalancer).
-    port: 8080           # Port on which the backend API is exposed.
+    type: ClusterIP      # 服务类型 (ClusterIP, NodePort, LoadBalancer)。
+    port: 8080           # 后端 API 暴露的端口。
 ```
 
-#### 3. WebSocket Server Configuration
-Keep uses Soketi as its websocket server. To learn how to configure it, please see [Soketi docs](https://github.com/soketi/charts/tree/master/charts/soketi).
+#### 3. WebSocket 服务器配置
+Keep 使用 Soketi 作为其 websocket 服务器。要了解如何配置，请参阅 [Soketi 文档](https://github.com/soketi/charts/tree/master/charts/soketi)。
 
 
-#### 4. Database Configuration
-Keep supports plenty of database (e.g. postgresql, mysql, sqlite, etc). It is out of scope to describe here how to deploy all of them to k8s. If you have specific questions - [contact us](https://slack.keephq.dev) and we will be happy to help.
+#### 4. 数据库配置
+Keep 支持多种数据库（例如 PostgreSQL、MySQL、SQLite 等）。在此描述如何将它们全部部署到 k8s 超出了范围。如果您有具体问题 - [联系我们](https://slack.keephq.dev)，我们很乐意提供帮助。

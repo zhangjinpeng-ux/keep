@@ -1,28 +1,27 @@
 ---
-title: "Mapping"
+title: "映射"
 ---
 
-Keep's Alert Mapping enrichment feature provides a powerful mechanism for dynamically enhancing alert data by leveraging external data sources, such as CSV files and topology data. This feature allows for the matching of incoming alerts to specific records in a CSV file or topology data based on predefined attributes (matchers) and enriching those alerts with additional information from the matched records.
+Keep 的告警映射富化功能提供了一种强大的机制，通过利用外部数据源（如 CSV 文件和拓扑数据）动态增强告警数据。此功能允许根据预定义的属性（匹配器）将传入告警与 CSV 文件或拓扑数据中的特定记录进行匹配，并使用匹配记录中的额外信息富化这些告警。
 
 <Frame width="100" height="200">
   <img height="10" src="/images/mapping.png" />
 </Frame>
 
+## 简介
 
-## Introduction
+在复杂的监控环境中，用额外的上下文富化告警数据对于有效的告警分析和响应至关重要。Keep 的告警映射和富化功能使用户能够定义规则，将告警与 CSV 文件或拓扑数据中的行进行匹配，用匹配行的值追加或修改告警属性。此过程为每条告警增加了重要价值，提供更深入的洞察并支持更精确、更明智的决策。
 
-In complex monitoring environments, the need to enrich alert data with additional context is critical for effective alert analysis and response. Keep's Alert Mapping and Enrichment enables users to define rules that match alerts to rows in a CSV file or topology data, appending or modifying alert attributes with the values from matching rows. This process adds significant value to each alert, providing deeper insights and enabling more precise and informed decision-making.
+## 工作原理
 
-## How It Works
+## 使用 CSV 文件映射
 
-## Mapping with CSV Files
+1. **规则定义**：用户定义映射规则，指定哪些告警属性（匹配器）应用于将告警与 CSV 文件中的行进行匹配。
+2. **CSV 文件指定**：每个映射规则关联一个 CSV 文件。此文件包含应添加到匹配规则的告警中的额外数据。
+3. **告警匹配**：当收到告警时，系统根据指定的匹配器检查是否匹配任何映射规则的条件。
+4. **数据富化**：如果找到匹配，告警会用 CSV 文件中对应行的额外数据进行富化。
 
-1. **Rule Definition**: Users define mapping rules that specify which alert attributes (matchers) should be used for matching alerts to rows in a CSV file.
-2. **CSV File Specification**: A CSV file is associated with each mapping rule. This file contains additional data that should be added to alerts matching the rule.
-3. **Alert Matching**: When an alert is received, the system checks if it matches the conditions of any mapping rule based on the specified matchers.
-4. **Data Enrichment**: If a match is found, the alert is enriched with additional data from the corresponding row in the CSV file.
-
-CVS file will look like:
+CSV 文件示例如下：
 
 | region       |responsible_team | severity_override               |
 |--------------|-----------------|---------------------------------|
@@ -30,43 +29,43 @@ CVS file will look like:
 | us-west-2    | team-beta       | medium                          |
 | eu-central-1 | team-gamma      | low                             |
 
-## Mapping with Topology Data
+## 使用拓扑数据映射
 
-1. **Rule Definition**: Users define mapping rules that specify which alert attributes (matchers) should be used for matching alerts to topology data.
-2. **Topology Data Specification**: Topology data is associated with each mapping rule. This data contains additional information about the components and their relationships in your environment.
-3. **Alert Matching**: When an alert is received, the system checks if it matches the conditions of any mapping rule based on the specified matchers.
-4. **Data Enrichment**: If a match is found, the alert is enriched with additional data from the corresponding topology data.
+1. **规则定义**：用户定义映射规则，指定哪些告警属性（匹配器）应用于将告警与拓扑数据进行匹配。
+2. **拓扑数据指定**：每个映射规则关联拓扑数据。此数据包含有关环境中组件及其关系的额外信息。
+3. **告警匹配**：当收到告警时，系统根据指定的匹配器检查是否匹配任何映射规则的条件。
+4. **数据富化**：如果找到匹配，告警会用相应拓扑数据中的额外数据进行富化。
 
-## Practical Example
+## 实际示例
 
-Imagine you have a CSV file with columns representing different aspects of your infrastructure, such as `region`, `responsible_team`, and `severity_override`. By creating a mapping rule that matches alerts based on `service` and `region`, you can automatically enrich alerts with the responsible team and adjust severity based on the matched row in the CSV file.
+假设您有一个 CSV 文件，列表示基础设施的不同方面，如 `region`、`responsible_team` 和 `severity_override`。通过创建基于 `service` 和 `region` 匹配告警的映射规则，您可以根据 CSV 文件中的匹配行自动用负责团队富化告警并调整严重程度。
 
-Similarly, you can use topology data to enrich alerts. For example, if an alert is related to a specific service, you can use topology data to find related components and their statuses, providing a more comprehensive view of the issue.
+同样，您可以使用拓扑数据富化告警。例如，如果告警与特定服务相关，您可以使用拓扑数据查找相关组件及其状态，提供更全面的问题视图。
 
-## Core Concepts
+## 核心概念
 
-- **Matchers**: Attributes within the alert used to identify matching rows within the CSV file or topology data. Common matchers include identifiers like `service` or `region`.
-- **CSV File**: A structured file containing rows of data. Each column represents a potential attribute that can be added to an alert.
-- **Topology Data**: Information about the components and their relationships in your environment. This data can be used to enrich alerts with additional context.
-- **Enrichment**: The process of adding new attributes or modifying existing ones in an alert based on the data from a matching CSV row or topology data.
+- **匹配器**：告警中用于识别 CSV 文件或拓扑数据中匹配行的属性。常见的匹配器包括 `service` 或 `region` 等标识符。
+- **CSV 文件**：包含数据行的结构化文件。每列代表一个可以添加到告警中的潜在属性。
+- **拓扑数据**：有关环境中组件及其关系的信息。此数据可用于用额外上下文富化告警。
+- **富化**：基于匹配的 CSV 行或拓扑数据中的数据，为告警添加新属性或修改现有属性的过程。
 
-## Creating a Mapping Rule
+## 创建映射规则
 
-To create an alert mapping and enrichment rule:
+创建告警映射和富化规则：
 
 <Frame width="100" height="200">
   <img height="10" src="/images/rule-creation.png" />
 </Frame>
 
-1. **Define the Matchers**: Specify which alert attributes will be used to match rows in the CSV file or topology data.
-2. **Specify the Data Source**: Provide the CSV file or specify the topology data to be used for enrichment.
-3. **Configure the Rule**: Set additional parameters, such as whether the rule should override existing alert attributes.
+1. **定义匹配器**：指定将用于匹配 CSV 文件或拓扑数据中行的告警属性。
+2. **指定数据源**：提供用于富化的 CSV 文件或指定拓扑数据。
+3. **配置规则**：设置其他参数，例如规则是否应覆盖现有的告警属性。
 
-## Best Practices
+## 最佳实践
 
-- **Keep CSV Files and Topology Data Updated**: Regularly update the CSV files and topology data to reflect the current state of your infrastructure and operational data.
-- **Use Specific Matchers**: Define matchers that are unique and relevant to ensure accurate matching.
-- **Monitor Rule Performance**: Review the application of mapping rules to ensure they are working as expected and adjust them as necessary.
+- **保持 CSV 文件和拓扑数据更新**：定期更新 CSV 文件和拓扑数据以反映基础设施和运维数据的当前状态。
+- **使用具体的匹配器**：定义唯一且相关的匹配器以确保准确匹配。
+- **监控规则性能**：审查映射规则的应用情况，确保它们按预期工作，并根据需要进行调整。
 
 <Frame width="100" height="200">
   <img height="10" src="/images/rule-table.png" />

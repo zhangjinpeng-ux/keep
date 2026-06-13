@@ -1,40 +1,40 @@
 ---
-title: "Triggers"
+title: "触发器"
 ---
 
-## Overview
+## 概述
 
-Triggers in Keep Workflow Engine define **when a workflow is executed**. Triggers are the starting point for workflows and can be configured to respond to a variety of events, conditions, or schedules.
+Keep 工作流引擎中的触发器定义了**工作流何时被执行**。触发器是工作流的起点，可以配置为响应各种事件、条件或计划。
 
-A workflow can have one or multiple triggers, and these triggers determine the specific circumstances under which the workflow is initiated. Examples include manual invocation, time-based schedules, or event-driven actions like alerts or incident updates.
+一个工作流可以有一个或多个触发器，这些触发器决定了工作流启动的具体环境。例如，手动调用、基于时间的计划或事件驱动的操作（如告警或事件更新）。
 
-Triggers are defined under the `triggers` section of a workflow YAML file. Each trigger has a `type` and optional additional configurations or filters.
+触发器在工作流 YAML 文件的 `triggers` 部分下定义。每个触发器都有一个 `type` 以及可选的附加配置或过滤器。
 
-## Supported Trigger Types
+## 支持的触发器类型
 
-### Manual Trigger
+### 手动触发器
 
-Used to execute workflows on demand.
+用于按需执行工作流。
 
 ```yaml
 triggers:
   - type: manual
 ```
 
-### Interval Trigger
+### 间隔触发器
 
-Runs workflows at a regular time.
+按固定时间运行工作流。
 
 ```yaml
 triggers:
   - type: interval
-    # Run every 5 seconds
+    # 每 5 秒运行一次
     value: 5
 ```
 
-### Alert Trigger
+### 告警触发器
 
-Executes a workflow when an alert is received.
+当收到告警时执行工作流。
 
 ```yaml
 triggers:
@@ -42,17 +42,16 @@ triggers:
 ```
 
 <Note>
-  If no filters or CEL expressions are specified, the workflow will be executed
-  for every alert that comes in.
+  如果未指定过滤器或 CEL 表达式，工作流将对每个传入的告警都执行。
 </Note>
 
-### Filtering Alerts
+### 过滤告警
 
-There are two ways to filter alerts in Keep:
+在 Keep 中有两种过滤告警的方式：
 
-#### 1. CEL-based Filtering (Recommended)
+#### 1. 基于 CEL 的过滤（推荐）
 
-Keep uses [Common Expression Language (CEL)](https://github.com/google/cel-spec/blob/master/doc/langdef.md) for filtering alerts. CEL provides a powerful and flexible way to express conditions using a simple expression language.
+Keep 使用[通用表达式语言（CEL）](https://github.com/google/cel-spec/blob/master/doc/langdef.md)来过滤告警。CEL 提供了一种强大而灵活的方式，使用简单的表达式语言来表达条件。
 
 ```yaml
 triggers:
@@ -60,19 +59,19 @@ triggers:
     cel: source.contains("datadog") && severity == "critical"
 ```
 
-Common CEL patterns:
+常见的 CEL 模式：
 
-- String matching: `source.contains("prometheus")`
-- Exact matching: `severity == "critical"`
-- Multiple conditions: `source.contains("datadog") && severity == "critical"`
-- Pattern matching: `name.contains("error") || name.contains("failure")`
-- Complex conditions: `(source.contains("datadog") && severity == "critical") || (source.contains("newrelic") && severity == "error")`
+- 字符串匹配：`source.contains("prometheus")`
+- 精确匹配：`severity == "critical"`
+- 多条件：`source.contains("datadog") && severity == "critical"`
+- 模式匹配：`name.contains("error") || name.contains("failure")`
+- 复杂条件：`(source.contains("datadog") && severity == "critical") || (source.contains("newrelic") && severity == "error")`
 
-You can test and experiment with CEL expressions using the [CEL Playground](https://playcel.undistro.io/).
+您可以使用 [CEL Playground](https://playcel.undistro.io/) 测试和试验 CEL 表达式。
 
-#### 2. Legacy Filtering (Deprecated)
+#### 2. 旧版过滤（已弃用）
 
-The old filtering mechanism is deprecated but still supported for backward compatibility. It uses a list of key-value pairs with optional regex patterns.
+旧的过滤机制已弃用，但为了向后兼容仍然支持。它使用带有可选正则表达式模式的键值对列表。
 
 ```yaml
 triggers:
@@ -86,9 +85,9 @@ triggers:
         value: r"(payments|ftp)"
 ```
 
-### Incident Trigger
+### 事件触发器
 
-Runs workflows when an incident is created, updated, or resolved.
+当事件被创建、更新或解决时运行工作流。
 
 ```yaml
 triggers:
@@ -98,9 +97,9 @@ triggers:
       - update
 ```
 
-### Field Change Trigger
+### 字段变更触发器
 
-Executes a workflow when specific fields in an alert change, such as status or severity.
+当告警中的特定字段（如状态或严重性）发生变化时执行工作流。
 
 ```yaml
 triggers:
@@ -109,8 +108,8 @@ triggers:
       - status
 ```
 
-## Summary
+## 总结
 
-Triggers are a powerful way to control the execution of workflows, ensuring that they respond appropriately to manual actions, schedules, or events. By leveraging CEL expressions or filters, workflows can be fine-tuned to execute only under specific conditions.
+触发器是控制工作流执行的强大方式，确保工作流能够适当地响应手动操作、计划或事件。通过利用 CEL 表达式或过滤器，工作流可以被精细调整以仅在特定条件下执行。
 
-For more information about CEL expressions, refer to the [CEL Language Definition](https://github.com/google/cel-spec/blob/master/doc/langdef.md) and experiment with expressions in the [CEL Playground](https://playcel.undistro.io/).
+有关 CEL 表达式的更多信息，请参阅 [CEL 语言定义](https://github.com/google/cel-spec/blob/master/doc/langdef.md)，并在 [CEL Playground](https://playcel.undistro.io/) 中试验表达式。

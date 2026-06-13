@@ -3,98 +3,96 @@ title: "Provider methods"
 sidebarTitle: "Provider Methods"
 ---
 
-Provider methods are additional capabilities that providers expose beyond the basic `query` and `notify` capabilities ([read more here](/providers/adding-a-new-provider#basics)). These methods allow you to interact with the provider's API in more specific ways, enabling richer integrations and automation capabilities.
+Provider 方法是 Provider 在基本 `query` 和 `notify` 能力之外提供的额外功能（[了解更多](/providers/adding-a-new-provider#basics)）。这些方法允许您以更具体的方式与 Provider 的 API 交互，实现更丰富的集成和自动化能力。
 
-## What are provider methods?
+## 什么是 Provider 方法？
 
-Developers define provider methods using the `PROVIDER_METHODS` list in each provider class. They represent specific actions or queries that you can perform through the provider's API. These methods extend the basic capabilities of providers beyond simple notifications and queries.
+开发者在每个 Provider 类中使用 `PROVIDER_METHODS` 列表定义 Provider 方法。它们代表可以通过 Provider 的 API 执行的特定操作或查询。这些方法扩展了 Provider 的基本能力，超越了简单的通知和查询。
 
 <Frame>
   <img src="/images/provider-methods-menu.png" />
 </Frame>
 
-For example, a monitoring service provider might expose methods to:
+例如，一个监控服务 Provider 可能暴露以下方法：
 
-- Mute/unmute alerts
-- Get detailed traces
-- Search for specific metrics
-- Modify monitoring configurations
+- 静音/取消静音告警
+- 获取详细追踪信息
+- 搜索特定指标
+- 修改监控配置
 
-## Using provider methods
+## 使用 Provider 方法
 
-You can access provider methods through:
+您可以通过以下方式访问 Provider 方法：
 
-- Keep's platform interface via the alert action menu
-- Keep's smart AI assistant (for example, "get traces for this alert")
-- Keep's API
-- Keep's workflows
+- 通过告警操作菜单使用 Keep 的平台界面
+- 通过 Keep 的智能 AI 助手（例如，"获取此告警的追踪信息"）
+- 通过 Keep 的 API
+- 通过 Keep 的工作流
 
-### Via UI
+### 通过界面
 
-Methods appear in the alert action menu when available for the alert's source provider:
+当告警的来源 Provider 可用时，方法会出现在告警操作菜单中：
 
 <Frame>
   <img src="/images/provider-methods-modal.png" />
 </Frame>
 
 <Note>
-  The form is automatically populated with the parameters required by the
-  method, if they're available in the alert.
+  如果告警中包含方法所需的参数，表单会自动填充这些参数。
 </Note>
 
-### Via AI assistant
+### 通过 AI 助手
 
-Keep's AI assistant can automatically discover and invoke provider methods based on natural language requests by understanding multiple contexts:
+Keep 的 AI 助手可以通过理解多种上下文，根据自然语言请求自动发现和调用 Provider 方法：
 
 <Frame>
   <img src="/images/provider-methods-assistant.png" />
 </Frame>
 
-1. **Alert Context**: The AI understands:
+1. **告警上下文**：AI 理解：
 
-   - The alert's source provider
-   - Alert metadata and attributes
-   - Related services and applications
-   - Current alert status and severity
+   - 告警的来源 Provider
+   - 告警元数据和属性
+   - 相关服务和应用
+   - 当前告警状态和严重级别
 
-2. **Provider Context**: The AI knows:
+2. **Provider 上下文**：AI 知道：
 
-   - Which providers you have connected to your account
-   - Available methods for each provider
-   - Required parameters and their types
-   - Method descriptions and capabilities
+   - 您已连接到账户的 Provider
+   - 每个 Provider 的可用方法
+   - 必需参数及其类型
+   - 方法描述和能力
 
-3. **Historical Context**: The AI learns from:
-   - Similar past incidents
-   - Previously successful method invocations
-   - Common patterns in alert resolution
+3. **历史上下文**：AI 从以下内容学习：
+   - 类似的历史事件
+   - 之前成功的方法调用
+   - 告警解决的常见模式
 
-For example:
+例如：
 
 ```text
-User: Can you get the traces for this alert?
-Assistant: I see this alert came from Datadog. I'll use the Datadog provider's
-get_traces method to fetch the traces. I'll use the trace_id from the alert's
-metadata: abc-123...
+用户: 能帮我获取这个告警的追踪信息吗？
+助手: 我看到这个告警来自 Datadog。我将使用 Datadog Provider 的
+get_traces 方法来获取追踪信息。我将使用告警元数据中的 trace_id：abc-123...
 
-User: This alert seems related to high latency. Can you help investigate?
-Assistant: I'll help investigate the latency issue. Since this is a Datadog alert,
-I can:
-1. Get recent traces using search_traces() to look for slow requests
-2. Fetch metrics using get_metrics() to check system performance
-3. Look for related logs using search_logs()
+用户: 这个告警似乎与高延迟有关。能帮我调查一下吗？
+助手: 我来帮您调查延迟问题。由于这是一个 Datadog 告警，
+我可以：
+1. 使用 search_traces() 获取最近的追踪信息，查找慢请求
+2. 使用 get_metrics() 获取指标，检查系统性能
+3. 使用 search_logs() 查找相关日志
 
-Would you like me to start with any of these?
+您想让我从哪个开始？
 ```
 
-The AI assistant automatically:
+AI 助手会自动：
 
-1. Identifies relevant provider methods
-2. Extracts required parameters from context
-3. Suggests appropriate actions based on the alert type
-4. Chains multiple methods for comprehensive investigation
+1. 识别相关的 Provider 方法
+2. 从上下文中提取所需参数
+3. 根据告警类型建议适当的操作
+4. 将多个方法串联起来进行综合调查
 
-### Via API
+### 通过 API
 
 ```python
 # Example using a Datadog provider method to mute a monitor
@@ -104,11 +102,11 @@ response = await api.post(
 )
 ```
 
-## Adding new provider methods
+## 添加新的 Provider 方法
 
-To add a new method to your provider:
+要向您的 Provider 添加新方法：
 
-1. Define the method in your provider class (must be an instance method):
+1. 在 Provider 类中定义方法（必须是实例方法）：
 
 ```python
 def get_traces(self, trace_id: str) -> dict:
@@ -124,7 +122,7 @@ def get_traces(self, trace_id: str) -> dict:
     pass
 ```
 
-2. Add method metadata to `PROVIDER_METHODS`:
+2. 将方法元数据添加到 `PROVIDER_METHODS`：
 
 ```python
 from keep.providers.models.provider_method import ProviderMethod
@@ -134,22 +132,22 @@ PROVIDER_METHODS = [
         name="Get Traces",
         description="Retrieve trace details",
         func_name="get_traces",
-        type="view",  # 'view' or 'action'
-        scopes=["traces:read"],  # Required provider scopes
-        category="Observability",  # Optional category for grouping methods
+        type="view",  # 'view' 或 'action'
+        scopes=["traces:read"],  # 必需的 Provider 权限范围
+        category="Observability",  # 可选的方法分组类别
     )
 ]
 ```
 
-Note: The `func_params` field is automatically populated by Keep through reflection of the method signature, so you don't need to define it manually.
+注意：`func_params` 字段由 Keep 通过反射方法签名自动填充，因此您无需手动定义。
 
 <Warning>
-Provider methods must be instance methods (not static or class methods) of the provider class. The method signature is automatically inspected to generate UI forms and parameter validation.
+Provider 方法必须是 Provider 类的实例方法（不能是静态方法或类方法）。方法签名会被自动检查，以生成 UI 表单和参数验证。
 </Warning>
 
-### Complete example
+### 完整示例
 
-Here's a complete example of a provider with custom methods:
+以下是一个带有自定义方法的 Provider 完整示例：
 
 ```python
 class MonitoringProvider(BaseProvider):
@@ -209,26 +207,26 @@ class MonitoringProvider(BaseProvider):
                           range=time_range)
 ```
 
-### Method types
+### 方法类型
 
-- **view**: Returns data for display (for example, getting traces, metrics)
-- **action**: Performs an action (for example, muting an alert, creating a ticket)
+- **view**：返回数据用于展示（例如，获取追踪信息、指标）
+- **action**：执行一个操作（例如，静音告警、创建工单）
 
-### Parameter types
+### 参数类型
 
-Supported parameter types for provider methods:
+Provider 方法支持的参数类型：
 
-- `str`: String input field
-- `int`: Numeric input field
-- `float`: Decimal number input field
-- `bool`: Boolean checkbox
-- `datetime`: Date/time picker
-- `dict`: JSON object input
-- `list`: Array/list input
-- `Literal`: Dropdown with predefined values
-- `Optional[type]`: Optional parameter of the specified type
+- `str`：字符串输入字段
+- `int`：数字输入字段
+- `float`：小数输入字段
+- `bool`：布尔复选框
+- `datetime`：日期/时间选择器
+- `dict`：JSON 对象输入
+- `list`：数组/列表输入
+- `Literal`：带预定义值的下拉菜单
+- `Optional[type]`：指定类型的可选参数
 
-Example with different parameter types:
+不同参数类型的示例：
 
 ```python
 from typing import Optional, Literal
@@ -247,27 +245,27 @@ def advanced_query(
     pass
 ```
 
-### Auto-discovery
+### 自动发现
 
-Keep automatically inspects provider classes to:
+Keep 会自动检查 Provider 类以：
 
-1. Discover available methods
-2. Extract parameter information
-3. Generate UI components
-4. Enable AI understanding of method capabilities
+1. 发现可用的方法
+2. 提取参数信息
+3. 生成 UI 组件
+4. 使 AI 能够理解方法的能力
 
-## Best practices
+## 最佳实践
 
-1. **Clear Documentation**: Provide detailed docstrings for methods
-2. **Type Hints**: Use Python type hints for parameters
-3. **Error Handling**: Return clear error messages
-4. **Scopes**: Define minimum required scopes
-5. **Validation**: Validate parameters before execution
+1. **清晰的文档**：为方法提供详细的 docstring
+2. **类型提示**：为参数使用 Python 类型提示
+3. **错误处理**：返回清晰的错误消息
+4. **权限范围**：定义所需的最小权限范围
+5. **参数验证**：在执行前验证参数
 
-## Limitations
+## 限制
 
-- Currently supports only synchronous methods
-- The supported parameter types are limited to basic types
-- Methods must be instance methods of the provider class
-- Methods are automatically discovered through reflection
-- Keep validates parameter types based on type hints
+- 目前仅支持同步方法
+- 支持的参数类型仅限于基本类型
+- 方法必须是 Provider 类的实例方法
+- 方法通过反射自动发现
+- Keep 基于类型提示验证参数类型

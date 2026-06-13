@@ -1,81 +1,81 @@
 ---
-title: "Customized Presets"
+title: "自定义预设"
 ---
 
 
 <Tip>
 
-You can think of a preset like a "Slack Channel" for your alerts - a logical container to follow only alerts that matter for you.
+您可以将预设想象成告警的"Slack 频道"——一个逻辑容器，只关注对您重要的告警。
 
 </Tip>
 
-With Keep's introduction of CEL (Common Expression Language) for alert filtering, users gain the flexibility to define more complex and precise alert filtering logic.
+随着 Keep 引入 CEL（通用表达式语言）用于告警过滤，用户获得了定义更复杂、更精确的告警过滤逻辑的灵活性。
 
-This feature allows the creation of customizable filters using CEL expressions to refine alert visibility based on specific criteria.
+该功能允许使用 CEL 表达式创建可自定义的过滤器，以根据特定条件细化告警可见性。
 
-## How It Works
+## 工作原理
 
-1. **CEL Expression Creation**: Users craft CEL expressions that define the filtering criteria for alerts.
-2. **Preset Definition**: These expressions can be saved as presets for easy application to different alert streams.
-3. **Alert Filtering**: When applied, the CEL expressions evaluate each alert against the defined criteria, filtering the alert stream in real-time.
+1. **CEL 表达式创建**：用户编写定义告警过滤条件的 CEL 表达式。
+2. **预设定义**：这些表达式可以保存为预设，以便轻松应用于不同的告警流。
+3. **告警过滤**：应用时，CEL 表达式会根据定义的条件评估每个告警，实时过滤告警流。
 
 
-## Creating a CEL Expression
+## 创建 CEL 表达式
 
-There are two ways of creating a CEL expression in Keep
-### Manually creating CEL query
+在 Keep 中有两种创建 CEL 表达式的方式
+### 手动创建 CEL 查询
 
-Use the [CEL Language Definition](https://github.com/google/cel-spec/blob/master/doc/langdef.md) documentation to better understand the capabilities of the Common Expression Language
-This is an example of how to query all the alerts that came from `Sentry`
+使用 [CEL 语言定义](https://github.com/google/cel-spec/blob/master/doc/langdef.md) 文档来更好地了解通用表达式语言的功能
+这是一个查询所有来自 `Sentry` 的告警的示例：
 <Frame width="100" height="200">
   <img height="10" src="/images/presets/valid-sentry-cel.png" />
 </Frame>
-If the CEL syntax you typed in is invalid, an error message will show up (in this case, we used invalid `''` instead of `""`):
+如果您输入的 CEL 语法无效，将会显示错误消息（在此例中，我们错误地使用了 `''` 而不是 `""`）：
 <Frame width="100" height="200">
   <img height="10" src="/images/presets/invalid-sentry-cel.png" />
 </Frame>
 
-### Importing from an SQL query
+### 从 SQL 查询导入
 
-1. Click on the "Import from SQL" button
+1. 点击"从 SQL 导入"按钮
 <Frame width="100" height="200">
   <img height="10" src="/images/presets/import-from-sql.png" />
 </Frame>
-2. Write/Paste your SQL query and hit the "Convert to CEL" button
+2. 编写/粘贴您的 SQL 查询，然后点击"转换为 CEL"按钮
 <Frame width="100" height="200">
   <img height="10" src="/images/presets/convert-to-cel.png" />
 </Frame>
-Which in turn will generate and apply a valid CEL query:
+随后将生成并应用一个有效的 CEL 查询：
 <Frame width="100" height="200">
   <img height="10" src="/images/presets/converted-sql-to-cel.png" />
 </Frame>
 
-## Save Presets
+## 保存预设
 
-You can save your CEL queries into a `Preset` using the "Save current filter as a view" button
+您可以使用"将当前过滤器保存为视图"按钮将 CEL 查询保存到 `预设` 中
 <Frame width="100" height="200">
   <img height="10" src="/images/presets/save-preset.png" />
 </Frame>
-You can name your `Preset` and configure whether it is "Private" (only the creating user will see this Preset) or account-wide available.
+您可以命名您的 `预设`，并配置其为"私有"（仅创建用户可见）或全账户可用。
 <Frame width="100" height="200">
   <img height="10" src="/images/presets/save-preset-modal.png" />
 </Frame>
-The `Preset` will then be created and available for you to quickly navigate and used
+然后 `预设` 将被创建，并可供您快速导航和使用
 <Frame width="100" height="200">
   <img height="10" src="/images/presets/preset-created.png" />
 </Frame>
 
-## Practical Example
+## 实际示例
 
-For instance, a user could create a CEL expression to filter alerts by severity and source, such as `severity == 'critical' && service.contains('database')`, ensuring only critical alerts from database services are displayed.
+例如，用户可以创建一个 CEL 表达式来按严重性和数据源过滤告警，例如 `severity == 'critical' && service.contains('database')`，确保只显示来自数据库服务的关键告警。
 
 
-## Best Practices
+## 最佳实践
 
-- **Specificity in Expressions**: Craft expressions that precisely target the desired alerts to avoid filtering out relevant alerts.
-- **Presets Management**: Regularly review and update your presets to align with evolving alerting needs.
-- **Testing Expressions**: Before applying, test CEL expressions to ensure they correctly filter the desired alerts.
+- **表达式的精确性**：编写精确针对所需告警的表达式，避免过滤掉相关告警。
+- **预设管理**：定期检查和更新您的预设，以与不断变化的告警需求保持一致。
+- **测试表达式**：在应用之前，测试 CEL 表达式以确保其正确过滤所需告警。
 
-## Useful Links
-- [Common Expression Language](https://github.com/google/cel-spec?tab=readme-ov-file)
-- [CEL Language Definition](https://github.com/google/cel-spec/blob/master/doc/langdef.md)
+## 有用链接
+- [通用表达式语言](https://github.com/google/cel-spec?tab=readme-ov-file)
+- [CEL 语言定义](https://github.com/google/cel-spec/blob/master/doc/langdef.md)

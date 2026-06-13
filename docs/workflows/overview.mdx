@@ -4,22 +4,22 @@ title: "Overview"
 
 <Tip>
 
-You can see plenty of fully working examples at our [GitHub repo](https://github.com/keephq/keep/blob/main/examples/workflows/).
+您可以在我们的 [GitHub 仓库](https://github.com/keephq/keep/blob/main/examples/workflows/) 中查看大量完整可运行的示例。
 
 </Tip>
 
-Keep Workflow Engine designed to streamline and automate operational tasks by integrating triggers, steps, actions, and conditions. This documentation provides an overview of the core concepts used to define and execute workflows effectively.
+Keep 工作流引擎旨在通过集成触发器、步骤、动作和条件来简化和自动化运维任务。本文档概述了用于定义和执行工作流的核心概念。
 
 
-### General Structure
+### 总体结构
 
 
-Each workflow compose of:
-1. **metadata** - id, description
-2. **triggers** - when this workflow runs?
-3. **steps/actions** - what this workflow should do?
+每个工作流由以下部分组成：
+1. **元数据（metadata）** - id, description
+2. **触发器（triggers）** - 此工作流何时运行？
+3. **步骤/动作（steps/actions）** - 此工作流应该做什么？
 
-The general structure of a workflow is:
+工作流的总体结构如下：
 
 ```yaml
 workflow:
@@ -46,62 +46,62 @@ workflow:
     - ...
 ```
 
-Let's dive into building workflows:
-- [Triggers](#triggers)
-- [Steps And Actions](#steps-and-actions)
-- [Conditions](#conditions)
-- [Functions](#functions)
-- [Context](#context)
-- [Providers](#providers)
-- [Variables](#variables)
-- [Foreach Loops](#foreach-loops)
-- [Alert Enrichment](#alert-enrichment)
+接下来让我们深入了解如何构建工作流：
+- [触发器](#triggers)
+- [步骤和动作](#steps-and-actions)
+- [条件](#conditions)
+- [函数](#functions)
+- [上下文](#context)
+- [提供者](#providers)
+- [变量](#variables)
+- [Foreach 循环](#foreach-loops)
+- [告警增强](#alert-enrichment)
 
 
-### Triggers
+### 触发器
 
-Define how a workflow starts, such as manually, on a schedule, or in response to alerts with optional filters for specific conditions.
+定义工作流的启动方式，例如手动触发、按计划执行或响应告警，并可附带针对特定条件的可选过滤器。
 
-[See syntax](/workflows/syntax/triggers)
+[查看语法](/workflows/syntax/triggers)
 
-### Steps And Actions
+### 步骤和动作
 
-Represent sequential operations, like querying data or running scripts, using configurable providers.
+表示顺序执行的操作，例如查询数据或运行脚本，使用可配置的提供者。
 
-[See syntax](/workflows/syntax/steps-and-actions)
+[查看语法](/workflows/syntax/steps-and-actions)
 
-### Conditions
+### 条件
 
-Allow decision-making in actions based on thresholds, assertions, or previous step results.
+允许基于阈值、断言或前一步骤结果在动作中进行决策。
 
-[See syntax](/workflows/syntax/conditions)
+[查看语法](/workflows/syntax/conditions)
 
-### Functions
+### 函数
 
-Built-in helpers like datetime_compare or is_business_hours simplify complex operations.
+内置辅助函数，如 datetime_compare 或 is_business_hours，可简化复杂操作。
 
-[See syntax](/workflows/syntax/functions)
+[查看语法](/workflows/syntax/functions)
 
-### Context
+### 上下文
 
-Enables access to and reuse of outputs from earlier steps within actions or conditions.
+支持在动作或条件中访问和重用前序步骤的输出结果。
 
-[See syntax](/workflows/syntax/context)
+[查看语法](/workflows/syntax/context)
 
-### Providers
+### 提供者
 
-External systems or services (e.g., Slack, Datadog, ServiceNow) integrated into workflows through a standard configuration interface.
+通过标准配置接口集成到工作流中的外部系统或服务（例如 Slack、Datadog、ServiceNow）。
 
-[See syntax](/workflows/syntax/providers)
+[查看语法](/workflows/syntax/providers)
 
-### Foreach Loops
+### Foreach 循环
 
-Iterate over a list of results from a step to perform repeated actions for each item.
+遍历步骤返回的结果列表，对每个元素执行重复操作。
 
-[See syntax](/workflows/syntax/foreach)
+[查看语法](/workflows/syntax/foreach)
 
-### Alert Enrichment
+### 告警增强
 
-Add context to alerts, like customer details or ticket metadata, using enrichment mechanisms in steps or actions.
+使用步骤或动作中的增强机制，为告警添加上下文信息，如客户详情或工单元数据。
 
-[See syntax](/workflows/syntax/enrichment)
+[查看语法](/workflows/syntax/enrichment)

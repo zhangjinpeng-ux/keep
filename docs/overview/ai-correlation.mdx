@@ -1,5 +1,5 @@
 ---
-title: "AI Correlation"
+title: "AI 关联分析"
 ---
 
 <Tip>
@@ -8,30 +8,30 @@ Keep Enterprise On-Premises: ✅ <br/>
 Keep Open Source: ⛔️
 </Tip>
 
-Keep's AI correlation engine provides a distinctive approach to fully AI-driven alert correlation. 
-By using historical alert data as its training dataset, the system intelligently classifies new alerts and assigns them to appropriate incidents.
+Keep 的 AI 关联引擎提供了一种独特的全 AI 驱动告警关联方法。
+通过将历史告警数据作为训练数据集，系统能够智能地对新告警进行分类，并将其分配到适当的事件中。
 
-The AI correlator runs on cycles, each iteration cycle completes in 5-15 minutes:
-1) Model trained based on historical data.
-2) Model is evaluated.
-3) All unassigned alerts are clustered and added to incidents when their confidence score exceeds the threshold. 
+AI 关联器按周期运行，每个迭代周期在 5-15 分钟内完成：
+1) 基于历史数据训练模型。
+2) 对模型进行评估。
+3) 所有未分配的告警在置信度分数超过阈值时被聚类并添加到事件中。
 
-Configuration UI:
+配置界面：
 <Frame width="100" height="200">
   <img height="10" src="/images/ai-correlation-1.png" />
 </Frame>
 
-Incident with alerts correlated by AI:
+包含由 AI 关联告警的事件：
 <Frame width="100" height="200">
   <img height="10" src="/images/ai-correlation-2.png" />
 </Frame>
 
-Check the demo on a playground: https://playground.keephq.dev/ai
+在 playground 上查看演示：https://playground.keephq.dev/ai
 
-To activate the feature for your on-premises tenant, please [talk to us](https://www.keephq.dev/meet-keep).
+如需为您的本地部署租户激活此功能，请[联系我们](https://www.keephq.dev/meet-keep)。
 
-## Frequent questions:
+## 常见问题：
 
-**Model used:** proprietary model developed and hosted by Keep.<br/>
-**Training dataset:** tenant's alerts and incidents.<br/>
-**Privacy:** tenant's data is used only for training of the model for the same tenant. Data is not mixed between tenants for training.
+**使用的模型：** Keep 开发和托管的专有模型。<br/>
+**训练数据集：** 租户的告警和事件。<br/>
+**隐私保护：** 租户数据仅用于训练同一租户的模型。不同租户之间的数据不会混合用于训练。

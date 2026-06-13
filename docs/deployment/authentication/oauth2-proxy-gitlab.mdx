@@ -1,63 +1,63 @@
 ---
-title: "Example: OAuth2‑Proxy + Keep + GitLab SSO"
+title: "Example: OAuth2‑Proxy + Keep + GitLab SSO"
 ---
 
-A **step‑by‑step cookbook** for adding single‑sign‑on to [Keep](https://github.com/keephq) with your **self‑hosted GitLab** using [oauth2‑proxy](https://oauth2‑proxy.github.io/) and the NGINX Ingress Controller.
+一份**逐步操作指南**，用于使用 [oauth2‑proxy](https://oauth2‑proxy.github.io/) 和 NGINX Ingress Controller 为 [Keep](https://github.com/keephq) 添加基于**自托管 GitLab** 的单点登录。
 
-> **Conventions used below**
+> **以下使用的约定**
 >
-> * `<keep-host>`             – public FQDN where users access Keep (e.g. `keep.example.com`)
-> * `<gitlab-host>`           – URL of your GitLab instance (e.g. `gitlab.example.com`)
-> * `<registry-host>`         – container registry that stores images (omit if you use the public images)
-> * Kubernetes namespace **`keep`** – feel free to change it everywhere if you prefer another namespace.
+> * `<keep-host>`             – 用户访问 Keep 的公共 FQDN（例如 `keep.example.com`）
+> * `<gitlab-host>`           – GitLab 实例的 URL（例如 `gitlab.example.com`）
+> * `<registry-host>`         – 存储镜像的容器仓库（如果您使用公共镜像则省略）
+> * Kubernetes 命名空间 **`keep`** – 如果您偏好其他命名空间，可以随时更改。
 
 ---
 
-## 1. Prerequisites
+## 1. 前提条件
 
-| What                                        | Why                                                   |
+| 条件                                        | 原因                                                   |
 | ------------------------------------------- | ----------------------------------------------------- |
-| Kubernetes cluster & `keep` namespace       | Where Keep, oauth2‑proxy and Services live            |
-| **ingress‑nginx** (or compatible)           | Provides the `auth_request` feature oauth2‑proxy uses |
-| GitLab 15 + at `https://<gitlab-host>`      | OpenID‑Connect issuer                                 |
-| Helm 3.x & offline charts/images (optional) | If your cluster has no Internet egress                |
+| Kubernetes 集群和 `keep` 命名空间       | Keep、oauth2‑proxy 和服务所在的位置            |
+| **ingress‑nginx**（或兼容的）           | 提供 oauth2‑proxy 使用的 `auth_request` 功能 |
+| GitLab 15+ 位于 `https://<gitlab-host>`      | OpenID‑Connect 签发者                                 |
+| Helm 3.x 和离线 chart/镜像（可选） | 如果您的集群没有互联网出口                |
 
 ---
 
-## 2. Create the GitLab OAuth application
+## 2. 创建 GitLab OAuth 应用程序
 
-1. **GitLab ▸ Admin → Applications → New**
-2. Name → `keep‑sso`
-3. Redirect URI → `https://<keep-host>/oauth2/callback`
-4. Scopes → `openid profile email` (+ `read_api` if you plan to gate access by group/project)
-5. Save – copy the generated **Application ID** and **Secret**.
+1. **GitLab ▸ Admin → Applications → New**
+2. 名称 → `keep‑sso`
+3. Redirect URI → `https://<keep-host>/oauth2/callback`
+4. 作用域 → `openid profile email`（如果您计划按组/项目控制访问，还需加上 `read_api`）
+5. 保存 – 复制生成的 **Application ID** 和 **Secret**。
 
 ---
 
-## 3. Kubernetes secrets & config
+## 3. Kubernetes 密钥和配置
 
 ```bash
-# 3.1 Generate a 32‑byte cookie secret
+# 3.1 生成 32 字节的 cookie 密钥
 echo "$(openssl rand -base64 32 | head -c 32 | base64)" > cookie.b64
 
-# 3.2 Store GitLab credentials and cookie secret
+# 3.2 存储 GitLab 凭证和 cookie 密钥
 kubectl -n keep create secret generic oauth2-proxy \
   --from-literal=client-id=<GITLAB_APP_ID> \
   --from-literal=client-secret=<GITLAB_APP_SECRET> \
   --from-file=cookie-secret=cookie.b64
 
-# 3.3 Add gitlab credentials and cookie secret using OAUTH2_PROXY ENV variables
+# 3.3 使用 OAUTH2_PROXY 环境变量添加 GitLab 凭证和 cookie 密钥
 OAUTH2_PROXY_CLIENT_ID=<GITLAB_APP_ID>
 OAUTH2_PROXY_CLIENT_SECRET=<GITLAB_APP_SECRET>
 OAUTH2_PROXY_COOKIE_SECRET=cookie.b64
 
-# (optional) store GitLab’s custom CA certificate
+# (可选) 存储 GitLab 的自定义 CA 证书
 kubectl -n keep create secret generic gitlab-ca \
   --from-file=gitlab-ca.pem
 ```
 
 ```yaml
-# 3.4 oauth2_proxy.cfg (ConfigMap)
+# 3.4 oauth2_proxy.cfg (ConfigMap)
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -66,31 +66,31 @@ metadata:
 data:
   oauth2_proxy.cfg: |
     email_domains = ["*"]
-    upstreams     = ["file:///dev/null"]   # we only use auth‑request mode
+    upstreams     = ["file:///dev/null"]   # 我们仅使用 auth‑request 模式
     provider      = "gitlab"
-    cookie_name   = "keep-dev" #if empty, will use default cookie name: _oauth2_proxy
+    cookie_name   = "keep-dev" #如果为空，将使用默认 cookie 名称：_oauth2_proxy
     cookie_secure = true
 ```
 
 ---
 
-## 4. Deploy **oauth2‑proxy** (Helm)
+## 4. 部署 **oauth2‑proxy** (Helm)
 
 ```yaml
-# values.oauth2-proxy.yaml – minimal baseline
-image:                     # replace with public image if desired
+# values.oauth2-proxy.yaml – 最小基线配置
+image:                     # 如果需要可替换为公共镜像
   repository: <registry-host>/oauth2-proxy/oauth2-proxy
   tag: v7.9.0
 
 config:
   configFile: |-
-    # content comes from the ConfigMap above
+    # 内容来自上面的 ConfigMap
 
 extraArgs:
   oidc-issuer-url: https://<gitlab-host>
-  set-xauthrequest: "true"            # add X-Auth-Request-*/X-Forwarded-* headers
-  pass-authorization-header: "true"   # add Authorization: Bearer <id_token>
-  # provider-ca-file: /ca/gitlab-ca.pem   # enable if you mounted a corporate CA or use ssl-insecure-skip-verify: "true" to disable SSL check.
+  set-xauthrequest: "true"            # 添加 X-Auth-Request-*/X-Forwarded-* 头
+  pass-authorization-header: "true"   # 添加 Authorization: Bearer <id_token>
+  # provider-ca-file: /ca/gitlab-ca.pem   # 如果您挂载了企业 CA 则启用，或使用 ssl-insecure-skip-verify: "true" 禁用 SSL 检查。
 extraVolumes:
   - name: gitlab-ca
     secret:
@@ -105,7 +105,7 @@ service:
   type: ClusterIP
 
 ingress:
-  enabled: false   # we only need an internal Service
+  enabled: false   # 我们只需要一个内部 Service
 ```
 
 ```bash
@@ -114,14 +114,13 @@ helm upgrade --install oauth2-proxy oauth2-proxy/oauth2-proxy \
      -n keep -f values.oauth2-proxy.yaml
 ```
 
-*Lab‑only shortcut*: instead of mounting the CA you can temporarily add
-`ssl-insecure-skip-verify: "true"` under `extraArgs`.
+*仅限实验室的快捷方式*：您可以临时在 `extraArgs` 下添加 `ssl-insecure-skip-verify: "true"`，而不是挂载 CA。
 
 ---
 
-## 5. Patch (or create) Keep’s Ingress resource
+## 5. 更新（或创建）Keep 的 Ingress 资源
 
-Add **three** annotations so ingress‑nginx delegates auth to the Service:
+添加**三个**注解，使 ingress‑nginx 将认证委托给 Service：
 
 ```yaml
 global:
@@ -132,11 +131,11 @@ global:
       nginx.ingress.kubernetes.io/auth-response-headers: "authorization,x-auth-request-user,x-auth-request-email,x-forwarded-user,x-forwarded-email,x-forwarded-groups"
 ```
 
-Redeploy Keep (or patch the Ingress manually).
+重新部署 Keep（或手动更新 Ingress）。
 
 ---
 
-## 6. Environment variables for Keep
+## 6. Keep 的环境变量
 
 ```yaml
 backend:
@@ -150,24 +149,24 @@ backend:
     - name: KEEP_OAUTH2_PROXY_AUTO_CREATE_USER
       value: true
     - name: KEEP_OAUTH2_PROXY_ADMIN_ROLES
-      value: <your gitlab group that will have admin role in your keep ui>
+      value: <在您的 Keep UI 中将拥有管理员角色的 GitLab 组>
     - name: KEEP_OAUTH2_PROXY_NOC_ROLES
-      value: <your gitlab group that wont have access to your keep ui>
+      value: <无法访问您的 Keep UI 的 GitLab 组>
 
 frontend:
   env:
-    # Public URL the **browser** should use
+    # **浏览器**应使用的公共 URL
     - name: NEXTAUTH_URL
       value: "https://<keep-host>"
 
-    # URL the **server‑side** Next.js code can always reach
+    # **服务器端** Next.js 代码始终可以访问的 URL
     - name: NEXTAUTH_URL_INTERNAL
       value: "http://keep-frontend.keep.svc.cluster.local:3000"
 
     # API URLs
-    - name: API_URL_CLIENT   # browser → ingress
+    - name: API_URL_CLIENT   # 浏览器 → ingress
       value: "/v2"
-    - name: API_URL          # server → backend Service (no auth‑proxy)
+    - name: API_URL          # 服务器 → 后端 Service（不经过 auth‑proxy）
       value: "http://keep-backend.keep.svc.cluster.local:8080"
 
     #Oauth2-Proxy
@@ -179,7 +178,7 @@ frontend:
       value: x-auth-request-groups
 ```
 
-Roll out the frontend:
+更新前端：
 
 ```bash
 kubectl -n keep rollout restart deploy/keep-frontend
@@ -187,53 +186,53 @@ kubectl -n keep rollout restart deploy/keep-frontend
 
 ---
 
-## 7. Quick validation
+## 7. 快速验证
 
 ```bash
-# 7.1 Call auth endpoint without cookie – expect 401
+# 7.1 不带 cookie 调用认证端点 – 预期返回 401
 curl -I http://oauth2-proxy.keep.svc.cluster.local/oauth2/auth
 
-# 7.2 Copy the keep-dev cookie from your browser session
+# 7.2 从浏览器会话中复制 keep-dev cookie
 curl -I --cookie "keep-dev=<COOKIE>" \
-     http://oauth2-proxy.keep.svc.cluster.local/oauth2/auth   # expect 200
+     http://oauth2-proxy.keep.svc.cluster.local/oauth2/auth   # 预期返回 200
 ```
 
-Browser smoke‑test:
+浏览器冒烟测试：
 
-* `https://<keep-host>` → redirect to GitLab → sign in → return to Keep.
-* DevTools ▸ Network → `/api/auth/session` returns **200**.
+* `https://<keep-host>` → 重定向到 GitLab → 登录 → 返回 Keep。
+* DevTools ▸ Network → `/api/auth/session` 返回 **200**。
 
 ---
 
-## 8. Troubleshooting
+## 8. 故障排除
 
-| Symptom                                                       | Common cause & remedy                                                                                                                       |
+| 现象                                                       | 常见原因和解决方法                                                                                                                       |
 | ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| **TLS error** `x509: certificate signed by unknown authority` | Mount your GitLab CA (`provider-ca-file`) or set `ssl-insecure-skip-verify=true` (dev only).                                                |
-| Ingress logs `auth request unexpected status: 502`            | `auth-url` is pointing at the external host – use the internal Service DNS (`http://oauth2-proxy.keep.svc.cluster.local`).                  |
-| Browser loops at `/signin?callbackUrl=…`                      | ① `set-xauthrequest` not enabled, or ② `auth-response-headers` not set, or ③ backend receives calls through oauth2‑proxy (`API_URL` wrong). |
-| Redirect to `0.0.0.0:3000` or pod name                        | `NEXTAUTH_URL` missing at **build time**; rebuild UI or override env.                                                                       |
-| 401 from `/oauth2/auth` even with cookie                      | Cookie expired / clocks out of sync. Clear cookie and re‑login.                                                                             |
+| **TLS 错误** `x509: certificate signed by unknown authority` | 挂载您的 GitLab CA (`provider-ca-file`) 或设置 `ssl-insecure-skip-verify=true`（仅限开发环境）。                                                |
+| Ingress 日志 `auth request unexpected status: 502`            | `auth-url` 指向了外部主机 – 使用内部 Service DNS (`http://oauth2-proxy.keep.svc.cluster.local`)。                  |
+| 浏览器在 `/signin?callbackUrl=…` 处循环                      | ① `set-xauthrequest` 未启用，或 ② `auth-response-headers` 未设置，或 ③ 后端通过 oauth2‑proxy 接收调用（`API_URL` 错误）。 |
+| 重定向到 `0.0.0.0:3000` 或 pod 名称                        | `NEXTAUTH_URL` 在**构建时**缺失；重新构建 UI 或覆盖环境变量。                                                                       |
+| 即使有 cookie，`/oauth2/auth` 也返回 401                      | Cookie 已过期 / 时钟不同步。清除 cookie 并重新登录。                                                                             |
 
 ---
 
-## 9. Clean‑up
+## 9. 清理
 
 ```bash
 helm -n keep uninstall oauth2-proxy
-helm -n keep uninstall keep          # if you want to remove Keep
+helm -n keep uninstall keep          # 如果您想移除 Keep
 kubectl -n keep delete secret oauth2-proxy gitlab-ca
 ```
 
 ---
 
-## Appendix A – Generate a 32‑byte cookie secret
+## 附录 A – 生成 32 字节的 cookie 密钥
 
 ```bash
 openssl rand -hex 16 | xxd -r -p | base64
 ```
 
-## Appendix B – Sync images to an offline registry (example)
+## 附录 B – 将镜像同步到离线仓库（示例）
 
 ```bash
 skopeo copy docker://quay.io/oauth2-proxy/oauth2-proxy:v7.9.0 \

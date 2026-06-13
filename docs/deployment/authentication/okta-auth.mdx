@@ -2,72 +2,72 @@
 title: "Okta Authentication"
 ---
 
-This document provides comprehensive information about the Okta integration in Keep.
+本文档提供了 Keep 中 Okta 集成的全面信息。
 
-## Overview
+## 概述：
 
-Keep supports Okta as an authentication provider, enabling:
-- Single Sign-On (SSO) via Okta
-- OAuth2/OIDC authentication flow
-- JWT token verification with JWKS
-- Role-based access control through token claims
+Keep 支持 Okta 作为认证提供商，支持：
+- 通过 Okta 进行 Single Sign-On (SSO)
+- OAuth2/OIDC 认证流程
+- 使用 JWKS 进行 JWT 令牌验证
+- 通过令牌声明实现基于角色的访问控制
 
-## Environment Variables
+## 环境变量
 
-### Backend Environment Variables
+### 后端环境变量
 
-| Variable | Description | Required |
+| 变量 | 描述 | 是否必需 |
 |----------|-------------|----------|
-| `AUTH_TYPE` | Set to `"OKTA"` to enable Okta authentication | Yes |
-| `OKTA_DOMAIN` | Your Okta domain (e.g., `https://company.okta.com`) | Yes |
-| `OKTA_ISSUER` | The issuer URL for your Okta authorization server (e.g., `https://company.okta.com/oauth2/default`) | Yes |
-| `OKTA_CLIENT_ID` | Client ID of your Okta application | Yes |
-| `OKTA_CLIENT_SECRET` | Client Secret of your Okta application | Yes |
-| `OKTA_AUDIENCE` | Expected audience claim in the token. Falls back to `OKTA_CLIENT_ID` if not set | No |
-| `OKTA_JWKS_URL` | Explicit JWKS URL. If not set, derived from `OKTA_ISSUER` | No |
-| `OKTA_API_TOKEN` | Okta API token for management operations | No |
+| `AUTH_TYPE` | 设置为 `"OKTA"` 以启用 Okta 认证 | 是 |
+| `OKTA_DOMAIN` | 您的 Okta 域名（例如，`https://company.okta.com`） | 是 |
+| `OKTA_ISSUER` | Okta 授权服务器的签发者 URL（例如，`https://company.okta.com/oauth2/default`） | 是 |
+| `OKTA_CLIENT_ID` | Okta 应用程序的客户端 ID | 是 |
+| `OKTA_CLIENT_SECRET` | Okta 应用程序的客户端密钥 | 是 |
+| `OKTA_AUDIENCE` | 令牌中预期的受众声明。如果未设置，回退到 `OKTA_CLIENT_ID` | 否 |
+| `OKTA_JWKS_URL` | 显式 JWKS URL。如果未设置，从 `OKTA_ISSUER` 派生 | 否 |
+| `OKTA_API_TOKEN` | 用于管理操作的 Okta API 令牌 | 否 |
 
-### Frontend Environment Variables
+### 前端环境变量
 
-| Variable | Description | Example |
+| 变量 | 描述 | 示例 |
 |----------|-------------|---------|
-| `AUTH_TYPE` | Set to `"OKTA"` to enable Okta authentication | `OKTA` |
-| `OKTA_ISSUER` | The issuer URL for your Okta authorization server | `https://company.okta.com/oauth2/default` |
-| `OKTA_CLIENT_ID` | Client ID of your Okta application | `0oa1bcdef2ghijklm3n4` |
-| `OKTA_CLIENT_SECRET` | Client Secret of your Okta application | `abcd1234efgh5678` |
+| `AUTH_TYPE` | 设置为 `"OKTA"` 以启用 Okta 认证 | `OKTA` |
+| `OKTA_ISSUER` | Okta 授权服务器的签发者 URL | `https://company.okta.com/oauth2/default` |
+| `OKTA_CLIENT_ID` | Okta 应用程序的客户端 ID | `0oa1bcdef2ghijklm3n4` |
+| `OKTA_CLIENT_SECRET` | Okta 应用程序的客户端密钥 | `abcd1234efgh5678` |
 
-## Okta Configuration
+## Okta 配置
 
-### Creating an Okta Application
+### 创建 Okta 应用程序
 
-1. Sign in to your Okta Admin Console
-2. Navigate to **Applications** > **Applications**
-3. Click **Create App Integration**
-4. Select **OIDC - OpenID Connect** as the sign-in method
-5. Select **Web Application** as the application type
-6. Click **Next**
+1. 登录 Okta Admin Console
+2. 导航到 **Applications** > **Applications**
+3. 点击 **Create App Integration**
+4. 选择 **OIDC - OpenID Connect** 作为登录方式
+5. 选择 **Web Application** 作为应用程序类型
+6. 点击 **Next**
 
-### Application Settings
+### 应用程序设置
 
-1. **App integration name**: Enter a name for your application (e.g., "Keep")
-2. **Sign-in redirect URIs**: Add your callback URL: `https://your-keep-domain.com/api/auth/callback/okta`
-3. **Sign-out redirect URIs**: Add your sign-out URL: `https://your-keep-domain.com`
-4. **Assignments**: Assign the application to the appropriate users or groups
-5. Click **Save**
-6. Copy the **Client ID** and **Client Secret** from the application settings
+1. **App integration name**：输入应用程序名称（例如，"Keep"）
+2. **Sign-in redirect URIs**：添加您的回调 URL：`https://your-keep-domain.com/api/auth/callback/okta`
+3. **Sign-out redirect URIs**：添加您的登出 URL：`https://your-keep-domain.com`
+4. **Assignments**：将应用程序分配给适当的用户或组
+5. 点击 **Save**
+6. 从应用程序设置中复制 **Client ID** 和 **Client Secret**
 
-### Role Mapping
+### 角色映射
 
-Keep extracts the user role from the JWT token. The role is determined in the following order:
+Keep 从 JWT 令牌中提取用户角色。角色按以下顺序确定：
 
-1. `keep_role` claim in the token
-2. `role` claim in the token
-3. First entry in the `groups` claim
-4. Falls back to `user` role
+1. 令牌中的 `keep_role` 声明
+2. 令牌中的 `role` 声明
+3. `groups` 声明中的第一个条目
+4. 回退到 `user` 角色
 
-To configure role mapping, add a custom claim to your Okta authorization server:
+要配置角色映射，请向您的 Okta 授权服务器添加自定义声明：
 
-1. Navigate to **Security** > **API** > **Authorization Servers**
-2. Select your authorization server (e.g., `default`)
-3. Go to the **Claims** tab
-4. Add a claim named `keep_role` or `groups` that maps to the user's Keep role
+1. 导航到 **Security** > **API** > **Authorization Servers**
+2. 选择您的授权服务器（例如，`default`）
+3. 进入 **Claims** 选项卡
+4. 添加一个名为 `keep_role` 或 `groups` 的声明，映射到用户的 Keep 角色

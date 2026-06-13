@@ -3,121 +3,105 @@ title: "Configuration"
 sidebarTitle: "Configuration"
 ---
 
-## Background
+## 背景
 
-Keep is highly configurable through environment variables. This allows you to customize various aspects of both the backend and frontend components without modifying the code. Environment variables can be set in your deployment environment, such as in your Kubernetes configuration, Docker Compose file, or directly on your host system.
+Keep 通过环境变量进行高度可配置。这使您无需修改代码即可自定义后端和前端组件的各个方面。环境变量可以在您的部署环境中设置，例如在 Kubernetes 配置、Docker Compose 文件或直接在您的主机系统上设置。
 
-## Backend Environment Variables
+## 后端环境变量
 
-### General
+### 通用
 
 <Info>
-  General configuration variables control the core behavior of the Keep server.
-  These settings determine fundamental aspects such as the server's host, port,
-  and whether certain components like the scheduler and consumer are enabled.
+  通用配置变量控制 Keep 服务器的核心行为。这些设置决定了基本方面，例如服务器的主机、端口，以及是否启用调度器和消费者等组件。
 </Info>
 
-|               Env var                |                        Purpose                        | Required |         Default Value          |        Valid options         |
+|               环境变量                |                         用途                         | 是否必需 |           默认值            |         有效选项         |
 | :----------------------------------: | :---------------------------------------------------: | :------: | :----------------------------: | :--------------------------: |
-|            **KEEP_HOST**             |        Specifies the host for the Keep server         |    No    |           "0.0.0.0"            | Valid hostname or IP address |
-|               **PORT**               |  Specifies the port on which the backend server runs  |    No    |              8080              |    Any valid port number     |
-|            **SCHEDULER**             |      Enables or disables the workflow scheduler       |    No    |             "true"             |      "true" or "false"       |
-|             **CONSUMER**             |           Enables or disables the consumer            |    No    |             "true"             |      "true" or "false"       |
-|           **KEEP_VERSION**           |              Specifies the Keep version               |    No    |           "unknown"            |     Valid version string     |
-|           **KEEP_API_URL**           |              Specifies the Keep API URL               |    No    | Constructed from HOST and PORT |          Valid URL           |
-|      **KEEP_STORE_RAW_ALERTS**       |             Enables storing of raw alerts             |    No    |            "false"             |      "true" or "false"       |
-| **TENANT_CONFIGURATION_RELOAD_TIME** |    Time in minutes to reload tenant configurations    |    No    |               5                |       Positive integer       |
-|       **KEEP_LIVE_DEMO_MODE**        | Keep will simulate incoming alerts and other activity |    No    |            "false"             |      "true" or "false"       |
+|            **KEEP_HOST**             |        指定 Keep 服务器的主机地址         |    否    |           "0.0.0.0"            | 有效的主机名或 IP 地址 |
+|               **PORT**               |  指定后端服务器运行的端口  |    否    |              8080              |    任何有效的端口号     |
+|            **SCHEDULER**             |      启用或禁用工作流调度器       |    否    |             "true"             |      "true" 或 "false"       |
+|             **CONSUMER**             |           启用或禁用消费者            |    否    |             "true"             |      "true" 或 "false"       |
+|           **KEEP_VERSION**           |              指定 Keep 版本               |    否    |           "unknown"            |     有效的版本字符串     |
+|           **KEEP_API_URL**           |              指定 Keep API URL               |    否    | 由 HOST 和 PORT 构建 |          有效的 URL           |
+|      **KEEP_STORE_RAW_ALERTS**       |             启用原始告警存储             |    否    |            "false"             |      "true" 或 "false"       |
+| **TENANT_CONFIGURATION_RELOAD_TIME** |    重新加载租户配置的时间（分钟）    |    否    |               5                |       正整数       |
+|       **KEEP_LIVE_DEMO_MODE**        | Keep 将模拟传入告警和其他活动 |    否    |            "false"             |      "true" 或 "false"       |
 
-### Logging and Environment
+### 日志与环境
 
 <Info>
-  Logging and environment configuration determines how Keep generates and
-  formats log output. These settings are crucial for debugging, monitoring, and
-  understanding the behavior of your Keep instance in different environments.
+  日志和环境配置决定 Keep 如何生成和格式化日志输出。这些设置对于调试、监控和理解您的 Keep 实例在不同环境中的行为至关重要。
 </Info>
 
-|       Env var        |                         Purpose                         | Required |  Default Value   |                  Valid options                  |
+|       环境变量        |                         用途                         | 是否必需 |    默认值    |                  有效选项                  |
 | :------------------: | :-----------------------------------------------------: | :------: | :--------------: | :---------------------------------------------: |
-|    **LOG_LEVEL**     |       Sets the logging level for the application        |    No    |      "INFO"      | "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL" |
-|   **ENVIRONMENT**    | Specifies the environment the application is running in |    No    |   "production"   |     "development", "staging", "production"      |
-|    **LOG_FORMAT**    |                Specifies the log format                 |    No    | "open_telemetry" |        "open_telemetry", "dev_terminal"         |
-| **LOG_AUTH_PAYLOAD** |        Enables logging of authentication payload        |    No    |     "false"      |                "true" or "false"                |
+|    **LOG_LEVEL**     |       设置应用程序的日志级别        |    否    |      "INFO"      | "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL" |
+|   **ENVIRONMENT**    | 指定应用程序运行的环境 |    否    |   "production"   |     "development", "staging", "production"      |
+|    **LOG_FORMAT**    |                指定日志格式                 |    否    | "open_telemetry" |        "open_telemetry", "dev_terminal"         |
+| **LOG_AUTH_PAYLOAD** |        启用认证负载日志记录        |    否    |     "false"      |                "true" 或 "false"                |
 
-### Database
+### 数据库
 
 <Info>
-  Database configuration is crucial for Keep's data persistence. Keep supports
-  various database backends through SQLAlchemy, allowing flexibility in choosing
-  and configuring your preferred database system.
+  数据库配置对于 Keep 的数据持久化至关重要。Keep 通过 SQLAlchemy 支持各种数据库后端，允许您灵活选择和配置首选数据库系统。
 </Info>
 
-|            Env var             |                      Purpose                      | Required |           Default Value           |           Valid options            |
+|            环境变量             |                      用途                      | 是否必需 |            默认值            |           有效选项            |
 | :----------------------------: | :-----------------------------------------------: | :------: | :-------------------------------: | :--------------------------------: |
-| **DATABASE_CONNECTION_STRING** |       Specifies the database connection URL       |   Yes    |               None                | Valid SQLAlchemy connection string |
-|     **DATABASE_POOL_SIZE**     |      Sets the database connection pool size       |    No    |                 5                 |          Positive integer          |
-|   **DATABASE_MAX_OVERFLOW**    | Sets the maximum overflow for the connection pool |    No    |                10                 |          Positive integer          |
-|       **DATABASE_ECHO**        |    Enables SQLAlchemy echo mode for debugging     |    No    |               False               |        Boolean (True/False)        |
-|     **DB_CONNECTION_NAME**     |      Specifies the Cloud SQL connection name      |    No    | "keephq-sandbox:us-central1:keep" | Valid Cloud SQL connection string  |
-|          **DB_NAME**           |       Specifies the Cloud SQL database name       |    No    |             "keepdb"              |   Valid Cloud SQL database name    |
-|     **DB_SERVICE_ACCOUNT**     |    Service account for database impersonation     |    No    |               None                |    Valid service account email     |
-|         **DB_IP_TYPE**         |          Specifies the Cloud SQL IP type          |    No    |             "public"              |    "public", "private" or "psc"    |
-|      **SKIP_DB_CREATION**      |      Skips database creation and migrations       |    No    |              "false"              |         "true" or "false"          |
+| **DATABASE_CONNECTION_STRING** |       指定数据库连接 URL       |    是    |               无               | 有效的 SQLAlchemy 连接字符串 |
+|     **DATABASE_POOL_SIZE**     |      设置数据库连接池大小       |    否    |                 5                 |          正整数          |
+|   **DATABASE_MAX_OVERFLOW**    | 设置连接池的最大溢出数 |    否    |                10                 |          正整数          |
+|       **DATABASE_ECHO**        |    启用 SQLAlchemy 回显模式用于调试     |    否    |               False               |        布尔值 (True/False)        |
+|     **DB_CONNECTION_NAME**     |      指定 Cloud SQL 连接名称      |    否    | "keephq-sandbox:us-central1:keep" | 有效的 Cloud SQL 连接字符串  |
+|          **DB_NAME**           |       指定 Cloud SQL 数据库名称       |    否    |             "keepdb"              |   有效的 Cloud SQL 数据库名称    |
+|     **DB_SERVICE_ACCOUNT**     |    用于数据库模拟的服务账号     |    否    |               无               |    有效的服务账号邮箱     |
+|         **DB_IP_TYPE**         |          指定 Cloud SQL IP 类型          |    否    |             "public"              |    "public", "private" 或 "psc"    |
+|      **SKIP_DB_CREATION**      |      跳过数据库创建和迁移       |    否    |              "false"              |         "true" 或 "false"          |
 
-### Resource Provisioning
+### 资源预置
 
 <Info>
-  Resource provisioning settings control how Keep sets up initial resources.
-  This configuration is particularly important for automating the setup process
-  and ensuring that necessary resources are available when Keep starts.
+  资源预置设置控制 Keep 如何设置初始资源。此配置对于自动化设置流程和确保 Keep 启动时必要的资源可用尤为重要。
 </Info>
 <Tip>
-  To elaborate on resource provisioning and its configuration, please see
-  [provisioning docs](/deployment/provision/overview).
+  要详细了解资源预置及其配置，请参阅[预置文档](/deployment/provision/overview)。
 </Tip>
 
-|         Env var         |                  Purpose                  | Required | Default Value |   Valid options   |
+|         环境变量         |                  用途                  | 是否必需 | 默认值 |    有效选项    |
 | :---------------------: | :---------------------------------------: | :------: | :-----------: | :---------------: |
-| **PROVISION_RESOURCES** | Enables or disables resource provisioning |    No    |    "true"     | "true" or "false" |
+| **PROVISION_RESOURCES** | 启用或禁用资源预置 |    否    |    "true"     | "true" 或 "false" |
 
-### Authentication
+### 认证
 
 <Info>
-  Authentication configuration determines how Keep verifies user identities and
-  manages access control. These settings are essential for securing your Keep
-  instance and integrating with various authentication providers.
+  认证配置决定 Keep 如何验证用户身份并管理访问控制。这些设置对于保护您的 Keep 实例并与各种认证提供商集成至关重要。
 </Info>
 <Tip>
-  For specific authentication type configuration, please see [authentication
-  docs](/deployment/authentication/overview).
+  有关特定认证类型的配置，请参阅[认证文档](/deployment/authentication/overview)。
 </Tip>
 
-|                Env var                |                              Purpose                              | Required | Default Value |                   Valid options                    |
+|                环境变量                |                              用途                              | 是否必需 | 默认值 |                   有效选项                    |
 | :-----------------------------------: | :---------------------------------------------------------------: | :------: | :-----------: | :------------------------------------------------: |
-|             **AUTH_TYPE**             |                 Specifies the authentication type                 |    No    |   "NOAUTH"    | "AUTH0", "KEYCLOAK", "DB", "NOAUTH", "OAUTH2PROXY", "OKTA", "ONELOGIN" |
-|          **KEEP_JWT_SECRET**          | Secret key for JWT token generation and validation (DB auth only) |   Yes    |     None      |              Any strong secret string              |
-|       **KEEP_DEFAULT_USERNAME**       |        Default username for the admin user (DB auth only)         |    No    |    "keep"     |             Any valid username string              |
-|       **KEEP_DEFAULT_PASSWORD**       |        Default password for the admin user (DB auth only)         |    No    |    "keep"     |             Any strong password string             |
-| **KEEP_FORCE_RESET_DEFAULT_PASSWORD** |               Forces reset of default user password               |    No    |    "false"    |                 "true" or "false"                  |
-|       **KEEP_DEFAULT_API_KEYS**       |       Comma-separated list of default API keys to provision       |    No    |      ""       |    Format: "name:role:secret,name:role:secret"     |
+|             **AUTH_TYPE**             |                 指定认证类型                 |    否    |   "NOAUTH"    | "AUTH0", "KEYCLOAK", "DB", "NOAUTH", "OAUTH2PROXY", "OKTA", "ONELOGIN" |
+|          **KEEP_JWT_SECRET**          | JWT 令牌生成和验证的密钥（仅限 DB 认证） |    是    |     无     |              任何强密码字符串              |
+|       **KEEP_DEFAULT_USERNAME**       |        管理员用户的默认用户名（仅限 DB 认证）         |    否    |    "keep"     |             任何有效用户名字符串              |
+|       **KEEP_DEFAULT_PASSWORD**       |        管理员用户的默认密码（仅限 DB 认证）         |    否    |    "keep"     |             任何强密码字符串             |
+| **KEEP_FORCE_RESET_DEFAULT_PASSWORD** |               强制重置默认用户密码               |    否    |    "false"    |                 "true" 或 "false"                  |
+|       **KEEP_DEFAULT_API_KEYS**       |       逗号分隔的默认 API 密钥列表       |    否    |      ""       |    格式: "name:role:secret,name:role:secret"     |
 
-### Service Mesh (Internal Alert Ingestion)
+### 服务网格（内部告警接入）
 
 <Info>
-  These settings allow trusted services within the same Kubernetes cluster to
-  POST alerts to Keep without requiring a Keep API key. This is intended for
-  service-to-service communication where network-level authentication (e.g.
-  Istio mTLS with AuthorizationPolicy) ensures only authorized callers can
-  reach Keep's alert ingestion endpoints.
+  这些设置允许同一 Kubernetes 集群内的受信任服务向 Keep POST 告警，而无需 Keep API 密钥。这适用于服务间通信，通过网络级认证（例如 Istio mTLS 配合 AuthorizationPolicy）确保只有授权的调用方才能访问 Keep 的告警接入端点。
 </Info>
 
-|                   Env var                    |                                   Purpose                                    | Required | Default Value |    Valid options     |
+|                   环境变量                    |                                   用途                                    | 是否必需 | 默认值 |     有效选项     |
 | :------------------------------------------: | :--------------------------------------------------------------------------: | :------: | :-----------: | :-----------------: |
-| **KEEP_ALLOW_MESH_ALERT_INGESTION**          | Allows unauthenticated POST requests to `/alerts/event*` endpoints           |    No    |    "false"    | "true" or "false"   |
+| **KEEP_ALLOW_MESH_ALERT_INGESTION**          | 允许未经认证的 POST 请求访问 `/alerts/event*` 端点           |    否    |    "false"    | "true" 或 "false"   |
 
-When `KEEP_ALLOW_MESH_ALERT_INGESTION` is set to `"true"`, requests to `/alerts/event*` that do not carry an API key or bearer token are accepted and authenticated as an internal service with the `webhook` role.
+当 `KEEP_ALLOW_MESH_ALERT_INGESTION` 设置为 `"true"` 时，对 `/alerts/event*` 的请求如果没有携带 API 密钥或 bearer 令牌，将被接受并认证为具有 `webhook` 角色的内部服务。
 
-Calling services can optionally set the `X-Service-Name` HTTP header to identify themselves in Keep's logs and audit trail:
+调用服务可以选择设置 `X-Service-Name` HTTP 头以在 Keep 的日志和审计追踪中标识自己：
 
 ```bash
 curl -X POST http://keep-backend:8080/alerts/event \
@@ -126,287 +110,250 @@ curl -X POST http://keep-backend:8080/alerts/event \
   -d '[{"id":"alert-1","name":"Example Alert","severity":"info","status":"firing","source":["my-service"]}]'
 ```
 
-The authenticated entity will have:
-- **email**: `service:<X-Service-Name header value>` (defaults to `service:unknown` if the header is not set)
-- **role**: `webhook` (grants `write:alert` and `write:incident` scopes)
+认证实体将具有：
+- **email**: `service:<X-Service-Name header value>`（如果未设置该头部，则默认为 `service:unknown`）
+- **role**: `webhook`（授予 `write:alert` 和 `write:incident` 作用域）
 
 <Warning>
-  This feature bypasses API key authentication for the alert ingestion
-  endpoints. You **must** pair it with network-level access control (such as
-  Istio AuthorizationPolicy) to restrict which services can reach these
-  endpoints. Without network-level enforcement, any client that can reach
-  Keep's backend can POST alerts.
+  此功能绕过了告警接入端点的 API 密钥认证。您**必须**将其与网络级访问控制（如 Istio AuthorizationPolicy）配合使用，以限制哪些服务可以访问这些端点。如果没有网络级强制措施，任何可以访问 Keep 后端的客户端都可以 POST 告警。
 </Warning>
 
-### Secrets Management
+### 密钥管理
 
 <Info>
-  Secrets Management configuration specifies how Keep handles sensitive
-  information. This is crucial for securely storing and accessing confidential
-  data such as API keys and integrations credentials.
+  密钥管理配置指定 Keep 如何处理敏感信息。这对于安全存储和访问机密数据（如 API 密钥和集成凭证）至关重要。
 </Info>
 
-|           Env var            |                                Purpose                                | Required | Default Value |         Valid options         |
+|           环境变量            |                                用途                                | 是否必需 | 默认值 |         有效选项         |
 | :--------------------------: | :-------------------------------------------------------------------: | :------: | :-----------: | :---------------------------: |
-|   **SECRET_MANAGER_TYPE**    |               Defines the type of secret manager to use               |   Yes    |    "FILE"     | "FILE", "GCP", "K8S", "VAULT", "DB" |
-| **SECRET_MANAGER_DIRECTORY** | Directory for storing secrets when using file-based secret management |    No    |   "/state"    |   Any valid directory path    |
+|   **SECRET_MANAGER_TYPE**    |               定义要使用的密钥管理器类型               |    是    |    "FILE"     | "FILE", "GCP", "K8S", "VAULT", "DB" |
+| **SECRET_MANAGER_DIRECTORY** | 使用基于文件的密钥管理时存储密钥的目录 |    否    |   "/state"    |   任何有效的目录路径    |
 
 ### OpenTelemetry
 
 <Info>
-  OpenTelemetry configuration enables comprehensive observability for Keep.
-  These settings allow you to integrate Keep with various monitoring and tracing
-  systems, enhancing your ability to debug and optimize performance.
+  OpenTelemetry 配置为 Keep 提供全面的可观测性。这些设置允许您将 Keep 与各种监控和追踪系统集成，增强您调试和优化性能的能力。
 </Info>
 
-|                 Env var                 |                   Purpose                   | Required | Default Value |       Valid options       |
+|                 环境变量                 |                   用途                   | 是否必需 | 默认值 |       有效选项       |
 | :-------------------------------------: | :-----------------------------------------: | :------: | :-----------: | :-----------------------: |
-|          **OTEL_SERVICE_NAME**          |         OpenTelemetry service name          |    No    |  "keep-api"   | Valid service name string |
-|            **SERVICE_NAME**             |      Alternative for OTEL_SERVICE_NAME      |    No    |  "keep-api"   | Valid service name string |
-|     **OTEL_EXPORTER_OTLP_ENDPOINT**     |      OpenTelemetry collector endpoint       |    No    |     None      |         Valid URL         |
-|            **OTLP_ENDPOINT**            | Alternative for OTEL_EXPORTER_OTLP_ENDPOINT |    No    |     None      |         Valid URL         |
-| **OTEL_EXPORTER_OTLP_TRACES_ENDPOINT**  |        OpenTelemetry traces endpoint        |    No    |     None      |         Valid URL         |
-|  **OTEL_EXPORTER_OTLP_LOGS_ENDPOINT**   |         OpenTelemetry logs endpoint         |    No    |     None      |         Valid URL         |
-| **OTEL_EXPORTER_OTLP_METRICS_ENDPOINT** |       OpenTelemetry metrics endpoint        |    No    |     None      |         Valid URL         |
-|         **CLOUD_TRACE_ENABLED**         |     Enables Google Cloud Trace exporter     |    No    |    "false"    |     "true" or "false"     |
-|         **METRIC_OTEL_ENABLED**         |        Enables OpenTelemetry metrics        |    No    |      ""       |     "true" or "false"     |
+|          **OTEL_SERVICE_NAME**          |         OpenTelemetry 服务名称          |    否    |  "keep-api"   | 有效的服务名称字符串 |
+|            **SERVICE_NAME**             |      OTEL_SERVICE_NAME 的替代方案      |    否    |  "keep-api"   | 有效的服务名称字符串 |
+|     **OTEL_EXPORTER_OTLP_ENDPOINT**     |      OpenTelemetry 收集器端点       |    否    |     无      |         有效的 URL         |
+|            **OTLP_ENDPOINT**            | OTEL_EXPORTER_OTLP_ENDPOINT 的替代方案 |    否    |     无      |         有效的 URL         |
+| **OTEL_EXPORTER_OTLP_TRACES_ENDPOINT**  |        OpenTelemetry 追踪端点        |    否    |     无      |         有效的 URL         |
+|  **OTEL_EXPORTER_OTLP_LOGS_ENDPOINT**   |         OpenTelemetry 日志端点         |    否    |     无      |         有效的 URL         |
+| **OTEL_EXPORTER_OTLP_METRICS_ENDPOINT** |       OpenTelemetry 指标端点        |    否    |     无      |         有效的 URL         |
+|         **CLOUD_TRACE_ENABLED**         |     启用 Google Cloud Trace 导出器     |    否    |    "false"    |     "true" 或 "false"     |
+|         **METRIC_OTEL_ENABLED**         |        启用 OpenTelemetry 指标        |    否    |      ""       |     "true" 或 "false"     |
 
-### WebSocket Server (Pusher/Soketi)
+### WebSocket 服务器 (Pusher/Soketi)
 
 <Info>
-  WebSocket server configuration controls real-time communication capabilities
-  in Keep. These settings are important for enabling features that require
-  instant updates and notifications.
+  WebSocket 服务器配置控制 Keep 中的实时通信能力。这些设置对于启用需要即时更新和通知的功能非常重要。
 </Info>
 
-|        Env var        |              Purpose              |       Required        | Default Value |        Valid options         |
+|        环境变量        |              用途              |       是否必需        | 默认值 |        有效选项         |
 | :-------------------: | :-------------------------------: | :-------------------: | :-----------: | :--------------------------: |
-|  **PUSHER_DISABLED**  |    Disables Pusher integration    |          No           |    "false"    |      "true" or "false"       |
-|    **PUSHER_HOST**    |   Hostname of the Pusher server   |          No           |     None      | Valid hostname or IP address |
-|    **PUSHER_PORT**    |     Port of the Pusher server     |          No           |     None      |    Any valid port number     |
-|   **PUSHER_APP_ID**   |       Pusher application ID       | Yes (if using Pusher) |     None      |     Valid Pusher App ID      |
-|  **PUSHER_APP_KEY**   |      Pusher application key       | Yes (if using Pusher) |     None      |     Valid Pusher App Key     |
-| **PUSHER_APP_SECRET** |     Pusher application secret     | Yes (if using Pusher) |     None      |   Valid Pusher App Secret    |
-|  **PUSHER_USE_SSL**   | Enables SSL for Pusher connection |          No           |     False     |     Boolean (True/False)     |
-|  **PUSHER_CLUSTER**   |          Pusher cluster           |          No           |     None      |  Valid Pusher cluster name   |
+|  **PUSHER_DISABLED**  |    禁用 Pusher 集成    |          否           |    "false"    |      "true" 或 "false"       |
+|    **PUSHER_HOST**    |   Pusher 服务器的主机名   |          否           |     无      | 有效的主机名或 IP 地址 |
+|    **PUSHER_PORT**    |     Pusher 服务器的端口     |          否           |     无      |    任何有效的端口号     |
+|   **PUSHER_APP_ID**   |       Pusher 应用 ID       | 是（如果使用 Pusher） |     无      |     有效的 Pusher App ID      |
+|  **PUSHER_APP_KEY**   |      Pusher 应用密钥      | 是（如果使用 Pusher） |     无      |     有效的 Pusher App Key     |
+| **PUSHER_APP_SECRET** |     Pusher 应用密钥     | 是（如果使用 Pusher） |     无      |   有效的 Pusher App Secret    |
+|  **PUSHER_USE_SSL**   | 为 Pusher 连接启用 SSL |          否           |     False     |     布尔值 (True/False)     |
+|  **PUSHER_CLUSTER**   |          Pusher 集群           |          否           |     无      |  有效的 Pusher 集群名称   |
 
 ### OpenAI
 
 <Info>
-  OpenAI configuration is used for integrating with OpenAI services. These
-  settings are important if you're utilizing OpenAI capabilities within Keep for
-  tasks such as natural language processing or AI-assisted operations.
+  OpenAI 配置用于集成 OpenAI 服务。这些设置在您利用 Keep 中的 OpenAI 功能进行自然语言处理或 AI 辅助操作等任务时非常重要。
 </Info>
 
-|           Env var           |                      Purpose                       | Required |    Default Value    |                        Valid options                         | Backend/Frontend |
+|           环境变量           |                      用途                       | 是否必需 |    默认值    |                        有效选项                         | 后端/前端 |
 | :-------------------------: | :------------------------------------------------: | :------: | :-----------------: | :----------------------------------------------------------: | :--------------: |
-|     **OPENAI_API_KEY**      |            API key for OpenAI services             |    No    |        None         |                     Valid OpenAI API key                     |       Both       |
-|    **OPENAI_MODEL_NAME**    |       Model name to use for OpenAI requests        |    No    | "gpt-4o-2024-08-06" | Valid OpenAI model name (e.g., "gpt-4o", "gpt-4o-mini", ...) |       Both       |
-| **OPEN_AI_ORGANIZATION_ID** |        Organization ID for OpenAI services         |    No    |        None         |                 Valid OpenAI organization ID                 |       Both       |
-|     **OPENAI_BASE_URL**     | Base URL for OpenAI API (useful for LiteLLM proxy) |    No    |        None         |          Valid URL (e.g., "http://localhost:4000")           |       Both       |
+|     **OPENAI_API_KEY**      |            OpenAI 服务的 API 密钥            |    否    |        无         |                     有效的 OpenAI API 密钥                     |       两者       |
+|    **OPENAI_MODEL_NAME**    |       用于 OpenAI 请求的模型名称        |    否    | "gpt-4o-2024-08-06" | 有效的 OpenAI 模型名称 (e.g., "gpt-4o", "gpt-4o-mini", ...) |       两者       |
+| **OPEN_AI_ORGANIZATION_ID** |        OpenAI 服务的组织 ID         |    否    |        无         |                 有效的 OpenAI 组织 ID                 |       两者       |
+|     **OPENAI_BASE_URL**     | OpenAI API 的基础 URL（用于 LiteLLM 代理） |    否    |        无         |          有效的 URL (e.g., "http://localhost:4000")           |       两者       |
 
 <Tip>
-  For various different LLM based features, we also require to set these
-  environment variables for Keep's frontend too.
+  对于各种基于 LLM 的功能，我们还需要为 Keep 的前端也设置这些环境变量。
 </Tip>
 
 ### Posthog
 
 <Info>
-  Posthog configuration controls Keep's integration with the Posthog analytics
-  platform. These settings are useful for tracking usage patterns and gathering
-  insights about how your Keep instance is being used.
+  Posthog 配置控制 Keep 与 Posthog 分析平台的集成。这些设置对于追踪使用模式、获取 Keep 实例使用情况的洞察非常有用。
 </Info>
 
-|       Env var        |            Purpose            | Required |                   Default Value                   |     Valid options     |
+|       环境变量        |            用途            | 是否必需 |                   默认值                   |     有效选项     |
 | :------------------: | :---------------------------: | :------: | :-----------------------------------------------: | :-------------------: |
-| **POSTHOG_API_KEY**  | API key for PostHog analytics |    No    | "phc_muk9qE3TfZsX3SZ9XxX52kCGJBclrjhkP9JxAQcm1PZ" | Valid PostHog API key |
-| **POSTHOG_DISABLED** | Disables PostHog integration  |    No    |                      "false"                      |   "true" or "false"   |
+| **POSTHOG_API_KEY**  | PostHog 分析的 API 密钥 |    否    | "phc_muk9qE3TfZsX3SZ9XxX52kCGJBclrjhkP9JxAQcm1PZ" | 有效的 PostHog API 密钥 |
+| **POSTHOG_DISABLED** | 禁用 PostHog 集成  |    否    |                      "false"                      |   "true" 或 "false"   |
 
 ### Sentry
 
 <Info>
-  Sentry configuration controls Keep's integration with Sentry for error
-  monitoring and reporting. These settings are important for maintaining the
-  stability and reliability of your Keep instance.
+  Sentry 配置控制 Keep 与 Sentry 的集成，用于错误监控和报告。这些设置对于维护 Keep 实例的稳定性和可靠性非常重要。
 </Info>
 
-|       Env var       |           Purpose           | Required | Default Value |   Valid options   |
+|       环境变量       |           用途           | 是否必需 | 默认值 |   有效选项   |
 | :-----------------: | :-------------------------: | :------: | :-----------: | :---------------: |
-| **SENTRY_DISABLED** | Disables Sentry integration |    No    |    "false"    | "true" or "false" |
+| **SENTRY_DISABLED** | 禁用 Sentry 集成 |    否    |    "false"    | "true" 或 "false" |
 
 ### Ngrok
 
 <Info>
-  Ngrok configuration enables secure tunneling to your Keep instance. These
-  settings are particularly useful for development or when you need to expose
-  your local Keep instance to the internet securely.
+  Ngrok 配置为您的 Keep 实例启用安全隧道。这些设置在开发时或需要将本地 Keep 实例安全暴露到互联网时特别有用。
 </Info>
 
-|       Env var        |            Purpose             | Required | Default Value |     Valid options      |
+|       环境变量        |            用途             | 是否必需 | 默认值 |     有效选项      |
 | :------------------: | :----------------------------: | :------: | :-----------: | :--------------------: |
-|    **USE_NGROK**     |  Enables ngrok for tunneling   |    No    |    "false"    |   "true" or "false"    |
-| **NGROK_AUTH_TOKEN** | Authentication token for ngrok |    No    |     None      | Valid ngrok auth token |
-|   **NGROK_DOMAIN**   |    Custom domain for ngrok     |    No    |     None      |   Valid domain name    |
+|    **USE_NGROK**     |  启用 ngrok 隧道   |    否    |    "false"    |   "true" 或 "false"    |
+| **NGROK_AUTH_TOKEN** | ngrok 的认证令牌 |    否    |     无      | 有效的 ngrok 认证令牌 |
+|   **NGROK_DOMAIN**   |    ngrok 的自定义域名     |    否    |     无      |   有效的域名    |
 
 ### Elasticsearch
 
 <Info>
-  Elasticsearch configuration controls Keep's integration with Elasticsearch for
-  advanced search capabilities. These settings are important if you're using
-  Elasticsearch to enhance Keep's search functionality and performance.
+  Elasticsearch 配置控制 Keep 与 Elasticsearch 的集成，用于高级搜索能力。这些设置在您使用 Elasticsearch 增强 Keep 的搜索功能和性能时非常重要。
 </Info>
 
-|         Env var          |                   Purpose                   |           Required           | Default Value |         Valid options         |
+|         环境变量          |                   用途                   |           是否必需           | 默认值 |         有效选项         |
 | :----------------------: | :-----------------------------------------: | :--------------------------: | :-----------: | :---------------------------: |
-|   **ELASTIC_ENABLED**    |      Enables Elasticsearch integration      |              No              |    "false"    |       "true" or "false"       |
-|   **ELASTIC_API_KEY**    |          API key for Elasticsearch          | Yes (if using Elasticsearch) |     None      |  Valid Elasticsearch API key  |
-|    **ELASTIC_HOSTS**     | Comma-separated list of Elasticsearch hosts | Yes (if using Elasticsearch) |     None      | Valid Elasticsearch host URLs |
-|     **ELASTIC_USER**     |    Username for Elasticsearch basic auth    |              No              |     None      |        Valid username         |
-|   **ELASTIC_PASSWORD**   |    Password for Elasticsearch basic auth    |              No              |     None      |        Valid password         |
-| **ELASTIC_INDEX_SUFFIX** |    Suffix for Elasticsearch index names     |   Yes (for single tenant)    |     None      |       Any valid string        |
+|   **ELASTIC_ENABLED**    |      启用 Elasticsearch 集成      |              否              |    "false"    |       "true" 或 "false"       |
+|   **ELASTIC_API_KEY**    |          Elasticsearch 的 API 密钥          | 是（如果使用 Elasticsearch） |     无      |  有效的 Elasticsearch API 密钥  |
+|    **ELASTIC_HOSTS**     | 逗号分隔的 Elasticsearch 主机列表 | 是（如果使用 Elasticsearch） |     无      | 有效的 Elasticsearch 主机 URL |
+|     **ELASTIC_USER**     |    Elasticsearch 基本认证的用户名    |              否              |     无      |        有效的用户名         |
+|   **ELASTIC_PASSWORD**   |    Elasticsearch 基本认证的密码    |              否              |     无      |        有效的密码         |
+| **ELASTIC_INDEX_SUFFIX** |    Elasticsearch 索引名称的后缀     |   是（单租户）    |     无      |       任何有效字符串        |
 
 ### Redis
 
 <Info>
-  Redis configuration specifies the connection details for Keep's Redis
-  instance. Redis is used for various caching and queueing purposes, making
-  these settings important for optimizing Keep's performance and scalability.
+  Redis 配置指定 Keep Redis 实例的连接详情。Redis 用于各种缓存和队列目的，这些设置对于优化 Keep 的性能和可扩展性非常重要。
 </Info>
 
-|      Env var       |        Purpose        | Required | Default Value |        Valid options         |
+|      环境变量       |        用途        | 是否必需 | 默认值 |        有效选项         |
 | :----------------: | :-------------------: | :------: | :-----------: | :--------------------------: |
-|      **REDIS**     |    Redis enabled      |    No    |     false     |        true or false         |
-|   **REDIS_HOST**   | Redis server hostname |    No    |  "localhost"  | Valid hostname or IP address |
-|   **REDIS_PORT**   |   Redis server port   |    No    |     6379      |      Valid port number       |
-| **REDIS_USERNAME** |    Redis username     |    No    |     None      |    Valid username string     |
-| **REDIS_PASSWORD** |    Redis password     |    No    |     None      |    Valid password string     |
+|      **REDIS**     |    Redis 已启用      |    否    |     false     |        true 或 false         |
+|   **REDIS_HOST**   | Redis 服务器主机名 |    否    |  "localhost"  | 有效的主机名或 IP 地址 |
+|   **REDIS_PORT**   |   Redis 服务器端口   |    否    |     6379      |      有效的端口号       |
+| **REDIS_USERNAME** |    Redis 用户名     |    否    |     无      |    有效的用户名字符串     |
+| **REDIS_PASSWORD** |    Redis 密码     |    否    |     无      |    有效的密码字符串     |
 
 ### Redis Sentinel
 <Info>
-  Redis sentinel configuration specifies the connection details for Keep's Redis sentinel
-  instance. Redis sentinel is used when you have a redis cluster and it acts as a broker.
+  Redis sentinel 配置指定 Keep Redis sentinel 实例的连接详情。Redis sentinel 在您拥有 redis 集群时使用，充当代理角色。
 </Info>
 
-|               Env var               |        Purpose              | Required |    Default Value    |                Valid options                |
+|               环境变量               |        用途              | 是否必需 |    默认值    |                有效选项                |
 | :---------------------------------: | :----------------------:    | :------: | :-----------------: | :-----------------------------------------: |
-|             **REDIS**               |        Redis enabled        |    No    |       false         |              true or false                  |
-|      **REDIS_SENTINEL_HOSTS**       |   Redis sentinel server(s)  |    No    |  "localhost:26379"  | "host1:port1,host2:port2" (comma-separated) |
-|   **REDIS_SENTINEL_SERVICE_NAME**   | Redis sentinel service name |    No    |    "mymaster"       |         Valid service name string           |
-|         **REDIS_USERNAME**          |      Redis username         |    No    |       None          |           Valid username string             |
-|         **REDIS_PASSWORD**          |      Redis password         |    No    |       None          |           Valid password string             |
+|             **REDIS**               |        Redis 已启用        |    否    |       false         |              true 或 false                  |
+|      **REDIS_SENTINEL_HOSTS**       |   Redis sentinel 服务器  |    否    |  "localhost:26379"  | "host1:port1,host2:port2" (逗号分隔) |
+|   **REDIS_SENTINEL_SERVICE_NAME**   | Redis sentinel 服务名称 |    否    |    "mymaster"       |         有效的服务名称字符串           |
+|         **REDIS_USERNAME**          |      Redis 用户名         |    否    |       无          |           有效的用户名字符串             |
+|         **REDIS_PASSWORD**          |      Redis 密码         |    否    |       无          |           有效的密码字符串             |
 
 
 ### ARQ
 
 <Info>
-  ARQ (Asynchronous Task Queue) configuration controls Keep's background task
-  processing. These settings are crucial for managing how Keep handles
-  long-running or scheduled tasks, ensuring efficient resource utilization and
-  responsiveness.
+  ARQ（异步任务队列）配置控制 Keep 的后台任务处理。这些设置对于管理 Keep 如何处理长时间运行或计划任务至关重要，确保高效的资源利用和响应能力。
 </Info>
 
-|           Env var            |                       Purpose                       | Required | Default Value |    Valid options     |
+|           环境变量            |                       用途                       | 是否必需 | 默认值 |     有效选项     |
 | :--------------------------: | :-------------------------------------------------: | :------: | :-----------: | :------------------: |
-| **ARQ_BACKGROUND_FUNCTIONS** | Comma-separated list of background functions to run |    No    |     None      | Valid function names |
-|     **ARQ_KEEP_RESULT**      |      Duration to keep job results (in seconds)      |    No    |     3600      |   Positive integer   |
-|       **ARQ_EXPIRES**        |      Default job expiration time (in seconds)       |    No    |     3600      |   Positive integer   |
-|      **ARQ_EXPIRES_AI**      |         AI job expiration time (in seconds)         |    No    |    3600000    |   Positive integer   |
+| **ARQ_BACKGROUND_FUNCTIONS** | 逗号分隔的要运行的后台函数列表 |    否    |     无      | 有效的函数名称 |
+|     **ARQ_KEEP_RESULT**      |      保留任务结果的时长（秒）      |    否    |     3600      |   正整数   |
+|       **ARQ_EXPIRES**        |      默认任务过期时间（秒）       |    否    |     3600      |   正整数   |
+|      **ARQ_EXPIRES_AI**      |         AI 任务过期时间（秒）         |    否    |    3600000    |   正整数   |
 
-### Rate Limiting
+### 速率限制
 
 <Info>
-  Rate limiting configuration controls how many requests can be made to Keep's
-  API endpoints within a specified time period. This helps prevent abuse and
-  ensures system stability.
+  速率限制配置控制在指定时间段内可以对 Keep 的 API 端点发出多少请求。这有助于防止滥用并确保系统稳定性。
 </Info>
 
-|          Env var           |                Purpose                | Required | Default Value |                                     Valid options                                     |
+|          环境变量           |                用途                | 是否必需 | 默认值 |                                     有效选项                                     |
 | :------------------------: | :-----------------------------------: | :------: | :-----------: | :-----------------------------------------------------------------------------------: |
-|    **KEEP_USE_LIMITER**    |   Enables or disables rate limiting   |    No    |    "false"    |                                   "true" or "false"                                   |
-| **KEEP_LIMIT_CONCURRENCY** | Sets the rate limit for API endpoints |    No    | "100/minute"  | Format: "{number}/{interval}" where interval can be "second", "minute", "hour", "day" |
+|    **KEEP_USE_LIMITER**    |   启用或禁用速率限制   |    否    |    "false"    |                                   "true" 或 "false"                                   |
+| **KEEP_LIMIT_CONCURRENCY** | 设置 API 端点的速率限制 |    否    | "100/minute"  | 格式: "{number}/{interval}"，其中 interval 可以是 "second", "minute", "hour", "day" |
 
 <Note>
-Currently, rate limiting is applied to the following endpoints:
-- POST `/alerts/event` - Generic event ingestion endpoint
-- POST `/alerts/{provider_type}` - Provider-specific event ingestion endpoints
+目前，速率限制应用于以下端点：
+- POST `/alerts/event` - 通用事件接入端点
+- POST `/alerts/{provider_type}` - 特定提供商的事件接入端点
 
-These endpoints are rate-limited according to the `KEEP_LIMIT_CONCURRENCY` setting when `KEEP_USE_LIMITER` is enabled.
+当 `KEEP_USE_LIMITER` 启用时，这些端点根据 `KEEP_LIMIT_CONCURRENCY` 设置进行速率限制。
 
 </Note>
 
 
-### Maintenance Windows
+### 维护窗口
 
 <Info>
-  The strategy enables the ability to manage how the alerts are handled
-  in case of a match with the Maintenance Windows Rules.
+  该策略使您能够管理在匹配维护窗口规则时如何处理告警。
 </Info>
 
-|             Env var              |                      Purpose                |        Required         | Default Value |               Valid options                       |
+|             环境变量              |                      用途                |        是否必需         | 默认值 |               有效选项                       |
 | :------------------------------: | :-----------------------------------------: | :---------------------: | :-----------: | :-----------------------------------------------: |
-| **MAINTENANCE_WINDOW_STRATEGY**  |          Choose the strategy                |           No            |    "default"  |      "default" or "recover_previous_status"       |
-| **WATCHER_LAPSED_TIME**          | Time in seconds to execute the alert review |           No            |       60      |             Valid positive integer                |
+| **MAINTENANCE_WINDOW_STRATEGY**  |          选择策略                |           否            |    "default"  |      "default" 或 "recover_previous_status"       |
+| **WATCHER_LAPSED_TIME**          | 执行告警审查的时间（秒） |           否            |       60      |             有效的正整数                |
 
-## Frontend Environment Variables
+## 前端环境变量
 
 <Info>
-  Frontend configuration variables control the behavior and features of Keep's
-  user interface. These settings are crucial for customizing the frontend's
-  appearance, functionality, and integration with the backend services.
+  前端配置变量控制 Keep 用户界面的行为和功能。这些设置对于自定义前端的外观、功能以及与后端服务的集成至关重要。
 </Info>
 
-### General
+### 通用
 
-| Env var                            | Purpose                                                             | Required | Default Value | Valid options   |
+| 环境变量                            | 用途                                                             | 是否必需 | 默认值 | 有效选项   |
 | ---------------------------------- | ------------------------------------------------------------------- | -------- | ------------- | --------------- |
-| **API_URL**                        | Specifies the URL of the Keep backend API                           | Yes      | None          | Valid URL       |
-| **AUTH_SESSION_TIMEOUT**           | Specifies user session timeout in seconds. Default is 30 days.      | No       | 2592000       | Value in seconds|
-| **KEEP_HIDE_SENSITIVE_FIELDS**     | Hides sensitive fields                                              | No       | None          | "true", "false" |
-| **HIDE_NAVBAR_CORRELATION**        | Hides the correlation page from the navigation bar in the UI        | No       | None          | "true"          |
-| **HIDE_NAVBAR_WORKFLOWS**          | Hides the workflows page from the navigation bar in the UI          | No       | None          | "true"          |
-| **HIDE_NAVBAR_SERVICE_TOPOLOGY**   | Hides the service topology page from the navigation bar in the UI   | No       | None          | "true"          |
-| **HIDE_NAVBAR_MAPPING**            | Hides the mapping page from the navigation bar in the UI            | No       | None          | "true"          |
-| **HIDE_NAVBAR_EXTRACTION**         | Hides the extraction page from the navigation bar in the UI         | No       | None          | "true"          |
-| **HIDE_NAVBAR_MAINTENANCE_WINDOW** | Hides the maintenance window page from the navigation bar in the UI | No       | None          | "true"          |
-| **HIDE_NAVBAR_AI_PLUGINS**         | Hides the AI plugins page from the navigation bar in the UI         | No       | None          | "true"          |
-| **KEEP_WF_LIST_EXTENDED_INFO**     | Use a list instead a button to show the complete execution list     | No       | "true"        | "true", "false" |
-| **ALERT_SIDEBAR_FIELDS**           | Specifies a list of fields to show in the sidebar.                  | No       | service,source,description,message,fingerprint,url,incidents,timeline,relatedServices | Valid list of fields |
+| **API_URL**                        | 指定 Keep 后端 API 的 URL                           | 是      | 无          | 有效的 URL       |
+| **AUTH_SESSION_TIMEOUT**           | 指定用户会话超时时间（秒）。默认 30 天。      | 否       | 2592000       | 以秒为单位的值|
+| **KEEP_HIDE_SENSITIVE_FIELDS**     | 隐藏敏感字段                                              | 否       | 无          | "true", "false" |
+| **HIDE_NAVBAR_CORRELATION**        | 在 UI 导航栏中隐藏关联页面        | 否       | 无          | "true"          |
+| **HIDE_NAVBAR_WORKFLOWS**          | 在 UI 导航栏中隐藏工作流页面          | 否       | 无          | "true"          |
+| **HIDE_NAVBAR_SERVICE_TOPOLOGY**   | 在 UI 导航栏中隐藏服务拓扑页面   | 否       | 无          | "true"          |
+| **HIDE_NAVBAR_MAPPING**            | 在 UI 导航栏中隐藏映射页面            | 否       | 无          | "true"          |
+| **HIDE_NAVBAR_EXTRACTION**         | 在 UI 导航栏中隐藏提取页面         | 否       | 无          | "true"          |
+| **HIDE_NAVBAR_MAINTENANCE_WINDOW** | 在 UI 导航栏中隐藏维护窗口页面 | 否       | 无          | "true"          |
+| **HIDE_NAVBAR_AI_PLUGINS**         | 在 UI 导航栏中隐藏 AI 插件页面         | 否       | 无          | "true"          |
+| **KEEP_WF_LIST_EXTENDED_INFO**     | 使用列表而非按钮显示完整的执行列表     | 否       | "true"        | "true", "false" |
+| **ALERT_SIDEBAR_FIELDS**           | 指定要在侧边栏中显示的字段列表。                  | 否       | service,source,description,message,fingerprint,url,incidents,timeline,relatedServices | 有效的字段列表 |
 
-### Authentication
+### 认证
 
 <Info>
-  Authentication configuration determines how Keep verifies user identities and
-  manages access control. These settings are essential for securing your Keep
-  instance and integrating with various authentication providers.
+  认证配置决定 Keep 如何验证用户身份并管理访问控制。这些设置对于保护您的 Keep 实例并与各种认证提供商集成至关重要。
 </Info>
 
-|       Env var       |              Purpose              | Required | Default Value |                   Valid options                    |
+|       环境变量       |              用途              | 是否必需 | 默认值 |                   有效选项                    |
 | :-----------------: | :-------------------------------: | :------: | :-----------: | :------------------------------------------------: |
-|    **AUTH_TYPE**    | Specifies the authentication type |    No    |   "NOAUTH"    | "AUTH0", "KEYCLOAK", "DB", "NOAUTH", "OAUTH2PROXY", "OKTA", "ONELOGIN" |
-|  **NEXTAUTH_URL**   |  URL for NextAuth authentication  |   Yes    |     None      |                     Valid URL                      |
-| **NEXTAUTH_SECRET** |      Secret key for NextAuth      |   Yes    |     None      |                Strong secret string                |
+|    **AUTH_TYPE**    | 指定认证类型 |    否    |   "NOAUTH"    | "AUTH0", "KEYCLOAK", "DB", "NOAUTH", "OAUTH2PROXY", "OKTA", "ONELOGIN" |
+|  **NEXTAUTH_URL**   |  NextAuth 认证的 URL  |    是    |     无      |                     有效的 URL                      |
+| **NEXTAUTH_SECRET** |      NextAuth 的密钥      |    是    |     无      |                强密码字符串                |
 
 ### Posthog
 
-|     Env var      |                Purpose                 | Required | Default Value |     Valid options     |
+|     环境变量      |                用途                 | 是否必需 | 默认值 |     有效选项     |
 | :--------------: | :------------------------------------: | :------: | :-----------: | :-------------------: |
-| **POSTHOG_KEY**  | PostHog API key for frontend analytics |    No    |     None      | Valid PostHog API key |
-| **POSTHOG_HOST** |  PostHog Host for frontend analytics   |    No    |     None      |  Valid PostHog Host   |
+| **POSTHOG_KEY**  | 前端分析的 PostHog API 密钥 |    否    |     无      | 有效的 PostHog API 密钥 |
+| **POSTHOG_HOST** |  前端分析的 PostHog 主机   |    否    |     无      |  有效的 PostHog 主机   |
 
 ### Pusher
 
 <Info>
-  Pusher configuration is essential for enabling real-time updates and
-  communication in Keep's frontend. These settings allow the frontend to
-  establish a WebSocket connection with the Pusher server, facilitating instant
-  updates and notifications.
+  Pusher 配置对于在 Keep 前端中启用实时更新和通信至关重要。这些设置允许前端与 Pusher 服务器建立 WebSocket 连接，促进即时更新和通知。
 </Info>
 
-|       Env var       |            Purpose            |        Required         | Default Value |        Valid options         |
+|       环境变量       |            用途            |        是否必需         | 默认值 |        有效选项         |
 | :-----------------: | :---------------------------: | :---------------------: | :-----------: | :--------------------------: |
-| **PUSHER_DISABLED** |  Disables Pusher integration  |           No            |    "false"    |      "true" or "false"       |
-|   **PUSHER_HOST**   | Hostname of the Pusher server |           No            |  "localhost"  | Valid hostname or IP address |
-|   **PUSHER_PORT**   |   Port of the Pusher server   |           No            |     6001      |      Valid port number       |
-| **PUSHER_APP_KEY**  |    Pusher application key     | Yes (if Pusher enabled) | "keepappkey"  |     Valid Pusher App Key     |
-| **PUSHER_CLUSTER**  |        Pusher cluster         |           No            |     None      |  Valid Pusher cluster name   |
+| **PUSHER_DISABLED** |  禁用 Pusher 集成  |           否            |    "false"    |      "true" 或 "false"       |
+|   **PUSHER_HOST**   | Pusher 服务器的主机名 |           否            |  "localhost"  | 有效的主机名或 IP 地址 |
+|   **PUSHER_PORT**   |   Pusher 服务器的端口   |           否            |     6001      |      有效的端口号       |
+| **PUSHER_APP_KEY**  |    Pusher 应用密钥     | 是（如果 Pusher 启用） | "keepappkey"  |     有效的 Pusher App Key     |
+| **PUSHER_CLUSTER**  |        Pusher 集群         |           否            |     无      |  有效的 Pusher 集群名称   |

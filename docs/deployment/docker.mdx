@@ -3,8 +3,8 @@ title: "Docker"
 sidebarTitle: "Docker"
 ---
 
-### Spin up Keep with docker-compose latest images
-The easiest way to start keep is is with docker-compose:
+### 使用 docker-compose 最新镜像启动 Keep
+启动 Keep 最简单的方式是使用 docker-compose：
 ```shell
 curl https://raw.githubusercontent.com/keephq/keep/main/start.sh | sh
 ```
@@ -26,21 +26,21 @@ curl https://raw.githubusercontent.com/keephq/keep/main/docker-compose.common.ym
 docker compose up -d
 ```
 
-The docker-compose.yml contains 3 services:
-- [keep-backend](https://console.cloud.google.com/artifacts/docker/keephq/us-central1/keep/keep-api?project=keephq) - a fastapi service that as the API server.
-- [keep-frontend](https://console.cloud.google.com/artifacts/docker/keephq/us-central1/keep/keep-ui?project=keephq) - a nextjs app that serves as Keep UI interface.
-- [keep-websocket-server](https://docs.soketi.app/getting-started/installation/docker) - Soketi (a pusher compatible websocket server) for real time alerting.
+docker-compose.yml 包含 3 个服务：
+- [keep-backend](https://console.cloud.google.com/artifacts/docker/keephq/us-central1/keep/keep-api?project=keephq) - 一个作为 API 服务器的 FastAPI 服务。
+- [keep-frontend](https://console.cloud.google.com/artifacts/docker/keephq/us-central1/keep/keep-ui?project=keephq) - 一个作为 Keep UI 界面的 Next.js 应用。
+- [keep-websocket-server](https://docs.soketi.app/getting-started/installation/docker) - Soketi（兼容 pusher 的 WebSocket 服务器）用于实时告警。
 
-### Reinstall Keep with the option to refresh from scratch
+### 全新重新安装 Keep
 
-`Caution:` This usage context will refresh from the beginning and Keep's data and settings will be erased. Even other containers on this host are also erased. So please consider when using the steps below.
+`注意：` 此操作将从头开始刷新，Keep 的数据和设置将被清除。此主机上的其他容器也会被清除。因此在使用以下步骤时请仔细考虑。
 
-For cases where you need to test many different options or simply want to reinstall Keep from scratch using docker compose without spending a lot of time, that is, without repeating the steps of installing docker, downloading the installer.. .. run the commands according to the previous instructions.
+适用于您需要测试许多不同选项，或只想使用 docker compose 从头重新安装 Keep 而无需花费太多时间的情况，即无需重复安装 docker、下载安装程序等步骤。
 
-Follow these steps
+请按照以下步骤操作
 
-#### Step1: Stop, Clear container, network, volume, image.
-In the directory containing the docker compose file you downloaded, say `/root/`
+#### 步骤1：停止、清除容器、网络、卷、镜像。
+在包含已下载的 docker compose 文件的目录中，比如 `/root/`
 
 ```
 docker-compose down
@@ -52,16 +52,15 @@ docker-compose down -v
 docker system prune -a --volumes
 ```
 
-#### Step2: Clear Config db, config file in state folder. 
+#### 步骤2：清除 state 文件夹中的配置数据库、配置文件。
 
 ```
 rm -rf state/*
 
 ```
 
-#### Step 3: Run again
+#### 步骤 3：重新运行
 
 ```
 docker compose up -d
 ```
-

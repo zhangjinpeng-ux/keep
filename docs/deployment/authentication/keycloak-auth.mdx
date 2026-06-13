@@ -8,52 +8,52 @@ Keep Enterprise On-Premises: ✅ <br/>
 Keep Open Source: ⛔️
 </Tip>
 
-<Tip>Keep supports Keycloak in a "managed" way where Keep auto-provisions all resources (realm, client, etc.). Keep can also work with externally managed Keycloak. To learn how, please contact the team on [Slack](https://slack.keephq.dev).</Tip>
+<Tip>Keep 支持以"托管"方式使用 Keycloak，其中 Keep 自动预置所有资源（realm、client 等）。Keep 也可以与外部管理的 Keycloak 配合使用。要了解如何操作，请在 [Slack](https://slack.keephq.dev) 上联系团队。</Tip>
 
-Keep integrates with Keycloak to provide a powerful and flexible authentication system for multi-tenant applications, supporting Single Sign-On (SSO) and SAML.
+Keep 与 Keycloak 集成，为多租户应用程序提供强大且灵活的认证系统，支持 Single Sign-On (SSO) 和 SAML。
 
 <Frame>
   <img src="/images/keycloakauth.png" width="500"/>
 </Frame>
 
-### When to Use
+### 何时使用
 
-- **On Prem:** When deploying Keep on-premises and requiring a robust authentication system.
-- **OSS:** If you prefer using open-source software for your authentication needs.
-- **Enterprise Protocols:** When you need support for enterprise-level protocols like SAML and OpenID Connect.
-- **Fully Customized:** When you need a highly customizable authentication solution.
-- **RBAC:** When you require Role-Based Access Control for managing user permissions.
-- **User and Group Management:** When you need advanced user and group management capabilities.
+- **本地部署：** 当您在本地部署 Keep 并需要强大的认证系统时。
+- **开源：** 如果您偏好使用开源软件满足认证需求。
+- **企业协议：** 当您需要支持企业级协议如 SAML 和 OpenID Connect 时。
+- **完全定制：** 当您需要高度可定制的认证解决方案时。
+- **RBAC：** 当您需要基于角色的访问控制来管理用户权限时。
+- **用户和组管理：** 当您需要高级用户和组管理能力时。
 
-### Setup Instructions
+### 设置说明
 
-To start Keep with Keycloak authentication, set the following environment variables:
+要使用 Keycloak 认证启动 Keep，请设置以下环境变量：
 
-#### Frontend Environment Variables
+#### 前端环境变量
 
-| Environment Variable | Description | Required | Default Value |
+| 环境变量 | 描述 | 是否必需 | 默认值 |
 |--------------------|-----------|:--------:|:-------------:|
-| AUTH_TYPE | Set to 'KEYCLOAK' for Keycloak authentication | Yes | - |
-| KEYCLOAK_ID | Your Keycloak client ID (e.g. keep) | Yes | - |
-| KEYCLOAK_ISSUER | Full URL to Your Keycloak issuer URL e.g. http://localhost:8181/auth/realms/keep | Yes | - |
-| KEYCLOAK_SECRET | Your Keycloak client secret | Yes | keep-keycloak-secret |
+| AUTH_TYPE | 设置为 'KEYCLOAK' 以启用 Keycloak 认证 | 是 | - |
+| KEYCLOAK_ID | 您的 Keycloak 客户端 ID (例如 keep) | 是 | - |
+| KEYCLOAK_ISSUER | Keycloak 签发者 URL 的完整 URL，例如 http://localhost:8181/auth/realms/keep | 是 | - |
+| KEYCLOAK_SECRET | 您的 Keycloak 客户端密钥 | 是 | keep-keycloak-secret |
 
-#### Backend Environment Variables
+#### 后端环境变量
 
-| Environment Variable | Description | Required | Default Value |
+| 环境变量 | 描述 | 是否必需 | 默认值 |
 |--------------------|-----------|:--------:|:-------------:|
-| AUTH_TYPE | Set to 'KEYCLOAK' for Keycloak authentication | Yes | - |
-| KEYCLOAK_URL | Full URL to your Keycloak server | Yes | http://localhost:8181/auth/ |
-| KEYCLOAK_REALM | Your Keycloak realm | Yes | keep |
-| KEYCLOAK_CLIENT_ID | Your Keycloak client ID | Yes | keep |
-| KEYCLOAK_CLIENT_SECRET | Your Keycloak client secret | Yes | keep-keycloak-secret |
-| KEYCLOAK_ADMIN_USER | Admin username for Keycloak | Yes | keep_admin |
-| KEYCLOAK_ADMIN_PASSWORD | Admin password for Keycloak | Yes | keep_admin |
-| KEYCLOAK_AUDIENCE | Audience for Keycloak | Yes | realm-management |
+| AUTH_TYPE | 设置为 'KEYCLOAK' 以启用 Keycloak 认证 | 是 | - |
+| KEYCLOAK_URL | Keycloak 服务器的完整 URL | 是 | http://localhost:8181/auth/ |
+| KEYCLOAK_REALM | 您的 Keycloak realm | 是 | keep |
+| KEYCLOAK_CLIENT_ID | 您的 Keycloak 客户端 ID | 是 | keep |
+| KEYCLOAK_CLIENT_SECRET | 您的 Keycloak 客户端密钥 | 是 | keep-keycloak-secret |
+| KEYCLOAK_ADMIN_USER | Keycloak 的管理员用户名 | 是 | keep_admin |
+| KEYCLOAK_ADMIN_PASSWORD | Keycloak 的管理员密码 | 是 | keep_admin |
+| KEYCLOAK_AUDIENCE | Keycloak 的受众 | 是 | realm-management |
 
 
-### Example configuration
+### 配置示例
 
-To get a better understanding on how to use Keep together with Keycloak, you can:
-- See [Keycloak](https://github.com/keephq/keep/tree/main/keycloak) directory for configuration, realm.json, etc
-- See Keep + Keycloak [docker-compose example](https://github.com/keephq/keep/blob/main/keycloak/docker-compose.yaml)
+为了更好地理解如何将 Keep 与 Keycloak 一起使用，您可以：
+- 查看 [Keycloak](https://github.com/keephq/keep/tree/main/keycloak) 目录中的配置、realm.json 等
+- 查看 Keep + Keycloak 的 [docker-compose 示例](https://github.com/keephq/keep/blob/main/keycloak/docker-compose.yaml)

@@ -2,7 +2,7 @@
 sidebarTitle: "keep mappings create"
 ---
 
-Create a mapping rule.
+创建映射规则。
 
 ## Usage
 
@@ -17,42 +17,42 @@ Usage: keep mappings create [OPTIONS]
   * Default: ``
   * Usage: `--name <mapping-name>`
 
-  The name of the mapping.
+  映射规则的名称。
 
 * `description`
   * Type: STRING
   * Default: ``
   * Usage: `--description <mapping-description>`
 
-  The description of the mapping.
+  映射规则的描述。
 
 * `file`
   * Type: STRING
   * Default: ``
   * Usage: `--file <mapping-file>`
 
-  The mapping file. Must be a CSV file.
+  映射文件。必须是 CSV 文件。
 
 * `matchers`
   * Type: STRING
   * Default: ``
   * Usage: `--matchers <mapping-matchers>`
 
-  The matchers of the mapping, as a comma-separated list of strings.
+  映射的匹配器，以逗号分隔的字符串列表形式。
 
 * `priority`
   * Type: INTEGER RANGE
   * Default: `0`
   * Usage: `--priority <priority>`
 
-  The priority of the mapping, higher priority means this rule will execute first. `0<=x<=100`.
+  映射规则的优先级，优先级越高，此规则越先执行。`0<=x<=100`。
 
 * `help`:
   * Type: BOOL
   * Default: `false`
   * Usage: `--help`
 
-  Show this message and exit.
+  显示此帮助信息并退出。
 
 ## CLI Help
 

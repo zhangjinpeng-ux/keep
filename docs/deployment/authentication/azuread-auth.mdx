@@ -8,195 +8,195 @@ Keep Enterprise On-Premises: ✅ <br/>
 Keep Open Source: ⛔️
 </Tip>
 
-Keep supports enterprise authentication through Azure Entre ID (formerly known as Azure AD), enabling organizations to use their existing Microsoft identity platform for secure access management.
+Keep 通过 Azure Entre ID（前身为 Azure AD）支持企业级认证，使组织能够使用其现有的 Microsoft 身份平台进行安全的访问管理。
 
-## When to Use
+## 何时使用
 
-- **Microsoft Environment:** If your organization uses Microsoft 365 or Azure services, Azure AD integration provides seamless authentication.
-- **Enterprise SSO:** Leverage Azure AD's Single Sign-On capabilities for unified access management.
+- **Microsoft 环境：** 如果您的组织使用 Microsoft 365 或 Azure 服务，Azure AD 集成可提供无缝认证。
+- **企业 SSO：** 利用 Azure AD 的 Single Sign-On 功能实现统一的访问管理。
 
-## Setup Instructions (on Azure AD)
+## 设置说明 (在 Azure AD 上)
 
-### Creating an Azure AD Application
+### 创建 Azure AD 应用程序
 
-1. Sign in to the [Azure Portal](https://portal.azure.com)
-2. Navigate to **Microsoft Entra ID** > **App registrations** > **New registration**
-
-<Frame>
-  <img src="/images/azuread_1.png" width="1000" alt="Azure AD App Registration"/>
-</Frame>
-
-3. Configure the application:
-   - Name: "Keep"
-
-<Info>Note that we are using "Register an application to integrate with Microsoft Entra ID (App you're developing)" since you're self-hosting Keep and need direct control over the authentication flow and permissions for your specific instance - unlike the cloud/managed version where Keep's team has already configured a centralized application registration.</Info>
+1. 登录 [Azure Portal](https://portal.azure.com)
+2. 导航到 **Microsoft Entra ID** > **App registrations** > **New registration**
 
 <Frame>
-  <img src="/images/azuread_2.png" width="1000" alt="Azure AD App Registration"/>
+  <img src="/images/azuread_1.png" width="1000" alt="Azure AD 应用注册"/>
 </Frame>
 
-4. Configure the application (continue)
-- Supported account types: "Single tenant"
+3. 配置应用程序：
+   - 名称："Keep"
+
+<Info>请注意，我们使用 "Register an application to integrate with Microsoft Entra ID (App you're developing)"，因为您是自托管 Keep 并且需要直接控制特定实例的认证流程和权限 — 与云端/托管版本不同，后者的 Keep 团队已配置了集中式应用程序注册。</Info>
+
+<Frame>
+  <img src="/images/azuread_2.png" width="1000" alt="Azure AD 应用注册"/>
+</Frame>
+
+4. 配置应用程序（继续）
+- 支持的账户类型："Single tenant"
 
 <Info>
-We recommend using "Single tenant" for enhanced security as it restricts access to users within your organization only. While multi-tenant configuration is possible, it would allow users from any Azure AD directory to access your Keep instance, which could pose security risks unless you have specific cross-organization requirements.
+我们建议使用 "Single tenant" 以增强安全性，因为它将访问限制为仅您组织内的用户。虽然可以配置多租户，但这将允许任何 Azure AD 目录中的用户访问您的 Keep 实例，除非您有特定的跨组织需求，否则可能带来安全风险。
 </Info>
 
-    - Redirect URI: "Web" + your redirect URI
+    - Redirect URI："Web" + 您的重定向 URI
 
 <Info>
-We use "Web" platform instead of "Single Page Application (SPA)" because Keep's backend handles the authentication flow using client credentials/secrets, which is more secure than the implicit flow used in SPAs. This prevents exposure of tokens in the browser and provides stronger security through server-side token validation and refresh token handling.
+我们使用 "Web" 平台而非 "Single Page Application (SPA)"，因为 Keep 的后端使用客户端凭证/密钥处理认证流程，这比 SPA 中使用的隐式流程更安全。这可以防止令牌在浏览器中暴露，并通过服务器端令牌验证和刷新令牌处理提供更强的安全性。
 </Info>
 
 <Tip>
-For localhost, the redirect would be http://localhost:3000/api/auth/callback/microsoft-entra-id
+对于 localhost，重定向地址应为 http://localhost:3000/api/auth/callback/microsoft-entra-id
 
-For production, it should be something like http://your_keep_frontend_domain/api/auth/callback/microsoft-entra-id
+对于生产环境，应为类似 http://your_keep_frontend_domain/api/auth/callback/microsoft-entra-id 的地址
 
 </Tip>
 
 <Frame>
-  <img src="/images/azuread_3.png" width="1000" alt="Azure AD App Registration"/>
+  <img src="/images/azuread_3.png" width="1000" alt="Azure AD 应用注册"/>
 </Frame>
 
-5. Finally, click "register"
+5. 最后，点击 "register"
 
-### Configure Authentication
-After we created the application, let's configure the authentication.
+### 配置认证
+创建应用程序后，让我们配置认证。
 
-1. Go to "App Registrations" -> "All applications"
+1. 进入 "App Registrations" -> "All applications"
 
 <Frame>
-  <img src="/images/azuread_4.png" width="1000" alt="Azure AD Authentication Configuration"/>
+  <img src="/images/azuread_4.png" width="1000" alt="Azure AD 认证配置"/>
 </Frame>
 
 
-2. Click on your application -> "Add a certificate or secret"
+2. 点击您的应用程序 -> "Add a certificate or secret"
 
 <Frame>
-  <img src="/images/azuread_5.png" width="1000" alt="Azure AD Authentication Configuration"/>
+  <img src="/images/azuread_5.png" width="1000" alt="Azure AD 认证配置"/>
 </Frame>
 
 
-3. Click on "New client secret" and give it a name
+3. 点击 "New client secret" 并为其命名
 
 <Frame>
-  <img src="/images/azuread_6.png" width="1000" alt="Azure AD Authentication Configuration"/>
+  <img src="/images/azuread_6.png" width="1000" alt="Azure AD 认证配置"/>
 </Frame>
 
-4. Keep the "Value", we will use it soon as `KEEP_AZUREAD_CLIENT_SECRET`
+4. 保留 "Value"，我们稍后将其用作 `KEEP_AZUREAD_CLIENT_SECRET`
 
 <Frame>
-  <img src="/images/azuread_7.png" width="1000" alt="Azure AD Authentication Configuration"/>
+  <img src="/images/azuread_7.png" width="1000" alt="Azure AD 认证配置"/>
 </Frame>
 
-### Configure Groups
+### 配置组
 
-Keep maps Azure AD groups to roles with two default groups:
-1. Admin Group (read + write)
-2. NOC Group (read only)
+Keep 将 Azure AD 组映射到角色，有两个默认组：
+1. Admin 组（读写）
+2. NOC 组（只读）
 
-To create those groups, go to Groups -> All groups and create two groups:
+要创建这些组，进入 Groups -> All groups 并创建两个组：
 
 <Frame>
-  <img src="/images/azuread_16.png" width="1000" alt="Azure AD Authentication Configuration"/>
+  <img src="/images/azuread_16.png" width="1000" alt="Azure AD 认证配置"/>
 </Frame>
 
-Keep the Object id of these groups and use it as `KEEP_AZUREAD_ADMIN_GROUP_ID` and `KEEP_AZUREAD_NOC_GROUP_ID`.
+保留这些组的 Object ID，并将其用作 `KEEP_AZUREAD_ADMIN_GROUP_ID` 和 `KEEP_AZUREAD_NOC_GROUP_ID`。
 
-### Configure Group Claims
+### 配置组声明
 
-1. Navigate to **Token configuration**
+1. 导航到 **Token configuration**
 
 <Frame>
-  <img src="/images/azuread_8.png" width="1000" alt="Azure AD Authentication Configuration"/>
+  <img src="/images/azuread_8.png" width="1000" alt="Azure AD 认证配置"/>
 </Frame>
 
 
-2. Add groups claim:
-   - Select "Security groups" and "Groups assigned to the application"
-   - Choose "Group ID" as the claim value
+2. 添加 groups claim：
+   - 选择 "Security groups" 和 "Groups assigned to the application"
+   - 选择 "Group ID" 作为声明值
 
 <Frame>
-  <img src="/images/azuread_9.png" width="1000" alt="Azure AD Authentication Configuration"/>
+  <img src="/images/azuread_9.png" width="1000" alt="Azure AD 认证配置"/>
 </Frame>
 
 
 <Frame>
-  <img src="/images/azuread_10.png" width="1000" alt="Azure AD Authentication Configuration"/>
+  <img src="/images/azuread_10.png" width="1000" alt="Azure AD 认证配置"/>
 </Frame>
 
-### Configure Application Scopes
+### 配置应用程序作用域
 
-1. Go to "Expose an API" and click on "Add a scope"
+1. 进入 "Expose an API" 并点击 "Add a scope"
 
 <Frame>
-  <img src="/images/azuread_11.png" width="1000" alt="Azure AD Authentication Configuration"/>
+  <img src="/images/azuread_11.png" width="1000" alt="Azure AD 认证配置"/>
 </Frame>
 
-2. Keep the default Application ID and click "Save and continue"
+2. 保留默认 Application ID 并点击 "Save and continue"
 
 <Frame>
-  <img src="/images/azuread_12.png" width="1000" alt="Azure AD Authentication Configuration"/>
+  <img src="/images/azuread_12.png" width="1000" alt="Azure AD 认证配置"/>
 </Frame>
 
-3. Add "default" as scope name, also give a display name and description
+3. 添加 "default" 作为作用域名称，同时提供显示名称和描述
 
 <Frame>
-  <img src="/images/azuread_13.png" width="1000" alt="Azure AD Authentication Configuration"/>
+  <img src="/images/azuread_13.png" width="1000" alt="Azure AD 认证配置"/>
 </Frame>
 
-3. Finally, click "Add scope"
+3. 最后，点击 "Add scope"
 
 <Frame>
-  <img src="/images/azuread_14.png" width="1000" alt="Azure AD Authentication Configuration"/>
+  <img src="/images/azuread_14.png" width="1000" alt="Azure AD 认证配置"/>
 </Frame>
 
-## Setup Instructions (on Keep)
+## 设置说明 (在 Keep 上)
 
-After you configured Azure AD you should have the following:
-1. Azure AD Tenant ID
-2. Azure AD Client ID
+配置 Azure AD 后，您应该拥有以下内容：
+1. Azure AD 租户 ID
+2. Azure AD 客户端 ID
 
-How to get:
+如何获取：
 
 <Frame>
-  <img src="/images/azuread_15.png" width="1000" alt="Azure AD Authentication Configuration"/>
+  <img src="/images/azuread_15.png" width="1000" alt="Azure AD 认证配置"/>
 </Frame>
 
-3. Azure AD Client Secret [See Configure Authentication](#configure-authentication).
-4. Azure AD Group ID's for Admins and NOC (read only) [See Configure Groups](#configure-groups).
+3. Azure AD 客户端密钥 [参见配置认证](#configure-authentication)。
+4. Admin 和 NOC（只读）的 Azure AD 组 ID [参见配置组](#configure-groups)。
 
 
-### Configuration
+### 配置
 
-#### Frontend
+#### 前端
 
-| Environment Variable | Description | Required | Default Value |
+| 环境变量 | 描述 | 是否必需 | 默认值 |
 |--------------------|-------------|:---------:|:-------------:|
-| AUTH_TYPE | Set to 'AZUREAD' for Azure AD authentication | Yes | - |
-| KEEP_AZUREAD_CLIENT_ID | Your Azure AD application (client) ID | Yes | - |
-| KEEP_AZUREAD_CLIENT_SECRET | Your client secret | Yes | - |
-| KEEP_AZUREAD_TENANT_ID | Your Azure AD tenant ID | Yes | - |
-| NEXTAUTH_URL | Your Keep application URL | Yes | - |
-| NEXTAUTH_SECRET | Random string for NextAuth.js | Yes | - |
+| AUTH_TYPE | 设置为 'AZUREAD' 以启用 Azure AD 认证 | 是 | - |
+| KEEP_AZUREAD_CLIENT_ID | 您的 Azure AD 应用程序（客户端）ID | 是 | - |
+| KEEP_AZUREAD_CLIENT_SECRET | 您的客户端密钥 | 是 | - |
+| KEEP_AZUREAD_TENANT_ID | 您的 Azure AD 租户 ID | 是 | - |
+| NEXTAUTH_URL | 您的 Keep 应用程序 URL | 是 | - |
+| NEXTAUTH_SECRET | NextAuth.js 的随机字符串 | 是 | - |
 
-#### Backend
+#### 后端
 
-| Environment Variable | Description | Required | Default Value |
+| 环境变量 | 描述 | 是否必需 | 默认值 |
 |--------------------|-------------|:---------:|:-------------:|
-| AUTH_TYPE | Set to 'AZUREAD' for Azure AD authentication | Yes | - |
-| KEEP_AZUREAD_TENANT_ID | Your Azure AD tenant ID | Yes | - |
-| KEEP_AZUREAD_CLIENT_ID | Your Azure AD application (client) ID | Yes | - |
-| KEEP_AZUREAD_ADMIN_GROUP_ID | The group ID of Keep Admins (read write) | Yes | - |
-| KEEP_AZUREAD_NOC_GROUP_ID | The group ID of Keep NOC (read only) | Yes | - |
+| AUTH_TYPE | 设置为 'AZUREAD' 以启用 Azure AD 认证 | 是 | - |
+| KEEP_AZUREAD_TENANT_ID | 您的 Azure AD 租户 ID | 是 | - |
+| KEEP_AZUREAD_CLIENT_ID | 您的 Azure AD 应用程序（客户端）ID | 是 | - |
+| KEEP_AZUREAD_ADMIN_GROUP_ID | Keep 管理员（读写）的组 ID | 是 | - |
+| KEEP_AZUREAD_NOC_GROUP_ID | Keep NOC（只读）的组 ID | 是 | - |
 
-## Features and Limitations
+## 功能与限制
 
-#### Supported Features
+#### 支持的功能
 - Single Sign-On (SSO)
-- Role-based access control through Azure AD groups
-- Multi-factor authentication (when configured in Azure AD)
+- 通过 Azure AD 组实现的基于角色的访问控制
+- 多因素认证（在 Azure AD 中配置时）
 
-#### Limitations
-See [Overview](/deployment/authentication/overview)
+#### 限制
+参见[概述](/deployment/authentication/overview)

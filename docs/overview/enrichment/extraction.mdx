@@ -1,50 +1,49 @@
 ---
-title: "Extraction"
+title: "提取"
 ---
 
-Keep's Alert Extraction enrichment feature enables dynamic extraction of data from incoming alerts using regular expressions. This powerful tool allows users to define extraction rules that identify and extract data based on patterns, enriching alerts with additional structured data derived directly from alert content.
+Keep 的告警提取富化功能支持使用正则表达式从传入告警中动态提取数据。这个强大的工具允许用户定义提取规则，基于模式识别和提取数据，用直接从告警内容中提取的额外结构化数据来富化告警。
 
 <Frame width="100" height="200">
   <img height="10" src="/images/extraction.png" />
 </Frame>
 
+## 简介
 
-## Introduction
+处理各种告警格式并提取相关信息可能具有挑战性。Keep 的告警提取功能通过允许用户定义基于正则表达式的规则来自动从告警中提取关键信息，简化了这一过程。此功能对于标准化告警数据和增强告警上下文至关重要，有助于更有效的监控和响应策略。
 
-Handling a variety of alert formats and extracting relevant information can be challenging. Keep's Alert Extraction feature simplifies this process by allowing users to define regex-based rules that automatically extract key pieces of information from alerts. This capability is crucial for standardizing alert data and enhancing alert context, which facilitates more effective monitoring and response strategies.
+## 工作原理
 
-## How It Works
+1. **规则定义**：用户创建提取规则，指定要应用于某些告警属性的正则表达式模式。
+2. **属性指定**：每个规则定义告警的哪个属性应由正则表达式检查。
+3. **数据提取**：当收到告警时，系统将正则表达式应用于指定的属性。如果模式匹配，正则表达式中的命名组定义要提取并添加到告警中的新属性。
+4. **首次匹配强制执行**：提取过程设计为在第一次成功匹配后停止。一旦规则成功应用并富化了告警，就不再处理其他规则。这确保了效率并防止重叠或冗余的数据提取。
+5. **告警富化**：提取的值被添加到告警中，用额外的属性增强其数据以改善分析。
 
-1. **Rule Definition**: Users create extraction rules specifying the regex patterns to apply to certain alert attributes.
-2. **Attribute Specification**: Each rule defines which attribute of the alert should be examined by the regex.
-3. **Data Extraction**: When an alert is received, the system applies the regex to the specified attribute. If the pattern matches, named groups within the regex define new attributes to be extracted and added to the alert.
-4. **First Match Enforcement**: The extraction process is designed to stop after the first successful match. Once a rule successfully applies and enriches the alert, no further rules are processed. This ensures efficiency and prevents overlapping or redundant data extraction.
-5. **Alert Enrichment**: Extracted values are added to the alert, enhancing its data with additional attributes for improved analysis.
+## 实际示例
 
-## Practical Example
+假设您收到的告警具有格式为 "Error 404: Not Found - [UserID: 12345]" 的消息属性。您可以定义一个提取规则，使用正则表达式如 `Error (?P<error_code>\d+): (?P<error_message>.+) - \[UserID: (?P<user_id>\d+)\]` 将 `error_code`、`error_message` 和 `user_id` 提取为告警中的独立属性。
 
-Suppose you receive alerts with a message attribute formatted as "Error 404: Not Found - [UserID: 12345]". You can define an extraction rule with a regex such as `Error (?P<error_code>\d+): (?P<error_message>.+) - \[UserID: (?P<user_id>\d+)\]` to extract `error_code`, `error_message`, and `user_id` as separate attributes in the alert.
+## 核心概念
 
-## Core Concepts
+- **Regex（正则表达式）**：一种强大的模式匹配语法，用于识别文本中的特定模式。在提取规则的上下文中，regex 用于定义如何从告警属性中提取数据。正则表达式模式必须遵循 [Python 的正则表达式语法](https://docs.python.org/3.11/library/re.html#match-objects)，特别是关于使用命名组进行组匹配的部分。
+- **属性**：正则表达式应用于的告警数据部分（例如 message、description）。
+- **命名组**：正则表达式模式的一部分，指定用于将特定数据点提取到新告警属性中的占位符。
 
-- **Regex (Regular Expression)**: A powerful pattern-matching syntax used to identify specific patterns within text. In the context of extraction rules, regex is used to define how data should be extracted from alert attributes. It is crucial that regex patterns adhere to [Python's regex syntax](https://docs.python.org/3.11/library/re.html#match-objects), especially concerning group matching using named groups.
-- **Attribute**: The part of the alert data (e.g., message, description) that the regex is applied to.
-- **Named Groups**: Part of the regex pattern that specifies placeholders for extracting specific data points into new alert attributes.
+## 创建提取规则
 
-## Creating an Extraction Rule
-
-To create an alert extraction rule:
+创建告警提取规则：
 
 <Frame width="100" height="200">
   <img height="10" src="/images/extraction-rule-creation.png" />
 </Frame>
 
-1. **Select the Attribute**: Choose which attribute of the alert should be examined by the regex.
-2. **Define the Regex**: Write a regex pattern with named groups that specify what information to extract. Ensure the regex is valid according to Python’s regex standards, particularly for group matching.
-3. **Configure Conditions**: Optionally, specify conditions under which this rule should apply, using CEL (Common Expression Language) for complex logic.
+1. **选择属性**：选择告警的哪个属性应由正则表达式检查。
+2. **定义正则表达式**：编写带有命名组的正则表达式模式，指定要提取的信息。确保正则表达式根据 Python 的正则表达式标准有效，特别是对于组匹配。
+3. **配置条件**：可选地，使用 CEL（Common Expression Language）指定此规则应适用的条件，以支持复杂逻辑。
 
-## Best Practices
+## 最佳实践
 
-- **Test Regex Patterns**: Before deploying a new extraction rule, thoroughly test the regex pattern to ensure it correctly matches and extracts data according to Python's regex standards.
-- **Monitor Extraction Performance**: Keep track of how extraction rules are performing and whether they are enriching alerts as expected. Adjust patterns as necessary based on incoming alert data.
-- **Use Specific Conditions**: When applicable, define conditions to limit when extraction rules apply, reducing unnecessary processing and focusing on relevant alerts.
+- **测试正则表达式模式**：在部署新的提取规则之前，彻底测试正则表达式模式，确保其根据 Python 的正则表达式标准正确匹配和提取数据。
+- **监控提取性能**：跟踪提取规则的表现以及它们是否按预期富化告警。根据传入的告警数据根据需要调整模式。
+- **使用具体条件**：在适用时定义条件以限制提取规则的应用范围，减少不必要的处理并专注于相关告警。

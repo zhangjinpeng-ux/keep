@@ -2,21 +2,21 @@
 title: "Foreach"
 ---
 
-The `foreach` directive in Keep workflows allows you to iterate over a list of items and perform actions for each item. This is particularly useful for processing multiple results returned by a step or performing actions on a collection of entities.
+Keep 工作流中的 `foreach` 指令允许您遍历项目列表，并对每个项目执行操作。这对于处理步骤返回的多个结果或对一组实体执行操作特别有用。
 
-## Key Features
+## 核心特性
 
-- **Dynamic Iteration:** Iterate over any list or array returned by a step or defined in the workflow.
-- **Scoped Variables:** Each iteration exposes the current item under the `foreach` variable, allowing you to access its properties directly.
-- **Action Chaining:** Multiple actions can use `foreach` to work sequentially on the same list of items.
+- **动态迭代：** 遍历步骤返回或工作流中定义的任意列表或数组。
+- **作用域变量：** 每次迭代将当前项目暴露在 `foreach` 变量下，允许您直接访问其属性。
+- **动作链式调用：** 多个动作可以使用 `foreach` 对同一个项目列表顺序执行。
 
 ---
 
-## Defining a `foreach`
+## 定义 `foreach`
 
-To use `foreach`, include it as part of an action. The value of `foreach` should be a reference to the list you want to iterate over.
+要使用 `foreach`，请将其作为动作的一部分。`foreach` 的值应为要遍历的列表的引用。
 
-### Example Workflow with `foreach`
+### 使用 `foreach` 的工作流示例
 
 ```yaml
 workflow:
@@ -40,20 +40,20 @@ workflow:
           message: "Pod name: {{ foreach.value.metadata.name }} || Namespace: {{ foreach.value.metadata.namespace }} || Status: {{ foreach.value.status.phase }}"
 ```
 
-In this example:
+在此示例中：
 
-- The `get-pods` step retrieves a list of Kubernetes pods.
-- The `foreach` iterates over the `results` returned by the `get-pods` step.
-- For each pod, it prints its `name`, `namespace`, and `status.`
+- `get-pods` 步骤获取 Kubernetes pods 列表。
+- `foreach` 遍历 `get-pods` 步骤返回的 `results`。
+- 对于每个 pod，打印其 `name`、`namespace` 和 `status`。
 
 ---
 
 
-## Using `foreach` Variables
+## 使用 `foreach` 变量
 
-The `foreach` variable provides scoped access to the current item in the iteration.
+`foreach` 变量为当前迭代中的项目提供作用域内的访问。
 
-### Example of Scoped Variables
+### 作用域变量示例
 
 ```yaml
 actions:
@@ -69,14 +69,14 @@ actions:
 
 ```
 
-In this case:
-- `{{ foreach.value }}` refers to the current item in the list.
-- Access properties like `metadata.name`, `metadata.namespace`, and `s`tatus.phase` dynamically.
+在此情况下：
+- `{{ foreach.value }}` 引用列表中的当前项目。
+- 动态访问 `metadata.name`、`metadata.namespace` 和 `status.phase` 等属性。
 
 
-### Using Conditions with `foreach`
+### 将条件与 `foreach` 结合使用
 
-You can combine `foreach` with `if` conditions to filter or act selectively.
+您可以将 `foreach` 与 `if` 条件结合使用，以进行过滤或选择性操作。
 
 ```yaml
 actions:

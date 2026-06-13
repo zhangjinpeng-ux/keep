@@ -1,19 +1,19 @@
 ---
-title: "Service Topology"
+title: "服务拓扑"
 ---
 
-The Service Topology feature in Keep provides a visual representation of your service dependencies, allowing you to quickly understand the relationships between various components in your system. By mapping services and their interactions, you can gain insights into how issues in one service may impact others, enabling faster root-cause analysis and more effective incident resolution.
+Keep 的服务拓扑功能提供了服务依赖关系的可视化表示，让您能够快速了解系统中各个组件之间的关系。通过映射服务及其交互，您可以深入了解一个服务中的问题如何影响其他服务，从而实现更快的根因分析和更有效的事件解决。
 
 <Frame width="100" height="200">
   <img height="10" src="/images/servicetopology.png" />
 </Frame>
 
-## Key Concepts
+## 关键概念
 
-- **Nodes**: Represent individual services, applications, or infrastructure components.
-- **Edges**: Show the dependencies and interactions between nodes.
+- **节点**：代表单个服务、应用程序或基础设施组件。
+- **边**：显示节点之间的依赖关系和交互。
 
-## Supported Providers
+## 支持的提供商
 
 <CardGroup cols={3}>
   <Card
@@ -60,77 +60,76 @@ The Service Topology feature in Keep provides a visual representation of your se
   ></Card>
 </CardGroup>
 
-## Features
+## 功能
 
-### Visualizing Dependencies
+### 可视化依赖关系
 
-The service topology graph helps you:
+服务拓扑图帮助您：
 
-- Identify critical dependencies between services.
-- Understand how failures in one service propagate through the system.
-- Highlight single points of failure or bottlenecks.
+- 识别服务之间的关键依赖关系。
+- 了解一个服务的故障如何在系统中传播。
+- 突出单点故障或瓶颈。
 
-### Real-Time Health Indicators
+### 实时健康指标
 
-Nodes and edges are enriched with health indicators derived from alerts and metrics. This allows you to:
+节点和边富化了来自告警和指标的健康指标。这使您能够：
 
-- Quickly spot issues in your architecture.
-- Prioritize incident resolution based on affected dependencies.
+- 快速发现架构中的问题。
+- 根据受影响的依赖关系确定事件解决的优先级。
 
-### Filter and Focus
+### 过滤与聚焦
 
-Use filters to focus on specific parts of the topology, such as:
+使用过滤器聚焦拓扑的特定部分，例如：
 
-- A particular environment (e.g., production, staging).
-- A service group (e.g., all database-related services).
-- Alerts of a specific severity or type.
+- 特定环境（如生产、预发布）。
+- 服务组（如所有数据库相关服务）。
+- 特定严重程度或类型的告警。
 
-### Incident Integration
+### 事件集成
 
-Service topology integrates seamlessly with Keep's incident management features. When an incident is triggered, you can:
+服务拓扑与 Keep 的事件管理功能无缝集成。当事件被触发时，您可以：
 
-- View the affected nodes and their dependencies directly on the topology graph.
-- Analyze how alerts related to the incident are propagating through the system.
-- Use this information to guide remediation efforts.
+- 直接在拓扑图上查看受影响的节点及其依赖关系。
+- 分析与事件相关的告警如何在系统中传播。
+- 使用这些信息指导修复工作。
 
+### 手动添加拓扑
 
-### Manually adding Topology
+此功能允许您创建和操作您的服务及其之间的依赖关系。
 
-This features allows you to create and manipulate your services and the dependencies between them.
-
-- Click on `+ Add Node` to add a new service to your map.
+- 点击 `+ Add Node` 向您的地图添加新服务。
 <Frame width="100" height="200">
   <img height="10" src="/images/topology/topology_add_node.png" />
 </Frame>
 
-- Field `Service` and `Display Name` are mandatory fields and rest of the fields are optional. (Note: `Tags` accepts CSV)
-- Click `Save`, this adds a new service to your map.
+- `Service` 和 `Display Name` 字段为必填，其余字段为可选。（注意：`Tags` 接受 CSV 格式）
+- 点击 `Save`，这会将新服务添加到您的地图。
 <Frame width="100" height="200">
   <img height="10" src="/images/topology/topology_sidebar_add.png" />
 </Frame>
 
-- You can add multiple such services and add connections/dependencies between them.
-- You can select on or more manually created services (holding Ctrl select multiple services), and delete them all at once using the `Delete Services` option.
+- 您可以添加多个此类服务，并在它们之间添加连接/依赖关系。
+- 您可以选中一个或多个手动创建的服务（按住 Ctrl 选择多个服务），并使用 `Delete Services` 选项一次性全部删除。
 <Frame width="100" height="200">
   <img height="10" src="/images/topology/topology_delete_services.png" />
 </Frame>
 
-- You can click any service and use `Update Service` button to update a service.
+- 您可以点击任何服务并使用 `Update Service` 按钮更新服务。
 <Frame width="100" height="200">
   <img height="10" src="/images/topology/topology_update_service.png" />
 </Frame>
 
-- To add a dependency drag from any service's right handle (source) to another service's left handle (target).
+- 要添加依赖关系，从任意服务的右侧手柄（源）拖动到另一个服务的左侧手柄（目标）。
 <Frame width="100" height="200">
   <img height="10" src="/images/topology/topology_add_connection.png" />
 </Frame>
 
-- You can remove a dependency by dragging away a dependency from it's target handle and leave it.
+- 您可以通过将依赖关系从其目标手柄拖离并释放来移除依赖关系。
 <Frame width="100" height="200">
   <img height="10" src="/images/topology/topology_delete_dependency.png" />
 </Frame>
 
-- To add a protocol to your dependency: click the dependency > Click `Edit Dependency` > Fill in the protocol in the popup > Click `OK`.
+- 为依赖关系添加协议：点击依赖关系 > 点击 `Edit Dependency` > 在弹出的对话框中填写协议 > 点击 `OK`。
 <Frame width="100" height="200">
   <img height="10" src="/images/topology/topology_edit_dependency.png" />
 </Frame>
@@ -142,22 +141,21 @@ This features allows you to create and manipulate your services and the dependen
 </Frame>
 
 <Note>
-- You can only manipulate the services that are created manually.
-- Creating or updating a dependency is only possible between two manually created services.
+- 您只能操作手动创建的服务。
+- 创建或更新依赖关系只能在两个手动创建的服务之间进行。
 </Note>
 
+### 导入和导出拓扑
 
-### Importing and Exporting topology
+您可以使用此功能将拓扑数据（服务 + 应用程序 + 依赖关系）导入/导出 Keep。
 
-You can Import/Export topology data: services + applications + dependencies to/from keep using this feature.
-
-- Click the menu item to get the Import/Export option.
+- 点击菜单项获取导入/导出选项。
 <Frame width="100" height="200">
   <img height="10" src="/images/topology/topology_import_export.png" />
 </Frame>
 
-- Data is Imported and Exported in YAML Format.
-- Below is a sample YAML:
+- 数据以 YAML 格式导入和导出。
+- 以下是一个示例 YAML：
 ```yaml
 applications:
 - description: 'A sample application for monitoring and management'

@@ -1,48 +1,46 @@
 ---
-title: "Alerts Severity and Status"
+title: "告警严重程度与状态"
 ---
 
-In Keep, alerts are treated as first-class citizens, with clearly defined severities and statuses to aid in quick and efficient response.
+在 Keep 中，告警被视为一等公民，具有明确定义的严重程度和状态，以帮助快速高效地响应。
 
+## 告警严重程度
+Keep 中的告警严重程度分为五个类别，帮助团队根据告警的紧急性和影响程度来确定响应优先级。
 
-## Alert Severity
-Alert severity in Keep is classified into five categories, helping teams prioritize their response based on the urgency and impact of the alert.
+| 严重程度级别 | 描述                                                     | 期望值          |
+|-------------|----------------------------------------------------------|----------------|
+| CRITICAL    | 需要立即采取行动。                                        | "critical"     |
+| HIGH        | 需要尽快处理。                                            | "high"         |
+| WARNING     | 表示存在潜在问题。                                        | "warning"      |
+| INFO        | 提供信息，无需立即采取行动。                               | "info"         |
+| LOW         | 轻微问题或最低优先级。                                    | "low"          |
 
-| Severity Level | Description                                           | Expected Value |
-|----------------|-------------------------------------------------------|----------------|
-| CRITICAL       | Requires immediate action.                            | "critical"     |
-| HIGH           | Needs to be addressed soon.                           | "high"         |
-| WARNING        | Indicates a potential problem.                        | "warning"      |
-| INFO           | Provides information, no immediate action required.   | "info"         |
-| LOW            | Minor issues or lowest priority.                      | "low"          |
+## 告警状态
+Keep 中告警的状态反映了其在告警生命周期中的当前阶段。
 
-## Alert Status
-The status of an alert in Keep reflects its current state in the alert lifecycle.
+| 状态         | 描述                                                                       | 期望值           |
+|--------------|----------------------------------------------------------------------------|-----------------|
+| FIRING       | 活跃告警，表示存在持续问题。                                                | "firing"        |
+| RESOLVED     | 问题已解决，告警不再活跃。                                                  | "resolved"      |
+| ACKNOWLEDGED | 告警已确认但尚未解决。                                                      | "acknowledged"  |
+| SUPPRESSED   | 告警因各种原因被抑制。                                                      | "suppressed"    |
+| PENDING      | 无数据或数据不足以确定告警状态。                                            | "pending"       |
 
-| Status       | Description                                                                 | Expected Value |
-|--------------|-----------------------------------------------------------------------------|----------------|
-| FIRING       | Active alert indicating an ongoing issue.                                   | "firing"       |
-| RESOLVED     | The issue has been resolved, and the alert is no longer active.             | "resolved"     |
-| ACKNOWLEDGED | The alert has been acknowledged but not resolved.                           | "acknowledged" |
-| SUPPRESSED   | Alert is suppressed due to various reasons.                                 | "suppressed"   |
-| PENDING      | No Data or insufficient data to determine the alert state.                  | "pending"      |
+## 提供商告警映射
+不同的提供商可能有自己特定的告警严重程度和状态定义及处理方式。
+Keep 通过将它们映射到已定义的枚举值（AlertSeverity 和 AlertStatus）来标准化这些差异。
 
+以下是各种提供商与 Keep 告警系统的对应关系：
 
-## Provider Alert Mappings
-Different providers might have their specific ways of defining and handling alert severity and status.
-Keep standardizes these variations by mapping them to the defined enums (AlertSeverity and AlertStatus).
-
-Here's how various providers align with Keep's alert system:
-
-| Provider      | Severity Mapping                                                               | Status Mapping                                                                                                  |
-|---------------|--------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
-| CloudWatch    | N/A                                                                            | ALARM -> FIRING, OK -> RESOLVED, INSUFFICIENT_DATA -> PENDING                                                   |
-| Prometheus    | "critical" -> CRITICAL  "warning" -> WARNING, "info" -> INFO, "low" -> LOW     | "firing" -> FIRING, "resolved" -> RESOLVED                                                                     |
-| Datadog       | "P4" -> INFO, "P3" -> WARNING, "P2" -> HIGH, "P1" -> CRITICAL                  | "Triggered" -> FIRING, "Recovered" -> RESOLVED, "Muted" -> SUPPRESSED                                          |
-| PagerDuty     | "P1" -> CRITICAL, "P2" -> HIGH, "P3" -> WARNING, "P4" -> INFO                  | "triggered" -> FIRING, "acknowledged" -> ACKNOWLEDGED, "resolved" -> RESOLVED                                  |
-| Pingdom       | N/A                                                                            | "down" -> FIRING, "up" -> RESOLVED, "paused" -> SUPPRESSED                                                      |
-| Dynatrace     | "critical" -> CRITICAL, "warning" -> WARNING, "info" -> INFO                   | "open" -> FIRING, "closed" -> RESOLVED, "acknowledged" -> ACKNOWLEDGED                                         |
-| Grafana       | "critical" -> CRITICAL, "high" -> HIGH, "warning" -> WARNING, "info" -> INFO   | "ok" -> RESOLVED, "paused" -> SUPPRESSED, "alerting" -> FIRING, "pending" -> PENDING, "no_data" -> PENDING     |
-| New Relic     | "critical" -> CRITICAL, "warning" -> WARNING, "info" -> INFO                   | "open" -> FIRING, "closed" -> RESOLVED, "acknowledged" -> ACKNOWLEDGED                                         |
-| Sentry        | "fatal" -> CRITICAL, "error" -> HIGH, "warning" -> WARNING, "info" -> INFO, "debug" -> LOW | "resolved" -> RESOLVED, "unresolved" -> FIRING, "ignored" -> SUPPRESSED |
-| Zabbix        | "not_classified" -> LOW, "information" -> INFO, "warning" -> WARNING, "average" -> WARNING, "high" -> HIGH, "disaster" -> CRITICAL | "problem" -> FIRING, "ok" -> RESOLVED, "acknowledged" -> ACKNOWLEDGED, "suppressed" -> SUPPRESSED |
+| 提供商        | 严重程度映射                                                                    | 状态映射                                                                                                         |
+|--------------|--------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------|
+| CloudWatch   | 不适用                                                                          | ALARM -> FIRING, OK -> RESOLVED, INSUFFICIENT_DATA -> PENDING                                                    |
+| Prometheus   | "critical" -> CRITICAL  "warning" -> WARNING, "info" -> INFO, "low" -> LOW     | "firing" -> FIRING, "resolved" -> RESOLVED                                                                      |
+| Datadog      | "P4" -> INFO, "P3" -> WARNING, "P2" -> HIGH, "P1" -> CRITICAL                  | "Triggered" -> FIRING, "Recovered" -> RESOLVED, "Muted" -> SUPPRESSED                                           |
+| PagerDuty    | "P1" -> CRITICAL, "P2" -> HIGH, "P3" -> WARNING, "P4" -> INFO                  | "triggered" -> FIRING, "acknowledged" -> ACKNOWLEDGED, "resolved" -> RESOLVED                                   |
+| Pingdom      | 不适用                                                                          | "down" -> FIRING, "up" -> RESOLVED, "paused" -> SUPPRESSED                                                       |
+| Dynatrace    | "critical" -> CRITICAL, "warning" -> WARNING, "info" -> INFO                   | "open" -> FIRING, "closed" -> RESOLVED, "acknowledged" -> ACKNOWLEDGED                                          |
+| Grafana      | "critical" -> CRITICAL, "high" -> HIGH, "warning" -> WARNING, "info" -> INFO   | "ok" -> RESOLVED, "paused" -> SUPPRESSED, "alerting" -> FIRING, "pending" -> PENDING, "no_data" -> PENDING      |
+| New Relic    | "critical" -> CRITICAL, "warning" -> WARNING, "info" -> INFO                   | "open" -> FIRING, "closed" -> RESOLVED, "acknowledged" -> ACKNOWLEDGED                                          |
+| Sentry       | "fatal" -> CRITICAL, "error" -> HIGH, "warning" -> WARNING, "info" -> INFO, "debug" -> LOW | "resolved" -> RESOLVED, "unresolved" -> FIRING, "ignored" -> SUPPRESSED |
+| Zabbix       | "not_classified" -> LOW, "information" -> INFO, "warning" -> WARNING, "average" -> WARNING, "high" -> HIGH, "disaster" -> CRITICAL | "problem" -> FIRING, "ok" -> RESOLVED, "acknowledged" -> ACKNOWLEDGED, "suppressed" -> SUPPRESSED |

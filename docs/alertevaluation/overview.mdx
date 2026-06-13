@@ -1,52 +1,52 @@
 ---
-title: "Overview"
+title: "概览"
 ---
 
-The Keep Alert Evaluation Engine is a flexible system that enables you to create alerts based on any data source and define evaluation rules. Unlike traditional monitoring solutions that are tied to specific metrics, Keep's engine allows you to combine data from multiple sources and apply complex logic to determine when and how alerts should be triggered.
+Keep 告警评估引擎是一个灵活的系统，使您能够基于任何数据源创建告警并定义评估规则。与绑定到特定指标的传统监控解决方案不同，Keep 的引擎允许您组合来自多个数据源的数据，并应用复杂逻辑来确定何时以及如何触发告警。
 
-## Core Features
+## 核心功能
 
-### Generic Data Source Support
-- Query any data source (databases, APIs, metrics systems)
-- Combine multiple data sources in a single alert rule
-- Apply custom transformations to the data
+### 通用数据源支持
+- 查询任何数据源（数据库、API、指标系统）
+- 在单个告警规则中组合多个数据源
+- 对数据应用自定义转换
 
-### Flexible Alert Evaluation
-- Define custom conditions using templated expressions
-- Support for complex boolean logic and mathematical operations
-- State management for alert transitions (pending->firing->resolved)
-- Deduplication and alert instance tracking
+### 灵活的告警评估
+- 使用模板表达式定义自定义条件
+- 支持复杂的布尔逻辑和数学运算
+- 告警转换的状态管理（待处理->触发中->已解决）
+- 去重和告警实例跟踪
 
-### Customizable Alert Definition
-- Full control over alert metadata (name, description, severity)
-- Dynamic labels based on evaluation context
-- Template support for all alert fields
-- Custom fingerprinting for alert grouping
+### 可自定义的告警定义
+- 完全控制告警元数据（名称、描述、严重性）
+- 基于评估上下文的动态标签
+- 所有告警字段支持模板
+- 自定义指纹用于告警分组
 
-## Core Components
+## 核心组件
 
-### Alert States
-- **Pending**: Initial state when alert condition is met (relevant only if `for` supplied)
-- **Firing**: Active alert that has met its duration condition
-- **Resolved**: Alert that is no longer active
+### 告警状态
+- **待处理**：满足告警条件时的初始状态（仅在提供了 `for` 时相关）
+- **触发中**：已满足持续时间条件的活跃告警
+- **已解决**：不再活跃的告警
 
-### Alert Rule Components
-1. **Data Collection**: Query steps to gather data from any source
-2. **Condition (`if`)**: Expression that determines when to create/update an alert
-3. **Duration (`for`)**: Optional time period the condition must be true before firing
-4. **Alert Definition**: Complete control over how the alert looks and behaves:
-   - Name and description
-   - Severity levels
-   - Labels for routing
-   - Custom fields and annotations
+### 告警规则组件
+1. **数据收集**：从任何数据源收集数据的查询步骤
+2. **条件 (`if`)**：决定何时创建/更新告警的表达式
+3. **持续时间 (`for`)**：条件在触发前必须为真的可选时间段
+4. **告警定义**：完全控制告警的外观和行为：
+   - 名称和描述
+   - 严重性级别
+   - 路由标签
+   - 自定义字段和注释
 
-### State Management
-- **Fingerprinting**: Unique identifier for alert deduplication and state tracking
-- **Keep-Firing**: Control how long alerts remain active
-- **State Transitions**: Rules for how alerts move between states
+### 状态管理
+- **指纹**：用于告警去重和状态跟踪的唯一标识符
+- **Keep-Firing**：控制告警保持活跃的时间
+- **状态转换**：告警在状态之间转换的规则
 
-## Examples
-The following examples demonstrate different ways to use the alert evaluation engine:
+## 示例
+以下示例演示了使用告警评估引擎的不同方式：
 
-- [Single Metric Alert](/alertevaluation/examples/victoriametricssingle) - Basic example showing metrics-based alerting
-- [Multiple Metrics Alert](/alertevaluation/examples/victoriametricsmulti) - Advanced example with multiple alert instances
+- [单指标告警](/alertevaluation/examples/victoriametricssingle) - 展示基于指标的告警的基本示例
+- [多指标告警](/alertevaluation/examples/victoriametricsmulti) - 具有多个告警实例的高级示例

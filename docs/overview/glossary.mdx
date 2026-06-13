@@ -1,50 +1,50 @@
 ---
-title: "Glossary"
+title: "术语表"
 ---
-## Alert
-An alert is an event that is triggered when something bad happens or going to happen.
-The term "alert" can sometimes be interchanged with "alarm" (e.g. in CloudWatch) or "monitor" (Datadog).
+## 告警
+告警是在发生或即将发生问题时触发的事件。
+术语"alert"有时可以与"alarm"（例如 CloudWatch 中）或"monitor"（Datadog）互换使用。
 
-## Incident
-An incident is a group of alerts that are related to each other.
+## 事件
+事件是一组彼此相关的告警。
 
-## Provider
-A provider can be a module that pulls alerts into Keep or pushes data out of keep by interacting with external systems.
+## 提供商
+提供商可以是一个将告警拉入 Keep 或通过外部系统交互将数据从 Keep 推送出去的模块。
 
-### Provider as a data source
-Within the context of a Workflow, a Provider can:
-- Query data - query Datadog's API or run a SQL query against a database.
-- Push data - send a Slack message or create a PagerDuty incident.
+### 作为数据源的提供商
+在工作流的上下文中，提供商可以：
+- 查询数据 - 查询 Datadog 的 API 或对数据库运行 SQL 查询。
+- 推送数据 - 发送 Slack 消息或创建 PagerDuty 事件。
 
-### Provider as an alert source
-When you connect a Provider, Keep begins to read and process alerts from that Provider. For example, after connecting your Prometheus instance, you'll start seeing your Prometheus alerts in Keep.
-A Provider can either push alerts into Keep, or Keep can pull alerts from the Provider.
+### 作为告警源的提供商
+当您连接一个提供商时，Keep 开始从该提供商读取和处理告警。例如，连接您的 Prometheus 实例后，您将开始在 Keep 中看到您的 Prometheus 告警。
+提供商可以将告警推送到 Keep，或者 Keep 可以从提供商拉取告警。
 
-#### Push alerts to Keep (Manual)
-You can configure your alert source to push alerts into Keep.
+#### 推送告警到 Keep（手动）
+您可以配置告警源将告警推送到 Keep。
 
-For example, consider Prometheus. If you want to push alerts from Prometheus to Keep, you'll need to configure Prometheus Alertmanager to send the alerts to
-'https://api.keephq.dev/alerts/event/prometheus' using API key authentication. Each Provider implements Push mechanism and is documented under the specific Provider page.
+例如，考虑 Prometheus。如果您想将 Prometheus 的告警推送到 Keep，您需要配置 Prometheus Alertmanager 使用 API 密钥认证将告警发送到
+'https://api.keephq.dev/alerts/event/prometheus'。每个提供商都实现了推送机制，并在特定提供商页面下有文档说明。
 
-#### Push alerts to Keep (Automatic)
-In compatible tools, Keep can automatically integrate with the alerting policy of the source tool and add itself as an alert destination. You can learn more about Webhook Integration [here](/providers/overview).
-Please note that this will slightly modify your monitors/notification policy.
+#### 推送告警到 Keep（自动）
+在兼容的工具中，Keep 可以自动与源工具的告警策略集成，并将自身添加为告警目标。您可以在[此处](/providers/overview)了解更多关于 Webhook 集成的信息。
+请注意，这将轻微修改您的监控/通知策略。
 
-### Pull alerts by Keep
-Keep also integrates with the alert APIs of various tools and can automatically pull alerts. While pulling is easier to set up (requiring only credentials), pushing is preferable when automation is involved.
+### Keep 拉取告警
+Keep 还与各种工具的告警 API 集成，可以自动拉取告警。虽然拉取更容易设置（只需要凭据），但在涉及自动化时推送更可取。
 
-## Workflow
-Workflows consist of a list of [Steps](/workflows/overview#steps) and [Actions](/workflows/overview#actions).
-A workflow can be triggered in the following ways:
-- When an Alert is triggered.
-- In a predefined interval.
-- Manually.
+## 工作流
+工作流由一系列[步骤](/workflows/overview#steps)和[动作](/workflows/overview#actions)组成。
+工作流可以通过以下方式触发：
+- 当告警被触发时。
+- 按预定义的时间间隔。
+- 手动。
 
-Workflows are commonly used to:
-1. Enrich your alerts with more context.
-2. Automate the response to alert.
-3. Create multi-step alerts.
+工作流通常用于：
+1. 用更多上下文富化您的告警。
+2. 自动化告警响应。
+3. 创建多步骤告警。
 
-## API first
-Keep is an API-first platform, meaning that anything you can do via the UI can also be accomplished through the [API](https://api.keephq.dev/redoc)
-This gives you the flexibility to integrate Keep with your existing stack and to automate alert remediation and enrichment processes.
+## API 优先
+Keep 是一个 API 优先的平台，这意味着您通过 UI 能做的任何事情也可以通过 [API](https://api.keephq.dev/redoc) 完成。
+这为您提供了灵活性，可以将 Keep 与您现有的技术栈集成，并自动化告警修复和富化过程。

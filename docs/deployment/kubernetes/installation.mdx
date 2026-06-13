@@ -4,62 +4,62 @@ sidebarTitle: "Installation"
 ---
 
 <Tip>
-The recommended way to install Keep on Kubernetes is via Helm Chart. <br></br>
-Follow these steps to set it up.
+推荐的 Keep 在 Kubernetes 上的安装方式是通过 Helm Chart。<br></br>
+请按照以下步骤进行设置。
 </Tip>
 
-# Prerequisites
+# 前提条件
 
 ## Helm CLI
-See the [Helm documentation](https://helm.sh/docs/intro/install/) for instructions about installing helm.
+有关安装 Helm 的说明，请参阅 [Helm 文档](https://helm.sh/docs/intro/install/)。
 
-## Ingress Controller (Optional)
+## Ingress 控制器（可选）
 <Info>
-You can skip this step if:
-1. You already have **ingress-nginx** installed.
-2. You don't need to expose Keep to the internet/network.
+以下情况可以跳过此步骤：
+1. 您已经安装了 **ingress-nginx**。
+2. 您不需要将 Keep 暴露到互联网/网络。
 </Info>
 
-### Overview
-An ingress controller is essential for managing external access to services in your Kubernetes cluster. It acts as a smart router and load balancer, allowing you to expose multiple services through a single entry point while handling SSL termination and routing rules.
+### 概述
+Ingress 控制器对于管理 Kubernetes 集群中服务的外部访问至关重要。它充当智能路由器和负载均衡器，允许您通过单一入口点暴露多个服务，同时处理 SSL 终止和路由规则。
 
 
 
-**Keep works best with both** [ingress-nginx](https://github.com/kubernetes/ingress-nginx) **and** [HAProxy Ingress](https://haproxy-ingress.github.io/) **controllers, but you can customize the helm chart for other ingress controllers too.**
+**Keep 与** [ingress-nginx](https://github.com/kubernetes/ingress-nginx) **和** [HAProxy Ingress](https://haproxy-ingress.github.io/) **控制器配合使用效果最佳，但您也可以为其他 Ingress 控制器自定义 Helm chart。**
 
 
-### Nginx Ingress Controller
+### Nginx Ingress 控制器
 
-#### Check ingress-nginx Installed
-You check if you already have ingress-nginx installed:
+#### 检查 ingress-nginx 是否已安装
+检查是否已安装 ingress-nginx：
 ```bash
-# By default, the ingress-nginx will be installed under the ingress-nginx namespace
+# 默认情况下，ingress-nginx 将安装在 ingress-nginx 命名空间下
 kubectl -n ingress-nginx get pods
 NAME                                       READY   STATUS    RESTARTS   AGE
 ingress-nginx-controller-d49697d5f-hjhbj   1/1     Running   0          4h19m
 
-# Or check for the ingress class
+# 或检查 ingress class
 kubectl get ingressclass
 NAME    CONTROLLER             PARAMETERS   AGE
 nginx   k8s.io/ingress-nginx   <none>       4h19m
 
 ```
 
-#### Install ingress-nginx
+#### 安装 ingress-nginx
 <Info>
-To read about more installation options, see [ingress-nginx installation docs](https://kubernetes.github.io/ingress-nginx/deploy/).
+要了解更多安装选项，请参阅 [ingress-nginx 安装文档](https://kubernetes.github.io/ingress-nginx/deploy/)。
 </Info>
 <Tip>
-Since ingress-nginx 4.12, you'll need to add
+自 ingress-nginx 4.12 起，您需要添加
 ```
 --set controller.config.annotations-risk-level=Critical
 ```
-See https://github.com/kubernetes/ingress-nginx/issues/12618#issuecomment-2566084202
+参见 https://github.com/kubernetes/ingress-nginx/issues/12618#issuecomment-2566084202
 </Tip>
 ```bash
-# simplest way to install
-# we set snippet-annotations to true to allow rewrites
-#   see https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/#allow-snippet-annotations
+# 最简单的安装方式
+# 我们设置 snippet-annotations 为 true 以允许重写
+#   参见 https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/#allow-snippet-annotations
 helm upgrade --install ingress-nginx ingress-nginx \
   --repo https://kubernetes.github.io/ingress-nginx \
   --set controller.config.allow-snippet-annotations=true \
@@ -67,85 +67,85 @@ helm upgrade --install ingress-nginx ingress-nginx \
   --namespace ingress-nginx --create-namespace
 ```
 
-Verify installation:
+验证安装：
 ```bash
 kubectl get ingressclass
 NAME    CONTROLLER             PARAMETERS   AGE
 nginx   k8s.io/ingress-nginx   <none>       4h19m
 ```
 
-Verify if snippet annotations are enabled:
+验证 snippet 注解是否启用：
 ```bash
 kubectl get configmap -n ingress-nginx ingress-nginx-controller -o yaml | grep allow-snippet-annotations
 allow-snippet-annotations: "true"
 ```
 
-### HAProxy Ingress Controller
+### HAProxy Ingress 控制器
 
-#### Install ingress-haproxy
+#### 安装 ingress-haproxy
 <Info>
-To read about more installation options, see [haproxy-ingress installation docs](https://haproxy-ingress.github.io/docs/getting-started/).
+要了解更多安装选项，请参阅 [haproxy-ingress 安装文档](https://haproxy-ingress.github.io/docs/getting-started/)。
 </Info>
 
 ```bash
-# simplest way to install
+# 最简单的安装方式
 helm upgrade --install haproxy-ingress haproxy-ingress \
   --repo https://haproxy-ingress.github.io/charts \
   --namespace ingress-haproxy --create-namespace
 ```
 
-Verify installation:
+验证安装：
 ```bash
 kubectl get ingressclass
 NAME      CONTROLLER                      PARAMETERS   AGE
 haproxy   haproxy-ingress.github.io/controller        <none>        4h19m
 ```
 
-Verify if controller is running:
+验证控制器是否正在运行：
 ```bash
 kubectl get pods -n ingress-haproxy -l app.kubernetes.io/instance=haproxy-ingress
 NAME                                READY   STATUS    RESTARTS   AGE
 haproxy-ingress-controller-x4n2z   1/1     Running   0          4h19m
 ```
 
-## Installation
+## 安装
 
-### With Ingress-NGINX (Recommended)
+### 使用 Ingress-NGINX（推荐）
 
 ```bash
-# Add the Helm repository
+# 添加 Helm 仓库
 helm repo add keephq https://keephq.github.io/helm-charts
 
-# Install Keep with ingress enabled
+# 安装 Keep 并启用 ingress
 helm install keep keephq/keep -n keep --create-namespace
 ```
 
-### With Ingress-HAProxy (Recommended)
+### 使用 Ingress-HAProxy（推荐）
 
 ```bash
-# Add the Helm repository
+# 添加 Helm 仓库
 helm repo add keephq https://keephq.github.io/helm-charts
 
-# Install Keep with ingress enabled
+# 安装 Keep 并启用 ingress
 helm install keep keephq/keep -n keep --create-namespace --set global.ingress.className=haproxy
 ```
 
-### Without Ingress (Not Recommended)
+### 不使用 Ingress（不推荐）
 
 ```bash
-# Add the Helm repository
+# 添加 Helm 仓库
 helm repo add keephq https://keephq.github.io/helm-charts
 
-# Install Keep without ingress enabled.
-# You won't be able to access Keep from the network.
+# 安装 Keep 但不启用 ingress。
+# 您将无法从网络访问 Keep。
 helm install keep keephq/keep -n keep --create-namespace \
   --set global.ingress.enabled=false
 ```
 
-## Accessing Keep
+## 访问 Keep
 
 ### Ingress
-If you installed Keep with ingress, you should be able to access Keep.
+如果您使用 ingress 安装了 Keep，您应该能够访问 Keep。
 
 ```bash
 kubectl -n keep get ingress
@@ -153,42 +153,42 @@ NAME           CLASS   HOSTS   ADDRESS        PORTS   AGE
 keep-ingress   nginx   *       X.X.X.X        80      4h16m
 ```
 
-Keep is available at http://X.X.X.X :)
+Keep 可在 http://X.X.X.X 访问 :)
 
-### Without Ingress (Port-Forwarding)
+### 不使用 Ingress（端口转发）
 
-Use the following commands to access Keep locally without ingress:
+使用以下命令在本地访问 Keep（不使用 ingress）：
 ```bash
-# Forward the UI
+# 转发 UI
 kubectl port-forward svc/keep-frontend 3000:3000 -n keep &
 
-# Forward the Backend
+# 转发后端
 kubectl port-forward svc/keep-backend 8080:8080 -n keep &
 
-# Forward WebSocket server (optional)
+# 转发 WebSocket 服务器（可选）
 kubectl port-forward svc/keep-websocket 6001:6001 -n keep &
 ```
 
-Keep is available at http://localhost:3000 :)
+Keep 可在 http://localhost:3000 访问 :)
 
-## Configuring HTTPS
+## 配置 HTTPS
 
-### Prerequisites
-1. Domain Name: Example - keep.yourcompany.com
-2. TLS Certificate: Private key (tls.key) and certificate (tls.crt)
+### 前提条件
+1. 域名：例如 - keep.yourcompany.com
+2. TLS 证书：私钥 (tls.key) 和证书 (tls.crt)
 
-### Create the TLS Secret
+### 创建 TLS Secret
 
-Assuming:
-- `tls.crt` contains the certificate.
-- `tls.key` contains the private key.
+假设：
+- `tls.crt` 包含证书。
+- `tls.key` 包含私钥。
 
 ```bash
-# create the secret with kubectl
+# 使用 kubectl 创建 secret
 kubectl create secret tls keep-tls --cert=./tls.crt --key=./tls.key -n keep
 ```
 
-### Update Helm Values for TLS
+### 更新 Helm Values 以配置 TLS
 ```bash
 helm upgrade -n keep keep keephq/keep \
   --set "global.ingress.hosts[0].host=keep.example.com" \
@@ -198,7 +198,7 @@ helm upgrade -n keep keep keephq/keep \
 
 
 
-Alternatively, update your `values.yaml`:
+或者，更新您的 `values.yaml`：
 ```bash
 ...
 global:
@@ -213,8 +213,8 @@ global:
 ```
 
 
-## Uninstallation
-To remove Keep and clean up:
+## 卸载
+要移除 Keep 并清理：
 ```bash
 helm uninstall keep -n keep
 kubectl delete namespace keep

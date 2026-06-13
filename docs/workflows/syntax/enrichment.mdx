@@ -1,29 +1,29 @@
 ---
-title: "Enrichment"
+title: "增强"
 ---
 
-Keep workflows support **enrichment**, a powerful feature that allows you to enhance alerts with additional data, making them more actionable and meaningful. Enrichments add custom fields or modify existing ones in an alert directly from your workflow.
-
----
-
-## Why Enrich Alerts?
-
-- **Provide Context:** Add critical information, such as related customer data or ticket IDs.
-- **Enable Automation:** Use enriched fields in subsequent actions for dynamic processing.
-- **Improve Visibility:** Surface essential metadata for better decision-making.
+Keep 工作流支持**增强（Enrichment）**，这是一项强大的功能，允许您为告警添加额外数据，使其更具可操作性和意义。增强功能可直接从工作流中向告警添加自定义字段或修改现有字段。
 
 ---
 
-## How to Enrich Alerts
+## 为什么要增强告警？
 
-### Using the `enrich_alert` Directive
+- **提供上下文：** 添加关键信息，例如相关客户数据或工单 ID。
+- **启用自动化：** 在后续动作中使用增强后的字段进行动态处理。
+- **提高可见性：** 展示必要的元数据以辅助更好的决策。
 
-The `enrich_alert` directive is used in actions to add or update fields in the alert. You specify a list of key-value pairs where:
-- `key` is the field name to add or update.
-- `value` is the data to assign to the field. It can be a static value or dynamically derived from steps or other parts of the workflow.
-- `disposable` is an optional attribute that determines whether the enrichment is temporary and should be discarded when a new alert is received. If disposable is set to True, the enrichment is added to disposable_enrichments and marked with dispose_on_new_alert=True.
+---
 
-### Example Workflow with Enrichment
+## 如何增强告警
+
+### 使用 `enrich_alert` 指令
+
+`enrich_alert` 指令在动作中用于添加或更新告警中的字段。您需要指定一组键值对，其中：
+- `key` 是要添加或更新的字段名。
+- `value` 是要分配给该字段的数据。可以是静态值，也可以是从步骤或工作流其他部分动态派生的值。
+- `disposable` 是一个可选属性，用于确定增强是否为临时性的，并在收到新告警时丢弃。如果 disposable 设置为 True，增强内容将被添加到 disposable_enrichments 中，并标记为 dispose_on_new_alert=True。
+
+### 带增强的工作流示例
 
 ```yaml
 workflow:
@@ -51,17 +51,17 @@ workflow:
               value: "{{ steps.get-customer-details.results.tier }}"
 ```
 
-In this example:
-- The `get-customer-details` step fetches customer data based on the alert.
-- The `enrich_alert` directive adds `customer_name` and `customer_tier` to the alert.
+在此示例中：
+- `get-customer-details` 步骤根据告警获取客户数据。
+- `enrich_alert` 指令将 `customer_name` 和 `customer_tier` 添加到告警中。
 
 ---
 
 
-## Enrichment Syntax
+## 增强语法
 
-### Key-Value Pairs
-Each enrichment is defined as a key-value pair:
+### 键值对
+每个增强定义为一个键值对：
 
 ```yaml
 enrich_alert:
@@ -70,21 +70,21 @@ enrich_alert:
     disposable: true
 ```
 
-- **Static Values:** Use static strings or numbers for straightforward enrichments:
+- **静态值：** 使用静态字符串或数字进行简单的增强：
 ```yaml
 - key: alert_source
   value: "Monitoring System"
 ```
 
--- **Dynamic Values:** Use values derived from steps, actions, or the alert itself:
+-- **动态值：** 使用从步骤、动作或告警本身派生的值：
 ```yaml
 - key: severity_level
   value: "{{ alert.severity }}"
 ```
 
-### Conditional Enrichment
+### 条件增强
 
-You can combine enrichment with conditions to enrich alerts dynamically:
+您可以将增强与条件结合使用，以动态增强告警：
 
 ```yaml
 actions:
@@ -98,11 +98,11 @@ actions:
             value: high
 ```
 
-## Advanced Use Cases
+## 高级用例
 
 
-### Enrich Alerts with Results from Actions
-Enrichments can use results from actions, allowing dynamic updates based on previous steps:
+### 使用动作结果增强告警
+增强可以使用动作的结果，从而基于前序步骤进行动态更新：
 ```yaml
 enrich_alert:
   - key: ticket_id
@@ -112,9 +112,9 @@ enrich_alert:
 
 ```
 
-## Enrichment Workflow Example
+## 增强工作流示例
 
-This example demonstrates how to enrich an alert with ticket details from ServiceNow:
+此示例演示了如何使用 ServiceNow 的工单详情来增强告警：
 
 ```yaml
 workflow:
@@ -145,8 +145,8 @@ workflow:
 
 ```
 
-## Troubleshooting Enrichment 
+## 增强故障排查
 
 
-### Enrichment without an Alert/Incident
-If there is no alert/incident present in the trigger (for example interval trigger or manual call in workflow page), the enrichment rule would not have an alert/incident to apply to. The enrichment process typically requires an alert/incident to be present to apply the specified enrichments. Without an alert/incident, the enrichment rule would not execute as intended. A workaround is to use a foreach directive and pass it an object containing the "fingerprint" variable.
+### 没有告警/事件时的增强
+如果触发器中没有告警/事件（例如间隔触发器或在工作流页面中手动调用），增强规则将没有可应用的告警/事件。增强过程通常需要一个告警/事件存在才能应用指定的增强内容。没有告警/事件时，增强规则将无法按预期执行。一种变通方法是使用 foreach 指令并传入一个包含 "fingerprint" 变量的对象。

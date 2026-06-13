@@ -1,49 +1,49 @@
 ---
-title: "VictoriaMetrics Single Alert Example"
+title: "VictoriaMetrics 单告警示例"
 ---
 
-This example demonstrates a simple CPU usage alert based on a metric:
+此示例演示了一个基于指标的简单 CPU 使用率告警：
 
 ```yaml
-# This workflow queries VictoriaMetrics metrics and creates alerts based on CPU usage
+# 此工作流查询 VictoriaMetrics 指标并根据 CPU 使用率创建告警
 workflow:
-  # Unique identifier for this workflow
+  # 此工作流的唯一标识符
   id: query-victoriametrics
-  # Display name shown in the UI
+  # UI 中显示的显示名称
   name: victoriametrics-alert-example
-  # Brief description of what this workflow does
+  # 此工作流功能的简要描述
   description: Monitors CPU usage metrics from VictoriaMetrics and creates alerts when thresholds are exceeded
 
-  # Define how the workflow is triggered
+  # 定义工作流如何触发
   triggers:
-    - type: manual # Can be triggered manually from the UI
+    - type: manual # 可以从 UI 手动触发
 
-  # Steps to execute in order
+  # 按顺序执行的步骤
   steps:
     - name: victoriametrics-step
       provider:
-        # Use VictoriaMetrics provider config defined in providers.vm
+        # 使用 providers.vm 中定义的 VictoriaMetrics provider 配置
         config: "{{ providers.vm }}"
         type: victoriametrics
         with:
-          # Query average CPU usage rate
+          # 查询平均 CPU 使用率
           query: avg(rate(process_cpu_seconds_total))
           queryType: query
 
-  # Actions to take based on the query results
+  # 基于查询结果执行的操作
   actions:
     - name: create-alert
       provider:
         type: keep
         with:
-          # Create alert if CPU usage exceeds threshold
+          # 当 CPU 使用率超过阈值时创建告警
           if: "{{ value.1 }} > 0.0040"
           alert:
             name: "High CPU Usage"
             description: "[Single] CPU usage is high on the VM (created from VM metric)"
-            # Set severity based on CPU usage thresholds
+            # 根据 CPU 使用率阈值设置严重性
             severity: '{{ value.1 }} > 0.9 ? "critical" : {{ value.1 }} > 0.7 ? "warning" : "info"'
-            # Alert labels for filtering and routing
+            # 用于过滤和路由的告警标签
             labels:
               environment: production
               app: myapp
