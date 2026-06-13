@@ -2,11 +2,11 @@
     <img src="/assets/keep.png?raw=true" width="86">
 </div>
 
-<h1 align="center">The open-source AIOps and alert management platform</h1>
+<h1 align="center">开源 AIOps 与告警管理平台</h1>
 
 </br>
 
-<div align="center">Single pane of glass, alert deduplication, enrichment, filtering and correlation, bi-directional integrations, workflows, dashboards.
+<div align="center">统一面板，告警去重、富化、过滤与关联，双向集成，工作流，仪表盘。
 </br>
 </div>
 
@@ -23,46 +23,46 @@
 </div>
 
 <p align="center">
-    <a href="https://docs.keephq.dev">Docs</a>
+    <a href="https://docs.keephq.dev">文档</a>
     ·
-    <a href="https://platform.keephq.dev">Try it out</a>
+    <a href="https://platform.keephq.dev">立即体验</a>
     ·
-    <a href="https://github.com/keephq/keep/issues/new?assignees=&labels=bug&template=bug_report.md&title=">Report Bug</a>
+    <a href="https://github.com/keephq/keep/issues/new?assignees=&labels=bug&template=bug_report.md&title=">报告 Bug</a>
     ·
-    <a href="https://www.keephq.dev/meet-keep">Book a Demo</a>
+    <a href="https://www.keephq.dev/meet-keep">预约演示</a>
     ·
-    <a href="https://www.keephq.dev">Website</a>
+    <a href="https://www.keephq.dev">官网</a>
 </p>
 
 <div style="width: 100%; max-width: 800px; margin: 0 auto;">
     <img
         src="/assets/sneaknew.png?raw=true"
         style="width: 100%; height: auto; object-fit: contain;"
-        alt="Sneak preview screenshot"
+        alt="预览截图"
     >
 </div>
 
 <h1 align="center"></h1>
 
-- 🔍 **Single pane of glass** - Best-in-class customizable UI for all your alerts and incidents
-- 🛠️ **Swiss Army Knife for alerts** - Deduplication, correlation, filtering and enrichment
-- 🔄 **Deep integrations** - Bi-directional syncs with monitoring tools, customizable workflows
-- ⚡ **[Automation](#workflows)** - GitHub Actions for your monitoring tools
-- 🤖 **AIOps 2.0** - AI-powered correlation and summarization
+- 🔍 **统一面板** - 一流的可定制 UI，集中管理所有告警和事件
+- 🛠️ **告警瑞士军刀** - 去重、关联、过滤和富化
+- 🔄 **深度集成** - 与监控工具的双向同步，可定制的工作流
+- ⚡ **[自动化](#workflows)** - 为你的监控工具提供 GitHub Actions 式体验
+- 🤖 **AIOps 2.0** - AI 驱动的关联和摘要
 
 </br>
 
-> See full [platform documentation](https://docs.keephq.dev).
+> 查看完整[平台文档](https://docs.keephq.dev)。
 
 </br>
 
-## Supported Integrations
+## 支持的集成
 
-> View the full list in our [documentation](https://docs.keephq.dev/providers/documentation)
+> 查看完整列表请访问[文档](https://docs.keephq.dev/providers/documentation)
 
-> Missing a provider? [Submit a new provider request](https://github.com/keephq/keep/issues/new?assignees=&labels=provider&projects=&template=new_provider_request.md&title=) and we'll add it quickly!
+> 缺少某个 Provider？[提交新的 Provider 请求](https://github.com/keephq/keep/issues/new?assignees=&labels=provider&projects=&template=new_provider_request.md&title=)，我们会快速添加！
 
-### AI Backends for Enrichments, Correlations and Incident Context Gathering
+### AI 后端（用于富化、关联和事件上下文收集）
 
 <table>
 <tr>
@@ -113,7 +113,7 @@
 </tr>
 </table>
 
-### Observability Tools
+### 可观测性工具
 
 <table>
 <tr>
@@ -382,7 +382,7 @@
 </tr>
 </table>
 
-### Databases & Data Warehouses
+### 数据库与数据仓库
 
 <table>
 <tr>
@@ -433,7 +433,7 @@
 </tr>
 </table>
 
-### Communication Platforms
+### 通讯平台
 
 <table>
 <tr>
@@ -534,7 +534,7 @@
 </tr>
 </table>
 
-### Incident Management
+### 事件管理
 
 <table>
   <tr>
@@ -615,7 +615,7 @@
   </tr>
 </table>
 
-### Ticketing Tools
+### 工单工具
 
 <table>
 <tr>
@@ -696,7 +696,7 @@
 </tr>
 </table>
 
-### Container Orchestration Platforms
+### 容器编排平台
 
 <table>
 <tr>
@@ -739,7 +739,7 @@
 </tr>
 </table>
 
-### Data Enrichment
+### 数据富化
 
 <table>
 <tr>
@@ -782,7 +782,7 @@
 </tr>
 </table>
 
-### Workflow Orchestration
+### 工作流编排
 
 <table>
 <tr>
@@ -795,7 +795,7 @@
 </tr>
 </table>
 
-### Queues
+### 消息队列
 
 <table>
 <tr>
@@ -814,19 +814,19 @@
 </tr>
 </table>
 
-## Workflows
+## 工作流
 
-Keep is GitHub Actions for your monitoring tools.
+Keep 就是你的监控工具专属的 GitHub Actions。
 
-A Keep Workflow is a declarative YAML file that automates your alert and incident management. Each workflow consists of:
+Keep 工作流是一个声明式 YAML 文件，用于自动化告警和事件管理。每个工作流包含：
 
-- **Triggers** - What starts the workflow (alerts, incidents, schedule or manual)
-- **Steps** - Read or fetch data (enrichment, context)
-- **Actions** - Execute operations (update tickets, send notifications, restart servers)
+- **触发器** - 启动工作流的条件（告警、事件、定时或手动）
+- **步骤** - 读取或获取数据（富化、上下文）
+- **动作** - 执行操作（更新工单、发送通知、重启服务器）
 
-Here's a simple workflow that creates a Jira ticket for every `critical` alert from `sentry` for `payments` and `api` services.
+以下是一个简单的工作流，为来自 `sentry` 的 `payments` 和 `api` 服务的每条 `critical` 告警创建 Jira 工单。
 
-For more workflows, see [here](https://github.com/keephq/keep/tree/main/examples/workflows).
+更多工作流示例请参见[这里](https://github.com/keephq/keep/tree/main/examples/workflows)。
 
 ```yaml
 workflow:
@@ -883,39 +883,39 @@ workflow:
               value: results.ticket_url
 ```
 
-## Enterprise Ready
+## 企业级能力
 
-- **Developer First** - Modern REST APIs, native SDKs, and comprehensive documentation for seamless integration
-- **[Enterprise Security](https://docs.keephq.dev/deployment/authentication/overview)** - Full authentication support (SSO, SAML, OIDC, LDAP) with granular access control (RBAC, ABAC) and team management
-- **Flexible Deployment** - Deploy on-premises or in air-gapped environments with cloud-agnostic architecture
-- **[Production Scale](https://docs.keephq.dev/deployment/stress-testing)** - High availability, performance-tested infrastructure supporting horizontal scaling for enterprise workloads
+- **开发者优先** - 现代 REST API、原生 SDK 和完善的文档，实现无缝集成
+- **[企业安全](https://docs.keephq.dev/deployment/authentication/overview)** - 完整的认证支持（SSO、SAML、OIDC、LDAP），配合细粒度访问控制（RBAC、ABAC）和团队管理
+- **灵活部署** - 支持本地部署或气隙环境，采用云无关架构
+- **[生产级规模](https://docs.keephq.dev/deployment/stress-testing)** - 高可用、性能测试验证的基础设施，支持水平扩展以应对企业级工作负载
 
-## Getting Started
+## 快速开始
 
-> Need help? Can't find your environment listed? Reach out on Slack and we'll help you quickly.
+> 需要帮助？找不到你的环境？在 Slack 上联系我们，我们会快速协助你。
 
-Keep can run in various environments and configurations. The easiest way to start is with Keep's Docker Compose.
+Keep 可以在各种环境和配置中运行。最简单的启动方式是使用 Keep 的 Docker Compose。
 
-- Running Keep [locally](https://docs.keephq.dev/development/getting-started).
-- Running Keep on [Kubernetes](https://docs.keephq.dev/deployment/kubernetes/installation).
-- Running Keep with [Docker](https://docs.keephq.dev/deployment/docker).
-- Running Keep on [AWS ECS](https://docs.keephq.dev/deployment/ecs).
-- Running Keep on [OpenShift](https://docs.keephq.dev/deployment/kubernetes/openshift).
+- [本地运行](https://docs.keephq.dev/development/getting-started) Keep。
+- 在 [Kubernetes](https://docs.keephq.dev/deployment/kubernetes/installation) 上运行 Keep。
+- 使用 [Docker](https://docs.keephq.dev/deployment/docker) 运行 Keep。
+- 在 [AWS ECS](https://docs.keephq.dev/deployment/ecs) 上运行 Keep。
+- 在 [OpenShift](https://docs.keephq.dev/deployment/kubernetes/openshift) 上运行 Keep。
 
 ## 🫵 Keepers
 
-### Top Contributors
+### 杰出贡献者
 
-A special thanks to our top contributors who help us make Keep great. You are more than awesome!
+特别感谢我们的杰出贡献者，帮助我们把 Keep 做得更好。你们太棒了！
 
 - [Furkan](https://github.com/pehlicd)
 - [Asharon](https://github.com/asharonbaltazar)
 
-Want to become a top contributor? Join our Slack and DM Tal, Shahar, or Furkan.
+想成为杰出贡献者？加入我们的 Slack，私信 Tal、Shahar 或 Furkan。
 
-### Contributors
+### 贡献者
 
-Thank you for contributing and continuously making <b>Keep</b> better, <b>you're awesome</b> 🫶
+感谢你们的贡献，持续让 <b>Keep</b> 变得更好，<b>你们太棒了</b> 🫶
 
 <a href="https://github.com/keephq/keep/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=keephq/keep" />
